@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.lovejjfg.circle.MainActivity">
+
+    <com.lovejjfg.circle.RippleView
+        android:id="@+id/circle"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+        <!--默认半径-->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="默认半径"
+            android:gravity="center"
+            />
+        <SeekBar
+            android:id="@+id/pb_cirRadius"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="500"
+            android:progress="5"
+            />
+        <!--最多扩充多少-->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="最多扩充多少"
+            android:gravity="center"
+            />
+        <SeekBar
+            android:id="@+id/pb_maxMul"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="10"
+            android:progress="5"
+            />
+        <!--加速度值-->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="加速度值"
+            android:gravity="center"
+            />
+        <SeekBar
+            android:id="@+id/pb_acceleration"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="5"
+            android:progress="3"
+            />
+
+        <!--最小半径-->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="最小半径"
+            android:gravity="center"
+            />
+        <SeekBar
+            android:id="@+id/pb_multipleRadius"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:max="10"
+            android:progress="5"
+            />
+
+    </LinearLayout>
+
+</RelativeLayout>
