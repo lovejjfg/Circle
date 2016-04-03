@@ -17,6 +17,8 @@ import android.view.View;
 public class RippleView extends View {
 
     private RectF rectF;
+    private Paint secondPain;
+    private RectF innerRectf;
 
     public int getMultipleRadius() {
         return multipleRadius;
@@ -118,6 +120,7 @@ public class RippleView extends View {
 
     private void initView() {
         rectF = new RectF();
+        innerRectf = new RectF();
         cirRadius = 200;
         circlePaint = new Paint();
         circlePaint.setColor(Color.WHITE);
@@ -153,15 +156,20 @@ public class RippleView extends View {
         int minRadius = (multipleRadius * cirRadius / 10);
         // 最多能扩大多少
 //        float f1 = maxMul * cirRadius / 10;
-        // 计算百分比距离
-        float f2 =  result ;
+//        // 计算百分比距离
+//        float f2 =  result ;
 
 //        // 扩散光圈效果
 //        canvas.drawCircle(width / 2, height / 2, radius + f2, circlePaint);
-        paint.setStrokeWidth(result+f2);
-        rectF.set(width / 2 - (minRadius + f2),height / 2 - (minRadius + f2), width
-                / 2 + (minRadius + f2),height / 2 + (minRadius + f2));
+        paint.setStrokeWidth(result+result);
+        paint.setAlpha(80);
+        rectF.set(width / 2 - (minRadius + result),height / 2 - (minRadius + result), width
+                / 2 + (minRadius + result),height / 2 + (minRadius + result));
+//        paint.setAlpha(120);
+        innerRectf.set(width / 2 - minRadius,height / 2 - minRadius, width
+                / 2 + minRadius,height / 2 + minRadius);
         canvas.drawArc(rectF, 0, 360, false, paint);
+//        canvas.drawArc(innerRectf, 0, 360, false, paint);
         // 最小圆形
         canvas.drawCircle(width / 2, height / 2, minRadius, circlePaint);
         circlePaint.setAlpha(120);
@@ -173,9 +181,10 @@ public class RippleView extends View {
         // 波浪的容器
         canvas.drawCircle(width / 2, height / 2, minRadius - 5, containPaint);
         // 绘制一个扇形
-        RectF rectF = new RectF(width / 2 - minRadius,height / 2 - minRadius, width
-                / 2 + minRadius,height / 2 + minRadius);
-        canvas.drawArc(rectF, 0, 180, false, wavePaint);
+//        RectF rectF = new RectF(width / 2 - minRadius,height / 2 - minRadius, width
+//                / 2 + minRadius,height / 2 + minRadius);
+
+        canvas.drawArc(innerRectf, 0, 180, true, wavePaint);
         double lineX = 0;
         double lineY = 0;
         // 根据正弦绘制波浪
