@@ -180,7 +180,7 @@ public class RippleView extends View {
         canvas.drawCircle(width / 2, height / 2, minRadius + 40, circlePaint);
         // 波浪的容器
         canvas.drawCircle(width / 2, height / 2, minRadius - 5, containPaint);
-        // 绘制一个扇形
+        // 绘制一个扇形 // TODO: 2016/4/3  内层
 //        RectF rectF = new RectF(width / 2 - minRadius,height / 2 - minRadius, width
 //                / 2 + minRadius,height / 2 + minRadius);
 
