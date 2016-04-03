@@ -14,8 +14,6 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
     SeekBar pb_acceleration;
     @Bind(R.id.pb_cirRadius)
     SeekBar pb_cirRadius;
-    @Bind(R.id.pb_maxMul)
-    SeekBar pb_maxMul;
     @Bind(R.id.pb_multipleRadius)
     SeekBar pb_multipleRadius;
     @Override
@@ -25,11 +23,9 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
         ButterKnife.bind(this);
         pb_acceleration.setOnSeekBarChangeListener(this);
         pb_cirRadius.setOnSeekBarChangeListener(this);
-        pb_maxMul.setOnSeekBarChangeListener(this);
         pb_multipleRadius.setOnSeekBarChangeListener(this);
         pb_acceleration.setProgress(rippleView.getAcceleration());
         pb_cirRadius.setProgress(rippleView.getCirRadius());
-        pb_maxMul.setProgress(rippleView.getMaxMul());
         pb_multipleRadius.setProgress(rippleView.getMultipleRadius());
 
     }
@@ -42,9 +38,6 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
                 break;
             case R.id.pb_cirRadius:
                 rippleView.setCirRadius(progress);
-                break;
-            case R.id.pb_maxMul:
-                rippleView.setMaxMul(progress);
                 break;
             case R.id.pb_multipleRadius:
                 rippleView.setMultipleRadius(progress);

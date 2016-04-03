@@ -27,22 +27,7 @@
             android:id="@+id/pb_cirRadius"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:max="500"
-            android:progress="5"
-            />
-        <!--最多扩充多少-->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="最多扩充多少"
-            android:gravity="center"
-            />
-        <SeekBar
-            android:id="@+id/pb_maxMul"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:max="10"
-            android:progress="5"
+            android:max="800"
             />
         <!--加速度值-->
         <TextView
@@ -55,7 +40,7 @@
             android:id="@+id/pb_acceleration"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:max="5"
+            android:max="20"
             android:progress="3"
             />
 
