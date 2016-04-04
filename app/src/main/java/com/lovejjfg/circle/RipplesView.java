@@ -1,11 +1,15 @@
 package com.lovejjfg.circle;
 
+import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -26,6 +30,10 @@ public class RipplesView extends View {
     private float innerResult;
     private float mWidth;
     private ObjectAnimator mWidthAnimator;
+    private ObjectAnimator mInnerWidthAnimator;
+    private Bitmap bitmap;
+    private Rect rect;
+    private RectF bitmapRectf;
 
     public int getMultipleRadius() {
         return multipleRadius;
@@ -73,7 +81,7 @@ public class RipplesView extends View {
     private int cirRadius;
     private Paint circlePaint;
     private Paint wavePaint;
-    private float result;
+    //    private float result;
     private Paint containPaint;
     private long angle;
     private Paint paint;
@@ -100,6 +108,10 @@ public class RipplesView extends View {
     private void initView() {
         rectF = new RectF();
         innerRectf = new RectF();
+        bitmapRectf = new RectF();
+        bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
+        rect = new Rect(0, 0, bitmap.getWidth()+100, bitmap.getHeight()+100);
+
         cirRadius = 200;
         circlePaint = new Paint();
         circlePaint.setColor(Color.WHITE);
@@ -127,12 +139,65 @@ public class RipplesView extends View {
         innerPaint.setAntiAlias(true);
         innerPaint.setColor(Color.WHITE);
 
-        mWidthAnimator = ObjectAnimator.ofFloat(this, mAngleProperty, 10, 200);
+        mWidthAnimator = ObjectAnimator.ofFloat(this, mWidthProperty, 10, 200);
         mWidthAnimator.setInterpolator(new LinearInterpolator());
         mWidthAnimator.setDuration(800);
         mWidthAnimator.setRepeatCount(Integer.MAX_VALUE);
         mWidthAnimator.setRepeatMode(ValueAnimator.REVERSE);
+        mWidthAnimator.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+//                animation.pause();
+//                mInnerWidthAnimator.resume();
+            }
+        });
+
+
+        mInnerWidthAnimator = ObjectAnimator.ofFloat(this, mInnerWidthProperty, 0, 20);
+        mInnerWidthAnimator.setInterpolator(new LinearInterpolator());
+        mInnerWidthAnimator.setDuration(300);
+        mInnerWidthAnimator.setRepeatCount(Integer.MAX_VALUE);
+        mInnerWidthAnimator.setRepeatMode(ValueAnimator.REVERSE);
+        mInnerWidthAnimator.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+//                animation.pause();
+//                mWidthAnimator.start();
+            }
+        });
+
         mWidthAnimator.start();
+        mInnerWidthAnimator.start();
     }
 
     @Override
@@ -140,28 +205,32 @@ public class RipplesView extends View {
         setBackgroundColor(getResources().getColor(R.color.colorPrimary));
         int height = getHeight();
         int width = getWidth();
-        Log.e("result:", result + "");
         angle++;
         // 最小半径
         int minRadius = (multipleRadius * cirRadius / 10);
         paint.setStrokeWidth(mWidth);
         innerPaint.setStrokeWidth(innerResult + innerResult);
-        int SecondRadius = (int) (minRadius + innerResult);
+        int SecondRadius = (int) (minRadius + getInnerStrokeWidth() / 2);
         paint.setAlpha(80);
         float strokeWidth = getStrokeWidth() / 2;
         rectF.set(width / 2 - (SecondRadius + strokeWidth), height / 2 - (SecondRadius + strokeWidth), width
                 / 2 + (SecondRadius + strokeWidth), height / 2 + (SecondRadius + strokeWidth));
-        innerRectf.set((float) (width / 2 - (minRadius + innerResult)), (float) (height / 2 - (minRadius + innerResult)), (float) (width
-                / 2 + (minRadius + innerResult)), (float) (height / 2 + (minRadius + innerResult)));
+        innerRectf.set(width / 2 - (minRadius + innerResult), height / 2 - (minRadius + innerResult), width
+                / 2 + (minRadius + innerResult), height / 2 + (minRadius + innerResult));
+        bitmapRectf.set(width / 2 - (minRadius + innerResult - 80), height / 2 - (minRadius + innerResult - 80), width
+                / 2 + (minRadius + innerResult - 80), height / 2 + (minRadius + innerResult - 80));
+//        rect.union((int) innerRectf.left, (int) innerRectf.top, (int) innerRectf.right, (int) innerRectf.bottom);
 //        canvas.drawArc(innerRectf, 0, 360, false, innerPaint);
         canvas.drawArc(rectF, 0, 360, false, paint);
+
+        canvas.drawBitmap(bitmap, null, bitmapRectf, null);
 //        // 最小圆形
 //        canvas.drawCircle(width / 2, height / 2, minRadius, circlePaint);
 //        circlePaint.setAlpha(120);
     }
 
 
-    private Property<RipplesView, Float> mAngleProperty = new Property<RipplesView, Float>(Float.class, "width") {
+    private Property<RipplesView, Float> mWidthProperty = new Property<RipplesView, Float>(Float.class, "width") {
         @Override
         public Float get(RipplesView object) {
             return object.getStrokeWidth();
@@ -172,6 +241,26 @@ public class RipplesView extends View {
             object.setStrokeWidth(value);
         }
     };
+    private Property<RipplesView, Float> mInnerWidthProperty = new Property<RipplesView, Float>(Float.class, "innerWidth") {
+        @Override
+        public Float get(RipplesView object) {
+            return object.getInnerStrokeWidth();
+        }
+
+        @Override
+        public void set(RipplesView object, Float value) {
+            object.setInnerStrokeWidth(value);
+        }
+    };
+
+    private void setInnerStrokeWidth(float value) {
+        innerResult = value;
+        invalidate();
+    }
+
+    private float getInnerStrokeWidth() {
+        return innerResult;
+    }
 
     private float getStrokeWidth() {
         return mWidth;
