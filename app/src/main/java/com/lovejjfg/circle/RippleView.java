@@ -19,6 +19,8 @@ public class RippleView extends View {
     private RectF rectF;
     private Paint secondPain;
     private RectF innerRectf;
+    private Paint innerPaint;
+    private float innerResult;
 
     public int getMultipleRadius() {
         return multipleRadius;
@@ -48,6 +50,7 @@ public class RippleView extends View {
     private int multipleRadius = 7;
     private int maxMul = 5;
     private int acceleration = 2;
+
     //设置默认半径
     public void setCirRadius(int cirRadius) {
         this.cirRadius = cirRadius;
@@ -99,13 +102,16 @@ public class RippleView extends View {
             } else {
                 // 判断是否达到最大，达到最大时往回缩
                 if (firstCount >= 0 && isAdd) {
+                    innerResult = getInterpolation(firstCount);
                     result = getInterpolation(firstCount);
+
                     firstCount++;
 
                 }
                 if (firstCount >= 10 || isReduce) {
                     isAdd = false;
                     isReduce = true;
+                    innerResult = getInterpolation(firstCount);
                     result = getInterpolation(firstCount);
                     firstCount--;
                     if (firstCount <= 1) {
@@ -140,6 +146,15 @@ public class RippleView extends View {
         paint.setStrokeWidth(20);
         paint.setColor(Color.WHITE);
         paint.setAlpha(50);
+        paint.setStrokeCap(Paint.Cap.ROUND);
+
+
+        innerPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        innerPaint.setStyle(Paint.Style.STROKE);
+        innerPaint.setAntiAlias(true);
+        innerPaint.setColor(Color.WHITE);
+//        paint.setAlpha(50);
+//        paint.setStrokeCap(Paint.Cap.ROUND);
 
         handler.sendEmptyMessage(1);
         handler.sendEmptyMessage(2);
@@ -161,15 +176,21 @@ public class RippleView extends View {
 
 //        // 扩散光圈效果
 //        canvas.drawCircle(width / 2, height / 2, radius + f2, circlePaint);
-        paint.setStrokeWidth(result+result);
+//        innerResult = (float) (result * 0.4);
+        paint.setStrokeWidth(result + result);
+        innerPaint.setStrokeWidth(innerResult + innerResult);
+        int SecondRadius = (int) (minRadius + innerResult );
         paint.setAlpha(80);
-        rectF.set(width / 2 - (minRadius + result),height / 2 - (minRadius + result), width
-                / 2 + (minRadius + result),height / 2 + (minRadius + result));
+        rectF.set((float) (width / 2 - (SecondRadius + result)), (float) (height / 2 - (SecondRadius + result)), (float) (width
+                / 2 + (SecondRadius + result)), (float) (height / 2 + (SecondRadius + result)));
 //        paint.setAlpha(120);
-        innerRectf.set(width / 2 - minRadius,height / 2 - minRadius, width
-                / 2 + minRadius,height / 2 + minRadius);
-        canvas.drawArc(rectF, 0, 360, false, paint);
-//        canvas.drawArc(innerRectf, 0, 360, false, paint);
+        innerRectf.set((float) (width / 2 - (minRadius + innerResult)), (float) (height / 2 - (minRadius + innerResult)), (float) (width
+                / 2 + (minRadius + innerResult)), (float) (height / 2 + (minRadius + innerResult)));
+//        if (firstCount <= 5) {
+            canvas.drawArc(innerRectf, 0, 360, false, innerPaint);
+//        } else {
+            canvas.drawArc(rectF, 0, 360, false, paint);
+//        }
         // 最小圆形
         canvas.drawCircle(width / 2, height / 2, minRadius, circlePaint);
         circlePaint.setAlpha(120);

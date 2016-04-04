@@ -9,7 +9,7 @@ import butterknife.ButterKnife;
 
 public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener {
     @Bind(R.id.circle)
-    RippleView rippleView;
+    RipplesView rippleView;
     @Bind(R.id.pb_acceleration)
     SeekBar pb_acceleration;
     @Bind(R.id.pb_cirRadius)
