@@ -34,6 +34,9 @@ public class RipplesView extends View {
     private Bitmap bitmap;
     private Rect rect;
     private RectF bitmapRectf;
+    private int rotate = 30;
+    private int count;
+
 
     public int getMultipleRadius() {
         return multipleRadius;
@@ -110,7 +113,8 @@ public class RipplesView extends View {
         innerRectf = new RectF();
         bitmapRectf = new RectF();
         bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
-        rect = new Rect(0, 0, bitmap.getWidth()+100, bitmap.getHeight()+100);
+        rect = new Rect(0, 0, bitmap.getWidth() + 100, bitmap.getHeight() + 100);
+
 
         cirRadius = 200;
         circlePaint = new Paint();
@@ -152,7 +156,8 @@ public class RipplesView extends View {
 
             @Override
             public void onAnimationEnd(Animator animation) {
-
+                mWidthAnimator.setRepeatCount(Integer.MAX_VALUE);
+                mWidthAnimator.start();
             }
 
             @Override
@@ -181,7 +186,8 @@ public class RipplesView extends View {
 
             @Override
             public void onAnimationEnd(Animator animation) {
-
+                mInnerWidthAnimator.setRepeatCount(Integer.MAX_VALUE);
+                mInnerWidthAnimator.start();
             }
 
             @Override
@@ -200,6 +206,7 @@ public class RipplesView extends View {
         mInnerWidthAnimator.start();
     }
 
+    //    注意：onDraw每次被调用时canvas画布都是一个干净的、空白的、透明的，他不会记录以前画上去的
     @Override
     protected void onDraw(Canvas canvas) {
         setBackgroundColor(getResources().getColor(R.color.colorPrimary));
@@ -217,12 +224,15 @@ public class RipplesView extends View {
                 / 2 + (SecondRadius + strokeWidth), height / 2 + (SecondRadius + strokeWidth));
         innerRectf.set(width / 2 - (minRadius + innerResult), height / 2 - (minRadius + innerResult), width
                 / 2 + (minRadius + innerResult), height / 2 + (minRadius + innerResult));
+        /*bitmap使用*/
         bitmapRectf.set(width / 2 - (minRadius + innerResult - 80), height / 2 - (minRadius + innerResult - 80), width
                 / 2 + (minRadius + innerResult - 80), height / 2 + (minRadius + innerResult - 80));
 //        rect.union((int) innerRectf.left, (int) innerRectf.top, (int) innerRectf.right, (int) innerRectf.bottom);
 //        canvas.drawArc(innerRectf, 0, 360, false, innerPaint);
         canvas.drawArc(rectF, 0, 360, false, paint);
 
+        rotate += 0.1;
+        canvas.rotate(rotate, getWidth() / 2, getHeight() / 2);
         canvas.drawBitmap(bitmap, null, bitmapRectf, null);
 //        // 最小圆形
 //        canvas.drawCircle(width / 2, height / 2, minRadius, circlePaint);

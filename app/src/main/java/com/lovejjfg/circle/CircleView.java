@@ -13,7 +13,7 @@ import android.view.animation.OvershootInterpolator;
 
 /**
  * Created by Joe on 2016-04-04
- * Email: zhangjun166@pingan.com.cn
+ * Email: lovejjfg@gmail.com
  */
 public class CircleView extends View {
 
