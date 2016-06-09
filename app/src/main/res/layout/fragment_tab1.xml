@@ -6,21 +6,21 @@
     android:layout_height="match_parent"
     tools:context="com.lovejjfg.circle.MainActivity">
 
-    <!--<com.lovejjfg.circle.RipplesView-->
-        <!--android:id="@+id/circle"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:visibility="gone"-->
-        <!--/>-->
+    <com.lovejjfg.circle.RipplesView
+    android:id="@+id/circle"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:visibility="gone"
+    />
     <!--<com.lovejjfg.circle.TouchCircleView-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:visibility="gone"-->
+    <!--/>-->
+    <!--<com.lovejjfg.circle.PopCircleView-->
         <!--android:layout_width="match_parent"-->
         <!--android:layout_height="match_parent"-->
-        <!--android:visibility="gone"-->
         <!--/>-->
-    <com.lovejjfg.circle.PopCircleView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        />
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
