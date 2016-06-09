@@ -34,6 +34,7 @@ public class PopCircleView extends View {
     private boolean isCanDraw;
     private Path path;
     private double angle;
+    private boolean flag;
 
 
     //设置默认半径
@@ -134,10 +135,11 @@ public class PopCircleView extends View {
     }
 
     private void updatePath() {
-        int dy = startY - circleY;
-        int dx = startX - circleX;
+        int dy = Math.abs(circleY - startY);
+        int dx = Math.abs(circleX - startX);
+        flag = (circleY - startY) * (circleX - startX) <= 0;
+        Log.i("TAG", "updatePath: " + flag);
         angle = Math.atan(dy * 1.0 / dx);
-        Log.i("TAG", "updatePath: " + angle);
 
         invalidate();
     }
@@ -146,17 +148,32 @@ public class PopCircleView extends View {
     protected void onDraw(Canvas canvas) {
         if (startY != 0 || startX != 0) {
             path.reset();
-            //第一个点
-            path.moveTo((float) (circleX - Math.sin(angle) * ORIGINRADIO), (float) (circleY - Math.cos(angle) * ORIGINRADIO));
+            if (flag) {
+                //第一个点
+                path.moveTo((float) (circleX - Math.sin(angle) * ORIGINRADIO), (float) (circleY - Math.cos(angle) * ORIGINRADIO));
 
-            path.quadTo((float) ((startX + circleX) * 0.5), (float) ((startY + circleY) * 0.5), (float) (startX - Math.sin(angle) * DRAGRADIO), (float) (startY - Math.cos(angle) * DRAGRADIO));
-            path.lineTo((float) (startX + Math.sin(angle) * DRAGRADIO), (float) (startY + Math.cos(angle) * DRAGRADIO));
+                path.quadTo((float) ((startX + circleX) * 0.5), (float) ((startY + circleY) * 0.5), (float) (startX - Math.sin(angle) * DRAGRADIO), (float) (startY - Math.cos(angle) * DRAGRADIO));
+                path.lineTo((float) (startX + Math.sin(angle) * DRAGRADIO), (float) (startY + Math.cos(angle) * DRAGRADIO));
 
-            path.quadTo((float) ((startX + circleX) * 0.5), (float) ((startY + circleY) * 0.5), (float) (circleX + Math.sin(angle) * ORIGINRADIO), (float) (circleY + Math.cos(angle) * ORIGINRADIO));
-            path.close();
-            canvas.drawPath(path, paint);
+                path.quadTo((float) ((startX + circleX) * 0.5), (float) ((startY + circleY) * 0.5), (float) (circleX + Math.sin(angle) * ORIGINRADIO), (float) (circleY + Math.cos(angle) * ORIGINRADIO));
+                path.close();
+                canvas.drawPath(path, paint);
+            } else {
+                //第一个点
+                path.moveTo((float) (circleX - Math.sin(angle) * ORIGINRADIO), (float) (circleY + Math.cos(angle) * ORIGINRADIO));
+
+                path.quadTo((float) ((startX + circleX) * 0.5), (float) ((startY + circleY) * 0.5), (float) (startX - Math.sin(angle) * DRAGRADIO), (float) (startY + Math.cos(angle) * DRAGRADIO));
+                path.lineTo((float) (startX + Math.sin(angle) * DRAGRADIO), (float) (startY - Math.cos(angle) * DRAGRADIO));
+
+                path.quadTo((float) ((startX + circleX) * 0.5), (float) ((startY + circleY) * 0.5), (float) (circleX + Math.sin(angle) * ORIGINRADIO), (float) (circleY - Math.cos(angle) * ORIGINRADIO));
+                path.close();
+                canvas.drawPath(path, paint);
+            }
+
         }
+
         canvas.drawCircle(circleX, circleY, ORIGINRADIO, paint);//默认的
+        canvas.drawPoint((float) ((startX + circleX) * 0.5), (float) ((startY + circleY) * 0.5), circlePaint);//默认的
         canvas.drawCircle(startX == 0 ? circleX : startX, startY == 0 ? circleY : startY, DRAGRADIO, paint);//拖拽的
 
     }
