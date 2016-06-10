@@ -16,38 +16,37 @@ import android.view.View;
  */
 public class PopCircleView extends View {
 
+    private static final String TAG = PopCircleView.class.getSimpleName();
     private int startX;
     private int startY;
     private int movedX;
     private int movedY;
-    private int DefaultRADIO = 200;
+    private int DefaultRADIO = 50;
     private int ORIGINRADIO = DefaultRADIO;
     private int DRAGRADIO = ORIGINRADIO;
     private int MINRADIO = (int) (ORIGINRADIO * 0.6);//最小半径
-    private int circleX = 800;
-    private int circleY = 800;
+    private int circleX = 400;
+    private int circleY = 400;
 
     private float percent;
     private int MAXDISTANCE = (int) (MINRADIO * 10);
 
-    private boolean isUp;
-    private float lastY;
-    private boolean isCanDraw;
     private Path path;
     private double angle;
     private boolean flag;
     private int currentDy;
+    private double distance;
 
 
     //设置默认半径
     public void setCirRadius(int cirRadius) {
-        this.cirRadius = cirRadius;
+        this.ORIGINRADIO = cirRadius;
         Log.i("默认半径：", cirRadius + "");
 
     }
 
     public int getCirRadius() {
-        return cirRadius;
+        return ORIGINRADIO;
     }
 
     private int cirRadius;
@@ -86,19 +85,19 @@ public class PopCircleView extends View {
                                public boolean onTouch(View v, MotionEvent ev) {
                                    switch (ev.getAction()) {
                                        case MotionEvent.ACTION_DOWN://有事件先拦截再说！！
-                                           startX = (int) ev.getRawX();
-                                           startY = (int) ev.getRawY();
-                                           movedX = (int) ev.getRawX();
-                                           movedY = (int) ev.getRawY();
+                                           startX = (int) ev.getX();
+                                           startY = (int) ev.getY();
+                                           movedX = (int) ev.getX();
+                                           movedY = (int) ev.getY();
                                            break;
                                        case MotionEvent.ACTION_MOVE://移动的时候
 //                                           int endY = (int) ev.getRawY();
 //                                           angle = endY - startY;
-                                           startX = (int) ev.getRawX();
-                                           startY = (int) ev.getRawY();
+                                           startX = (int) ev.getX();
+                                           startY = (int) ev.getY();
 
-                                           endY = (int) ev.getRawY();
-                                           endX = (int) ev.getRawX();
+                                           endY = (int) ev.getY();
+                                           endX = (int) ev.getX();
                                            int dy = endY - movedY;
                                            int dx = endX - movedX;
                                            movedY = endY;
@@ -106,13 +105,12 @@ public class PopCircleView extends View {
 //                                           currentDy+=dy;
 
                                            updatePath();
-                                           double DISTANCE = Math.sqrt(dy * dy + dx * dx);
-                                           Log.i("TAG", "onTouch: " + DISTANCE);
-                                           if (ORIGINRADIO - DISTANCE >= MINRADIO && ORIGINRADIO - DISTANCE  <= DefaultRADIO) {
-//                                               Log.e("TAG", "currentDy: " + currentDy);
-                                               ORIGINRADIO -= DISTANCE;
-
-                                           }
+//                                           double DISTANCE = Math.sqrt(dy * dy + dx * dx);
+//                                           if (ORIGINRADIO - DISTANCE >= MINRADIO && ORIGINRADIO - DISTANCE  <= DefaultRADIO) {
+////                                               Log.e("TAG", "currentDy: " + currentDy);
+//                                               ORIGINRADIO -= DISTANCE;
+//
+//                                           }
 
                                            invalidate();
                                            break;
@@ -136,7 +134,7 @@ public class PopCircleView extends View {
 
         circlePaint.setStyle(Paint.Style.FILL);
 //        paint.setAntiAlias(true);
-        circlePaint.setStrokeWidth(50);
+        circlePaint.setStrokeWidth(ORIGINRADIO / 2);
         circlePaint.setColor(Color.GREEN);
 //        paint.setAlpha(50);
 //        paint.setStrokeCap(Paint.Cap.SQUARE);
@@ -147,6 +145,14 @@ public class PopCircleView extends View {
     private void updatePath() {
         int dy = Math.abs(circleY - startY);
         int dx = Math.abs(circleX - startX);
+
+        double dis = Math.sqrt(dy * dy + dx * dx);
+        if (dis <= MAXDISTANCE) {//增加的情况，原始半径减小
+            ORIGINRADIO = (int) (DefaultRADIO - (dis / MAXDISTANCE) * (DefaultRADIO - MINRADIO));
+            Log.e(TAG, "distance: " + (int) ((1 - dis / MAXDISTANCE) * MINRADIO));
+            Log.i(TAG, "distance: " + ORIGINRADIO);
+        }
+//        distance = dis;
         flag = (circleY - startY) * (circleX - startX) <= 0;
         Log.i("TAG", "updatePath: " + flag);
         angle = Math.atan(dy * 1.0 / dx);
