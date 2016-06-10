@@ -251,6 +251,7 @@ public class DragBubbleView extends View {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+
         int modeWidth = MeasureSpec.getMode(widthMeasureSpec);
         int modeHeight = MeasureSpec.getMode(heightMeasureSpec);
         if (modeWidth == MeasureSpec.UNSPECIFIED || modeWidth == MeasureSpec.AT_MOST) {
