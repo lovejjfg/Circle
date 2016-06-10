@@ -232,6 +232,7 @@ public class DragBubbleView extends View {
                     animSetXY.start();
                 } else if (CurrentState == STATE_DRAG_BREAK) {
                     CurrentState = STATE_UP_BREAK;
+                    invalidate();
                 } else {
                     CurrentState = STATE_UP_DRAG_BREAK_BACK;
                     valueX.setIntValues(startX, CIRCLEX);
