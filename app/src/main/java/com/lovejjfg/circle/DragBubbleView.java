@@ -86,11 +86,6 @@ public class DragBubbleView extends View {
             public void onAnimationUpdate(ValueAnimator animation) {
                 startX = (int) animation.getAnimatedValue();
                 Log.e(TAG, "onAnimationUpdate-startX: " + startX);
-//                if (!animation.isRunning()) {
-//                    //动画结束之后重置
-//                    CurrentState = STATE_IDLE;
-//                    ORIGIN_RADIO = DEFAULT_RADIO;
-//                }
                 invalidate();
             }
 

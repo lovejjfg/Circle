@@ -12,12 +12,13 @@ import com.lovejjfg.circle.R;
 import com.lovejjfg.circle.RipplesView;
 
 import butterknife.Bind;
+import butterknife.ButterKnife;
 
 /**
  * Created by Joe on 2016-06-09
  * Email: zhangjun166@pingan.com.cn
  */
-public class Fragment1 extends Fragment {
+public class Fragment1 extends Fragment implements SeekBar.OnSeekBarChangeListener {
 
         @Bind(R.id.circle)
         RipplesView rippleView;
@@ -52,8 +53,40 @@ public class Fragment1 extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_tab1, container, false);
-        TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-        textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
+        ButterKnife.bind(this, rootView);
+        pb_acceleration.setOnSeekBarChangeListener(this);
+        pb_cirRadius.setOnSeekBarChangeListener(this);
+        pb_multipleRadius.setOnSeekBarChangeListener(this);
+        pb_acceleration.setProgress(rippleView.getAcceleration());
+        pb_cirRadius.setProgress(rippleView.getCirRadius());
+        pb_multipleRadius.setProgress(rippleView.getMultipleRadius());
+
         return rootView;
+    }
+
+    @Override
+    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+        switch (seekBar.getId()) {
+            case R.id.pb_acceleration:
+                rippleView.setAcceleration(progress);
+                break;
+            case R.id.pb_cirRadius:
+                rippleView.setCirRadius(progress);
+                break;
+            case R.id.pb_multipleRadius:
+                rippleView.setMultipleRadius(progress);
+                break;
+
+        }
+    }
+
+    @Override
+    public void onStartTrackingTouch(SeekBar seekBar) {
+
+    }
+
+    @Override
+    public void onStopTrackingTouch(SeekBar seekBar) {
+
     }
 }

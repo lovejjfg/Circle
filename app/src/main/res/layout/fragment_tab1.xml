@@ -7,20 +7,11 @@
     tools:context="com.lovejjfg.circle.MainActivity">
 
     <com.lovejjfg.circle.RipplesView
-    android:id="@+id/circle"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:visibility="gone"
-    />
-    <!--<com.lovejjfg.circle.TouchCircleView-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent"-->
-    <!--android:visibility="gone"-->
-    <!--/>-->
-    <!--<com.lovejjfg.circle.PopCircleView-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--/>-->
+        android:id="@+id/circle"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -31,9 +22,10 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="默认半径"
             android:gravity="center"
+            android:text="默认半径"
             />
+
         <SeekBar
             android:id="@+id/pb_cirRadius"
             android:layout_width="match_parent"
@@ -44,9 +36,10 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="加速度值"
             android:gravity="center"
+            android:text="加速度值"
             />
+
         <SeekBar
             android:id="@+id/pb_acceleration"
             android:layout_width="match_parent"
@@ -59,9 +52,10 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="最小半径"
             android:gravity="center"
+            android:text="最小半径"
             />
+
         <SeekBar
             android:id="@+id/pb_multipleRadius"
             android:layout_width="match_parent"

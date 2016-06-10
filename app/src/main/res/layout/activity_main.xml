@@ -17,7 +17,7 @@
         <!--android:layout_height="match_parent"-->
         <!--android:visibility="gone"-->
         <!--/>-->
-    <com.lovejjfg.circle.PopCircleView
+    <com.lovejjfg.circle.DragBubbleView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         />
