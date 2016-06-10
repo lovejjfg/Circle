@@ -267,7 +267,6 @@ public class DragBubbleView extends View {
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         CIRCLEX = (int) ((right - left) * 0.5 + 0.5);
         CIRCLEY = (int) ((bottom - top) * 0.5 + 0.5);
-        invalidate();
         super.onLayout(changed, left, top, right, bottom);
 
     }
