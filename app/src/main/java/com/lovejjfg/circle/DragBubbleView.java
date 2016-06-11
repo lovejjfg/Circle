@@ -25,9 +25,9 @@ public class DragBubbleView extends View {
     private static int DEFAULT_RADIO = 30;
     private int ORIGIN_RADIO = DEFAULT_RADIO;
     private int DRAG_RADIO = ORIGIN_RADIO;
-    private int MIN_RADIO = (int) (ORIGIN_RADIO * 0.4);//最小半径
     private int CIRCLEX;
     private int CIRCLEY;
+    private int MIN_RADIO = (int) (ORIGIN_RADIO * 0.4);//最小半径
     private int MAXDISTANCE = (int) (MIN_RADIO * 13);
     private Path path;
     private double angle;
@@ -37,6 +37,17 @@ public class DragBubbleView extends View {
     private AnimatorSet animSetXY;
     //    private boolean isLeave;
     private boolean fillDraw = true;
+
+    public boolean isShowCircle() {
+        return showCircle;
+    }
+
+    public void setShowCircle(boolean showCircle) {
+        this.showCircle = showCircle;
+        invalidate();
+    }
+
+    private boolean showCircle = true;
 //    private boolean isUp;
 
     private final static int STATE_IDLE = 1;//静止的状态
@@ -46,8 +57,6 @@ public class DragBubbleView extends View {
     private final static int STATE_UP_BACK = 5;//放手后的没有断裂的返回的状态
     private final static int STATE_UP_DRAG_BREAK_BACK = 6;//拖拽断裂又返回的状态
     private int CurrentState = STATE_IDLE;
-
-
 
 
     private Paint circlePaint;
@@ -140,18 +149,18 @@ public class DragBubbleView extends View {
             CurrentState = STATE_DRAG_BREAK;
         }
 //        distance = dis;
-        flag = (CIRCLEY - startY) * (CIRCLEX - startX) <= 0;
+        flag = (startY - CIRCLEY) * (startX - CIRCLEX) <= 0;
         Log.i("TAG", "updatePath: " + flag);
         angle = Math.atan(dy * 1.0 / dx);
-
-
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         switch (CurrentState) {
             case STATE_IDLE://空闲状态，就画默认的圆
-                canvas.drawCircle(CIRCLEX, CIRCLEY, ORIGIN_RADIO, paint);//默认的
+                if (showCircle) {
+                    canvas.drawCircle(CIRCLEX, CIRCLEY, ORIGIN_RADIO, paint);//默认的
+                }
                 break;
             case STATE_UP_BACK://执行返回的动画
             case STATE_DRAG_NORMAL://拖拽状态 画贝塞尔曲线和两个圆
@@ -177,13 +186,17 @@ public class DragBubbleView extends View {
                     path.close();
                     canvas.drawPath(path, paint);
                 }
-                canvas.drawCircle(CIRCLEX, CIRCLEY, ORIGIN_RADIO, paint);//默认的
-                canvas.drawCircle(startX == 0 ? CIRCLEX : startX, startY == 0 ? CIRCLEY : startY, DRAG_RADIO, paint);//拖拽的
+                if (showCircle) {
+                    canvas.drawCircle(CIRCLEX, CIRCLEY, ORIGIN_RADIO, paint);//默认的
+                    canvas.drawCircle(startX == 0 ? CIRCLEX : startX, startY == 0 ? CIRCLEY : startY, DRAG_RADIO, paint);//拖拽的
+                }
                 break;
 
-            case STATE_DRAG_BREAK://拖拽到了上限，话拖拽的圆:
+            case STATE_DRAG_BREAK://拖拽到了上限，画拖拽的圆:
             case STATE_UP_DRAG_BREAK_BACK:
-                canvas.drawCircle(startX == 0 ? CIRCLEX : startX, startY == 0 ? CIRCLEY : startY, DRAG_RADIO, paint);//拖拽的
+                if (showCircle) {
+                    canvas.drawCircle(startX == 0 ? CIRCLEX : startX, startY == 0 ? CIRCLEY : startY, DRAG_RADIO, paint);//拖拽的
+                }
                 break;
 
             case STATE_UP_BREAK://画出爆裂的效果
@@ -212,9 +225,6 @@ public class DragBubbleView extends View {
                 startY = (int) ev.getRawY();
                 break;
             case MotionEvent.ACTION_MOVE://移动的时候
-//                                           int endY = (int) ev.getRawY();
-//                                           angle = endY - startY;
-//                CurrentState = STATE_DRAG_NORMAL;
                 startX = (int) ev.getX();
                 startY = (int) ev.getY();
 
@@ -222,9 +232,6 @@ public class DragBubbleView extends View {
                 invalidate();
                 break;
             case MotionEvent.ACTION_UP:
-//                startX = (int) ev.getX();
-//                startY = (int) ev.getY();
-
                 if (CurrentState == STATE_DRAG_NORMAL) {
                     CurrentState = STATE_UP_BACK;
                     valueX.setIntValues(startX, CIRCLEX);
@@ -239,6 +246,7 @@ public class DragBubbleView extends View {
                     valueY.setIntValues(startY, CIRCLEY);
                     animSetXY.start();
                 }
+                break;
 
         }
 
@@ -250,21 +258,25 @@ public class DragBubbleView extends View {
 
         int modeWidth = MeasureSpec.getMode(widthMeasureSpec);
         int modeHeight = MeasureSpec.getMode(heightMeasureSpec);
-        if (modeWidth == MeasureSpec.UNSPECIFIED || modeWidth == MeasureSpec.AT_MOST) {
-            widthMeasureSpec = MeasureSpec.makeMeasureSpec(DEFAULT_RADIO * 2, MeasureSpec.EXACTLY);
-        }
-        if (modeHeight == MeasureSpec.UNSPECIFIED || modeHeight == MeasureSpec.AT_MOST) {
-            heightMeasureSpec = MeasureSpec.makeMeasureSpec(DEFAULT_RADIO * 2, MeasureSpec.EXACTLY);
-        }
+        widthMeasureSpec = MeasureSpec.makeMeasureSpec(DEFAULT_RADIO * 2, MeasureSpec.EXACTLY);
+        heightMeasureSpec = MeasureSpec.makeMeasureSpec(DEFAULT_RADIO * 2, MeasureSpec.EXACTLY);
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
     }
 
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-        CIRCLEX = (int) ((right - left) * 0.5 + 0.5);
-        CIRCLEY = (int) ((bottom - top) * 0.5 + 0.5);
+
         super.onLayout(changed, left, top, right, bottom);
 
+    }
+
+
+    @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
+        CIRCLEX = (int) ((w) * 0.5 + 0.5);
+        CIRCLEY = (int) ((h) * 0.5 + 0.5);
+        CurrentState = STATE_IDLE;
     }
 
     public void setFillDraw(boolean fillDraw) {
@@ -281,6 +293,8 @@ public class DragBubbleView extends View {
         ORIGIN_RADIO = progress;
         DEFAULT_RADIO = progress;
         DRAG_RADIO = progress;
+        MIN_RADIO = (int) (ORIGIN_RADIO * 0.4);
+        MAXDISTANCE = (int) (MIN_RADIO * 13);
         requestLayout();
         invalidate();
     }
