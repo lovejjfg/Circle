@@ -13,3 +13,5 @@
 ![旋转过程的角标](http://img.blog.csdn.net/20160611113042129)
 
 3、松手时，根据相关的状态，要么带Path路径执行动画返回，要么不带Path路径直接返回，要么直接爆裂！
+
+[博客地址 戳我戳我](http://blog.csdn.net/lovejjfg/article/details/50990604)
