@@ -42,7 +42,7 @@ public class PathTextView extends View {
 
     private static final int Default = 11;
     private static final int Oblique = 12;
-    private int Mode = Oblique;
+    private int Mode = Default;
     private float defaultRadio = 20;
     private float defaultX = 0;
     private float defaultY = 0;
@@ -88,10 +88,10 @@ public class PathTextView extends View {
 
     private void init() {
         final ArrayList<Bitmap> bitmaps = new ArrayList<>(4);
-        bitmaps.add(BitmapFactory.decodeResource(getResources(), R.mipmap.p1));
-        bitmaps.add(BitmapFactory.decodeResource(getResources(), R.mipmap.p3));
-        bitmaps.add(BitmapFactory.decodeResource(getResources(), R.mipmap.p5));
-        bitmaps.add(BitmapFactory.decodeResource(getResources(), R.mipmap.p7));
+        bitmaps.add(BitmapFactory.decodeResource(getResources(), R.mipmap.fruit1));
+        bitmaps.add(BitmapFactory.decodeResource(getResources(), R.mipmap.fruit2));
+        bitmaps.add(BitmapFactory.decodeResource(getResources(), R.mipmap.fruit3));
+        bitmaps.add(BitmapFactory.decodeResource(getResources(), R.mipmap.fruit4));
         currentBitmap = bitmaps.get(0);
         path = new Path();
         textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);

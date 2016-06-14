@@ -9,8 +9,8 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.SeekBar;
 
-import com.lovejjfg.circle.widget.DragBubbleView;
 import com.lovejjfg.circle.R;
+import com.lovejjfg.circle.widget.DragBubbleView;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -27,6 +27,8 @@ public class Fragment2 extends Fragment implements CompoundButton.OnCheckedChang
      */
     @Bind(R.id.cb_fill)
     CheckBox mCbFill;
+    @Bind(R.id.cb_circle)
+    CheckBox mCbCircle;
     @Bind(R.id.pb_cirRadius)
     SeekBar mPbRadio;
     @Bind(R.id.dbv)
@@ -54,15 +56,26 @@ public class Fragment2 extends Fragment implements CompoundButton.OnCheckedChang
         View rootView = inflater.inflate(R.layout.fragment_tab2, container, false);
         ButterKnife.bind(this, rootView);
         mCbFill.setChecked(mBubble.getFillDraw());
+        mCbCircle.setChecked(mBubble.isShowCircle());
         mCbFill.setOnCheckedChangeListener(this);
         mPbRadio.setOnSeekBarChangeListener(this);
+        mCbCircle.setOnCheckedChangeListener(this);
 
         return rootView;
     }
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        mBubble.setFillDraw(isChecked);
+        switch (buttonView.getId()) {
+            case R.id.cb_fill:
+                mBubble.setFillDraw(isChecked);
+                break;
+            case R.id.cb_circle:
+                mBubble.setShowCircle(isChecked);
+                break;
+
+        }
+
     }
 
     @Override

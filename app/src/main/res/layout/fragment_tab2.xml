@@ -1,21 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:clipChildren="false"
-    tools:context=".view.TabActivity">
+    tools:context="com.lovejjfg.circle.TabActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        >
         <!--默认半径-->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="默认半径" />
+            android:text="默认半径"
+            />
 
         <SeekBar
             android:id="@+id/pb_cirRadius"
@@ -24,32 +27,41 @@
             android:max="170"
 
             />
-
-        <LinearLayout
+     <LinearLayout
+         android:layout_marginTop="16dp"
+         android:gravity="center"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content">
+         <TextView
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:text="填充显示"
+             />
+        <CheckBox
+            android:id="@+id/cb_fill"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp">
+            android:layout_height="wrap_content"/>
+         <TextView
+             android:layout_marginLeft="16dp"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:text="圆形显示"
+             />
+        <CheckBox
+            android:id="@+id/cb_circle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="填充显示" />
-
-            <CheckBox
-                android:id="@+id/cb_fill"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
-        </LinearLayout>
+     </LinearLayout>
 
     </LinearLayout>
 
 
     <com.lovejjfg.circle.widget.DragBubbleView
         android:id="@+id/dbv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center" />
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"/>
 
 
 </FrameLayout>

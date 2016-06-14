@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import com.lovejjfg.circle.R;
 import com.lovejjfg.circle.fragment.Fragment1;
 import com.lovejjfg.circle.fragment.Fragment2;
+import com.lovejjfg.circle.fragment.Fragment3;
 import com.lovejjfg.circle.fragment.Fragment4;
 import com.lovejjfg.circle.fragment.Fragment5;
 
@@ -55,6 +56,7 @@ public class TabActivity extends AppCompatActivity {
         fragments.add(Fragment5.newInstance(1));
         fragments.add(Fragment1.newInstance(1));
         fragments.add(Fragment2.newInstance(1));
+        fragments.add(Fragment3.newInstance(1));
         fragments.add(Fragment4.newInstance(1));
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
@@ -127,6 +129,8 @@ public class TabActivity extends AppCompatActivity {
                     return "SECTION 3";
                 case 3:
                     return "SECTION 4";
+                case 4:
+                    return "SECTION 5";
             }
             return null;
         }

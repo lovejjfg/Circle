@@ -97,7 +97,7 @@ public class Fragment4 extends Fragment {
 //            animator.setLeft(0);
 //            animator.setoffset(-2 * 36);
             MorphingAnimator animator = new MorphingAnimator(mBt, drawable);
-            animator.setDuration(10000);
+            animator.setDuration(1500);
             animator.setFromColor(Color.RED);
             animator.setToColor(Color.BLUE);
             mBt.setText("开始");
