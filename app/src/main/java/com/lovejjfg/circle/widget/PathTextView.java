@@ -4,6 +4,8 @@ import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -16,6 +18,10 @@ import android.view.View;
 import android.view.animation.BounceInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
+
+import com.lovejjfg.circle.R;
+
+import java.util.ArrayList;
 
 /**
  * Created by Joe on 2016-06-14
@@ -30,6 +36,7 @@ public class PathTextView extends View {
     private Path path;
     private float textWidth;
 
+
     private float defaultRadio = 20;
     private float defaultX = 0;
     private float defaultY = 0;
@@ -41,9 +48,14 @@ public class PathTextView extends View {
     private Paint cilclePaint;
     private float radioCenterX;
     private float radioCenterY = defaultRadio;
-    private ObjectAnimator distanceAnimator;
-    private float amplitude = 20.0f;//振幅
+    private ObjectAnimator distanceDownAnimator;
+    private float amplitude = 30.0f;//振幅
     private BounceInterpolator bounceInterpolator;
+    private Bitmap currentBitmap;
+    private int currentIndex;
+    private float fraction;
+    private boolean isUp;
+    private ObjectAnimator distanceUpAnimator;
 
     public PathTextView(Context context) {
         this(context, null);
@@ -59,6 +71,12 @@ public class PathTextView extends View {
     }
 
     private void init() {
+        final ArrayList<Bitmap> bitmaps = new ArrayList<>(4);
+        bitmaps.add(BitmapFactory.decodeResource(getResources(), R.mipmap.p1));
+        bitmaps.add(BitmapFactory.decodeResource(getResources(), R.mipmap.p3));
+        bitmaps.add(BitmapFactory.decodeResource(getResources(), R.mipmap.p5));
+        bitmaps.add(BitmapFactory.decodeResource(getResources(), R.mipmap.p7));
+        currentBitmap = bitmaps.get(0);
         path = new Path();
         textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         textPaint.setStyle(Paint.Style.FILL);
@@ -79,26 +97,75 @@ public class PathTextView extends View {
 
         textWidth = textPaint.measureText(TEST);
         offsetAnimator = ObjectAnimator.ofFloat(this, mOffsetProperty, 0);
-        offsetAnimator.setDuration(1000);
+        offsetAnimator.setDuration(300);
         bounceInterpolator = new BounceInterpolator();
         offsetAnimator.setInterpolator(bounceInterpolator);
 
-        distanceAnimator = ObjectAnimator.ofFloat(this, mDistanceProperty, 0);
-        distanceAnimator.setDuration(1000);
-        distanceAnimator.setInterpolator(linearInterpolator);
-        distanceAnimator.setRepeatCount(Integer.MAX_VALUE);
-        distanceAnimator.setRepeatMode(ValueAnimator.REVERSE);
-        distanceAnimator.addListener(new Animator.AnimatorListener() {
-
+        distanceDownAnimator = ObjectAnimator.ofFloat(this, mDistanceProperty, 0);
+        distanceDownAnimator.setDuration(1000);
+        distanceDownAnimator.setInterpolator(linearInterpolator);
+//        distanceDownAnimator.setRepeatCount(Integer.MAX_VALUE);
+//        distanceDownAnimator.setRepeatMode(ValueAnimator.INFINITE);
+        distanceDownAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                fraction = animation.getAnimatedFraction();
+            }
+        });
+        distanceDownAnimator.addListener(new Animator.AnimatorListener() {
             private int count;
-
             @Override
             public void onAnimationStart(Animator animation) {
+                Log.i("TAG", "onAnimationEnd: 开始了！！");
+                isUp = false;
+                if (++currentIndex >= bitmaps.size()) {
+                    currentIndex = 0;
+                }
+                currentBitmap = bitmaps.get(currentIndex);
+//                offsetAnimator.cancel();
+//                distanceUpAnimator.cancel();
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                Log.i("TAG", "onAnimationEnd: 结束了！！");
+                distanceUpAnimator.start();
+                offsetAnimator.start();
+
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+                Log.i("TAG", "onAnimationEnd: 取消了！！");
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+            }
+        });
+        distanceDownAnimator.start();
+
+        distanceUpAnimator = ObjectAnimator.ofFloat(this, mDistanceProperty, 0);
+        distanceUpAnimator.setDuration(1000);
+        distanceUpAnimator.setInterpolator(decelerateInterpolator);
+//        distanceUpAnimator.setRepeatCount(Integer.MAX_VALUE);
+//        distanceUpAnimator.setRepeatMode(ValueAnimator.INFINITE);
+        distanceUpAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                fraction = animation.getAnimatedFraction();
+            }
+        });
+        distanceUpAnimator.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+                isUp = true;
                 Log.i("TAG", "onAnimationEnd: 开始了！！");
             }
 
             @Override
             public void onAnimationEnd(Animator animation) {
+                distanceDownAnimator.start();
                 Log.i("TAG", "onAnimationEnd: 结束了！！");
             }
 
@@ -109,19 +176,10 @@ public class PathTextView extends View {
 
             @Override
             public void onAnimationRepeat(Animator animation) {
-                Log.i("TAG", "onAnimationEnd: 重复了！！");
-                count += 1;
-                if (count % 2 == 0) {
-                    cilclePaint.setColor(COLOR[count % 5]);
-//                    distanceAnimator.setInterpolator(linearOutSlowInInterpolator);
-                }
-                if (!offsetAnimator.isRunning() && count % 2 == 1) {
-                    offsetAnimator.start();
-                }
 
             }
         });
-        distanceAnimator.start();
+//        distanceUpAnimator.start();
     }
 
     @Override
@@ -130,7 +188,8 @@ public class PathTextView extends View {
         textHeight = textPaint.getFontMetrics().bottom - textPaint.getFontMetrics().top;
         defaultY = h - textHeight; //(h+textHeight*0.5f) / 2.0f;
         offsetAnimator.setFloatValues(defaultY, defaultY + amplitude, defaultY);
-        distanceAnimator.setFloatValues(radioCenterY, defaultY - textHeight);
+        distanceDownAnimator.setFloatValues(radioCenterY, defaultY - textHeight);
+        distanceUpAnimator.setFloatValues(defaultY - textHeight,radioCenterY );
     }
 
     @Override
@@ -147,16 +206,24 @@ public class PathTextView extends View {
         path.reset();
         path.moveTo(defaultX, defaultY);
         radioCenterX = (defaultX + textWidth) / 2.0f;
-        if (currentOffset !=-1) {
+        if (currentOffset != -1) {
             path.quadTo(radioCenterX, currentOffset, textWidth, defaultY);
         } else {
             path.lineTo(textWidth, defaultY);
         }
+
 //        canvas.drawPoint(radioCenterX, currentOffset, paint);
 //        canvas.drawPath(path, paint);
         canvas.drawTextOnPath(TEST, path, 0, 0, textPaint);
 
-        canvas.drawCircle(radioCenterX, radioCenterY, defaultRadio, cilclePaint);
+//        canvas.drawCircle(radioCenterX, radioCenterY, defaultRadio, cilclePaint);
+        if (currentBitmap != null) {
+//            Log.i("TAG", "onDraw: " + fraction);
+            canvas.rotate(isUp ? 360 * fraction: 360+360 * fraction, radioCenterX, radioCenterY);
+            canvas.drawBitmap(currentBitmap, radioCenterX - currentBitmap.getWidth() / 2.0f, radioCenterY - currentBitmap.getHeight() / 2.0f, null);
+
+        }
+
     }
 
     private Property<PathTextView, Float> mOffsetProperty = new Property<PathTextView, Float>(Float.class, "offset") {
