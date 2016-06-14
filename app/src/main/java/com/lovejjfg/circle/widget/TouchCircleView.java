@@ -1,4 +1,4 @@
-package com.lovejjfg.circle;
+package com.lovejjfg.circle.widget;
 
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
@@ -8,6 +8,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.util.AttributeSet;
@@ -15,6 +16,9 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
+
+import com.lovejjfg.circle.R;
+import com.lovejjfg.circle.widget.drawable.MaterialProgressDrawable;
 
 /**
  * Created by Joe on 2016/4/3.
@@ -39,6 +43,15 @@ public class TouchCircleView extends View {
     private ValueAnimator animator;
     private int startX;
     private int startY;
+    private Path path;
+    private static final int State_Draw_Arc = 1;
+    private static final int State_Draw_Path = 2;
+    private static final int State_Draw_Circle = 3;
+    //    private static final int State_Draw_Path_Arc = 4;
+    private int currentState;
+    private int measuredHeight;
+    private int measuredWidth;
+    MaterialProgressDrawable drawable;
 
 
     public int getMultipleRadius() {
@@ -90,6 +103,7 @@ public class TouchCircleView extends View {
     //    private float result;
     private Paint containPaint;
     private long angle;
+    private long paths;
     private Paint paint;
 
     public TouchCircleView(Context context) {
@@ -120,21 +134,51 @@ public class TouchCircleView extends View {
                     case MotionEvent.ACTION_DOWN://有事件先拦截再说！！
                         startX = (int) ev.getRawX();
                         startY = (int) ev.getRawY();
+                        rectF.set(measuredWidth - 100, measuredHeight - 100, measuredWidth + 100
+                                , measuredHeight + 100);
                         break;
                     case MotionEvent.ACTION_MOVE://移动的时候
                         int endY = (int) ev.getRawY();
                         int dy = endY - startY;
-                        if (dy < -360) {
-                            dy = -360;
+                        if (dy < 0) {
+                            dy = 0;
                         }
-                        if (dy > 360) {
-                            dy = 360;
-                        }
-                        if (dy!=angle && dy >= -360 && dy <= 360) {
+//                        if (dy > 360) {
+//                            dy = 360;
+//                        }
+//                        if (dy!=angle && dy >= -360 && dy <= 360) {
+                        if (dy != angle && dy >= 0 && dy <= 360) {
+                            rectF.set(measuredWidth - 100, measuredHeight - 100, measuredWidth + 100
+                                    , measuredHeight + 100);
+                            currentState = State_Draw_Arc;
                             angle = dy;
                             Log.i("TAG", "onTouchEvent: " + angle);
                             invalidate();
+                            break;
                         }
+                        if (dy != paths && dy >= 400 && dy <= 760) {
+                            currentState = State_Draw_Path;
+
+                            paths = dy - 360;
+                            if (dy > 560) {//360+半径？？
+                                float precent = dy * 1.0f / 760;
+                                rectF.set(measuredWidth - (100 - precent * 40), measuredHeight - 100, measuredWidth + (100 - precent * 40)
+                                        , measuredHeight + 100);
+
+                            }
+                            invalidate();
+                            Log.i("TAG", "onTouchEvent->pathsssss:: " + paths);
+                            break;
+                        }
+
+                        if (dy >= 780) {
+                            currentState = State_Draw_Circle;
+                            invalidate();
+                            Log.i("TAG", "onTouchEvent->pathsssss:: " + paths);
+                            break;
+                        }
+
+
                         break;
                 }
                 return true;
@@ -142,13 +186,15 @@ public class TouchCircleView extends View {
         });
         rectF = new RectF();
         post(new Runnable() {
+
+
             @Override
             public void run() {
-                int measuredWidth = getMeasuredWidth() / 2;
-                int measuredHeight = getMeasuredHeight() / 2;
+                measuredWidth = getMeasuredWidth() / 2;
+                measuredHeight = getMeasuredHeight() / 2 - 200;
                 Log.e("TAG111", "run: " + measuredWidth);
-                rectF.set(measuredWidth - 200, measuredHeight - 200, measuredWidth + 200
-                        , measuredHeight + 200);
+                rectF.set(measuredWidth - 100, measuredHeight - 100, measuredWidth + 100
+                        , measuredHeight + 100);
                 animator = ValueAnimator.ofInt(0, 360);
                 animator.setInterpolator(new AccelerateDecelerateInterpolator());
                 animator.setDuration(5000);
@@ -161,7 +207,7 @@ public class TouchCircleView extends View {
 
                     }
                 });
-                animator.start();
+//                animator.start();
 
             }
         });
@@ -183,14 +229,16 @@ public class TouchCircleView extends View {
         containPaint = new Paint(circlePaint);
         containPaint.setStrokeWidth(10);
         containPaint.setAntiAlias(true);
-        containPaint.setAlpha(1);
+//        containPaint.setAlpha(1);
+        path = new Path();
+
 
         paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         paint.setStyle(Paint.Style.FILL);
         paint.setAntiAlias(true);
         paint.setStrokeWidth(20);
         paint.setColor(Color.RED);
-        paint.setAlpha(50);
+//        paint.setAlpha(50);
         paint.setStrokeCap(Paint.Cap.SQUARE);
 
 
@@ -213,7 +261,23 @@ public class TouchCircleView extends View {
 //        paint.setAlpha(80);
         //动画的
 //        canvas.drawArc(rectF, 0, angle1 == null ? 0 : angle1, true, paint);
-        canvas.drawArc(rectF, 0, angle, true, paint);
+        switch (currentState) {
+            case State_Draw_Arc:
+                canvas.drawArc(rectF, 0, angle, true, paint);
+                canvas.save();
+                break;
+            case State_Draw_Path:
+                path.reset();
+                path.moveTo((float) (rectF.centerX() - Math.cos(180 / Math.PI * 30) * (rectF.centerX() - rectF.left)), (float) (rectF.centerY() - Math.sin(180 / Math.PI * 30) * (rectF.centerY() - rectF.top)));
+                path.quadTo(rectF.centerX(), rectF.centerY() + paths, (float) (rectF.centerX() + Math.cos(180 / Math.PI * 30) * (rectF.centerX() - rectF.left)), (float) (rectF.centerY() - Math.sin(180 / Math.PI * 30) * (rectF.centerY() - rectF.top)));
+                canvas.drawPath(path, paint);
+                canvas.drawArc(rectF, 0, 360, true, paint);
+                break;
+            case State_Draw_Circle:
+                canvas.drawCircle(rectF.centerX(), rectF.centerY() + 250, 80, paint);
+                break;
+        }
+
 
 //        // 最小圆形
 //        canvas.drawCircle(width / 2, height / 2, minRadius, circlePaint);

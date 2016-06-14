@@ -1,4 +1,4 @@
-package com.lovejjfg.circle;
+package com.lovejjfg.circle.widget;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -9,6 +9,8 @@ import android.os.Handler;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
+
+import com.lovejjfg.circle.R;
 
 /**
  * Created by Joe on 2016/4/3.

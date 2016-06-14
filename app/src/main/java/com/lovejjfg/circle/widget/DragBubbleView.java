@@ -1,4 +1,4 @@
-package com.lovejjfg.circle;
+package com.lovejjfg.circle.widget;
 
 import android.animation.AnimatorSet;
 import android.animation.ValueAnimator;
@@ -12,6 +12,8 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.OvershootInterpolator;
+
+import com.lovejjfg.circle.R;
 
 /**
  * Created by Joe on 2016/4/3.
