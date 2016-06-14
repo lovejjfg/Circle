@@ -10,6 +10,9 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.support.annotation.ColorInt;
+import android.support.annotation.FloatRange;
+import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.support.v4.view.animation.LinearOutSlowInInterpolator;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -33,10 +36,13 @@ public class PathTextView extends View {
     DecelerateInterpolator decelerateInterpolator = new DecelerateInterpolator();
     LinearInterpolator linearInterpolator = new LinearInterpolator();
     LinearOutSlowInInterpolator linearOutSlowInInterpolator = new LinearOutSlowInInterpolator();
+    FastOutSlowInInterpolator fastOutSlowInInterpolator = new FastOutSlowInInterpolator ();
     private Path path;
     private float textWidth;
 
-
+    private static final int Default = 11;
+    private static final int Oblique = 12;
+    private int Mode = Oblique;
     private float defaultRadio = 20;
     private float defaultX = 0;
     private float defaultY = 0;
@@ -49,12 +55,22 @@ public class PathTextView extends View {
     private float radioCenterX;
     private float radioCenterY = defaultRadio;
     private ObjectAnimator distanceDownAnimator;
+
+    public float getAmplitude() {
+        return amplitude;
+    }
+
+    public void setAmplitude(float amplitude) {
+        this.amplitude = amplitude;
+    }
+
     private float amplitude = 30.0f;//振幅
     private BounceInterpolator bounceInterpolator;
     private Bitmap currentBitmap;
     private int currentIndex;
     private float fraction;
     private boolean isUp;
+    private boolean left;
     private ObjectAnimator distanceUpAnimator;
 
     public PathTextView(Context context) {
@@ -114,6 +130,7 @@ public class PathTextView extends View {
         });
         distanceDownAnimator.addListener(new Animator.AnimatorListener() {
             private int count;
+
             @Override
             public void onAnimationStart(Animator animation) {
                 Log.i("TAG", "onAnimationEnd: 开始了！！");
@@ -146,8 +163,9 @@ public class PathTextView extends View {
         distanceDownAnimator.start();
 
         distanceUpAnimator = ObjectAnimator.ofFloat(this, mDistanceProperty, 0);
-        distanceUpAnimator.setDuration(1000);
-        distanceUpAnimator.setInterpolator(decelerateInterpolator);
+        distanceUpAnimator.setDuration(Mode == Default ? 1000 : 3000);
+        // TODO: 2016-06-14 完成第二次的振幅效果
+        distanceUpAnimator.setInterpolator(Mode == Default ? decelerateInterpolator : linearOutSlowInInterpolator);
 //        distanceUpAnimator.setRepeatCount(Integer.MAX_VALUE);
 //        distanceUpAnimator.setRepeatMode(ValueAnimator.INFINITE);
         distanceUpAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
@@ -160,6 +178,7 @@ public class PathTextView extends View {
             @Override
             public void onAnimationStart(Animator animation) {
                 isUp = true;
+                left = !left;
                 Log.i("TAG", "onAnimationEnd: 开始了！！");
             }
 
@@ -189,7 +208,13 @@ public class PathTextView extends View {
         defaultY = h - textHeight; //(h+textHeight*0.5f) / 2.0f;
         offsetAnimator.setFloatValues(defaultY, defaultY + amplitude, defaultY);
         distanceDownAnimator.setFloatValues(radioCenterY, defaultY - textHeight);
-        distanceUpAnimator.setFloatValues(defaultY - textHeight,radioCenterY );
+        if (Mode == Default) {
+            distanceUpAnimator.setFloatValues(defaultY - textHeight, radioCenterY);
+        } else {
+            distanceUpAnimator.setFloatValues(defaultY - textHeight, defaultY - 4 * textHeight, defaultY - textHeight, defaultY - 2 * textHeight);
+
+        }
+
     }
 
     @Override
@@ -217,10 +242,31 @@ public class PathTextView extends View {
         canvas.drawTextOnPath(TEST, path, 0, 0, textPaint);
 
 //        canvas.drawCircle(radioCenterX, radioCenterY, defaultRadio, cilclePaint);
+
         if (currentBitmap != null) {
-//            Log.i("TAG", "onDraw: " + fraction);
-            canvas.rotate(isUp ? 360 * fraction: 360+360 * fraction, radioCenterX, radioCenterY);
-            canvas.drawBitmap(currentBitmap, radioCenterX - currentBitmap.getWidth() / 2.0f, radioCenterY - currentBitmap.getHeight() / 2.0f, null);
+            if (!isUp) {
+                canvas.rotate(isUp ? 360 * fraction : 360 + 360 * fraction, radioCenterX, radioCenterY);
+                canvas.drawBitmap(currentBitmap, radioCenterX - currentBitmap.getWidth() / 2.0f, radioCenterY - currentBitmap.getHeight() / 2.0f, null);
+                return;
+            }
+            switch (Mode) {
+                case Default:
+                    canvas.rotate(isUp ? 360 * fraction : 360 + 360 * fraction, radioCenterX, radioCenterY);
+                    canvas.drawBitmap(currentBitmap, radioCenterX - currentBitmap.getWidth() / 2.0f, radioCenterY - currentBitmap.getHeight() / 2.0f, null);
+                    break;
+                case Oblique:
+                    float x = left ? radioCenterX * fraction : radioCenterX * fraction * -1.0f;
+                    canvas.translate(x, 0);
+                    // TODO: 2016-06-14 又是旋转又是平移的中心点坐标
+//                    canvas.rotate(360 * fraction, radioCenterX+x*0.5f, radioCenterY);
+                    int i1 = blendColors(Color.WHITE, Color.TRANSPARENT, fraction);
+                    cilclePaint.setColor(i1);
+
+                    canvas.drawBitmap(currentBitmap, radioCenterX - currentBitmap.getWidth() / 2.0f, radioCenterY - currentBitmap.getHeight() / 2.0f, cilclePaint);
+
+                    break;
+
+            }
 
         }
 
@@ -267,5 +313,19 @@ public class PathTextView extends View {
 
     public Float getCurrentDistance() {
         return radioCenterY;
+    }
+
+
+    public static
+    @ColorInt
+    int blendColors(@ColorInt int color1,
+                    @ColorInt int color2,
+                    @FloatRange(from = 0f, to = 1f) float ratio) {
+        final float inverseRatio = 1f - ratio;
+        float a = (Color.alpha(color1) * inverseRatio) + (Color.alpha(color2) * ratio);
+        float r = (Color.red(color1) * inverseRatio) + (Color.red(color2) * ratio);
+        float g = (Color.green(color1) * inverseRatio) + (Color.green(color2) * ratio);
+        float b = (Color.blue(color1) * inverseRatio) + (Color.blue(color2) * ratio);
+        return Color.argb((int) a, (int) r, (int) g, (int) b);
     }
 }

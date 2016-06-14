@@ -44,9 +44,11 @@ public class TouchCircleView extends View {
     private int startX;
     private int startY;
     private Path path;
+    private Path mArrow;
     private static final int State_Draw_Arc = 1;
     private static final int State_Draw_Path = 2;
     private static final int State_Draw_Circle = 3;
+    private static final int State_Draw_Arrow = 4;
     //    private static final int State_Draw_Path_Arc = 4;
     private int currentState;
     private int measuredHeight;
@@ -218,19 +220,14 @@ public class TouchCircleView extends View {
         rect = new Rect(0, 0, bitmap.getWidth() + 100, bitmap.getHeight() + 100);
 
 
-        cirRadius = 200;
         circlePaint = new Paint();
-        circlePaint.setColor(Color.WHITE);
+        circlePaint.setColor(Color.BLUE);
+        circlePaint.setStrokeWidth(10);
         circlePaint.setStyle(Paint.Style.STROKE);
         circlePaint.setAntiAlias(true);
         circlePaint.setAlpha(50);
-        wavePaint = new Paint(circlePaint);
-        wavePaint.setStyle(Paint.Style.FILL);
-        containPaint = new Paint(circlePaint);
-        containPaint.setStrokeWidth(10);
-        containPaint.setAntiAlias(true);
-//        containPaint.setAlpha(1);
         path = new Path();
+        mArrow = new Path();
 
 
         paint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -263,8 +260,19 @@ public class TouchCircleView extends View {
 //        canvas.drawArc(rectF, 0, angle1 == null ? 0 : angle1, true, paint);
         switch (currentState) {
             case State_Draw_Arc:
-                canvas.drawArc(rectF, 0, angle, true, paint);
-                canvas.save();
+//                canvas.drawArc(rectF, 0, angle, true, paint);
+//                canvas.drawArc(rectF, 0, angle, false, circlePaint);
+//                float inset = (int) mStrokeInset / 2 * mArrowScale;
+                canvas.rotate(angle, rectF.centerX(), rectF.centerY());
+                mArrow.reset();
+                float arrowX = (float) (Math.cos(180 / Math.PI * angle) * (rectF.centerX() - rectF.left));
+                float arrowY = (float) (Math.sin(180 / Math.PI * angle) * (rectF.centerX() - rectF.left));
+                mArrow.moveTo(arrowX, arrowY);
+                mArrow.lineTo(rectF.centerX()+20, rectF.centerY());
+                mArrow.lineTo(rectF.centerX()+20, rectF.centerY()+20);
+//                mArrow.offset(x - inset, y);
+                mArrow.close();
+                canvas.drawPath(mArrow, circlePaint);
                 break;
             case State_Draw_Path:
                 path.reset();

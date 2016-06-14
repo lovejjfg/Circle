@@ -14,8 +14,8 @@ import android.view.MenuItem;
 import com.lovejjfg.circle.R;
 import com.lovejjfg.circle.fragment.Fragment1;
 import com.lovejjfg.circle.fragment.Fragment2;
-import com.lovejjfg.circle.fragment.Fragment3;
 import com.lovejjfg.circle.fragment.Fragment4;
+import com.lovejjfg.circle.fragment.Fragment5;
 
 import java.util.ArrayList;
 
@@ -52,7 +52,7 @@ public class TabActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         fragments = new ArrayList<>();
-        fragments.add(Fragment3.newInstance(1));
+        fragments.add(Fragment5.newInstance(1));
         fragments.add(Fragment1.newInstance(1));
         fragments.add(Fragment2.newInstance(1));
         fragments.add(Fragment4.newInstance(1));
