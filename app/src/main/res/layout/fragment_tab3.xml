@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipChildren="false"
+    tools:context=".view.TabActivity">
+
+    <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:orientation="vertical"-->
+        <!--&gt;-->
+        <!--&lt;!&ndash;默认半径&ndash;&gt;-->
+        <!--<TextView-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:gravity="center"-->
+            <!--android:text="默认半径"-->
+            <!--/>-->
+
+        <!--<SeekBar-->
+            <!--android:id="@+id/pb_cirRadius"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:max="170"-->
+
+            <!--/>-->
+     <!--<LinearLayout-->
+         <!--android:layout_marginTop="16dp"-->
+         <!--android:layout_width="wrap_content"-->
+         <!--android:layout_height="wrap_content">-->
+         <!--<TextView-->
+             <!--android:layout_width="wrap_content"-->
+             <!--android:layout_height="wrap_content"-->
+             <!--android:text="填充显示"-->
+             <!--/>-->
+        <!--<CheckBox-->
+            <!--android:id="@+id/cb_fill"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"/>-->
+
+     <!--</LinearLayout>-->
+
+    <!--</LinearLayout>-->
+
+
+    <com.lovejjfg.circle.widget.TouchCircleView
+        android:id="@+id/dbv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"/>
+
+
+</FrameLayout>

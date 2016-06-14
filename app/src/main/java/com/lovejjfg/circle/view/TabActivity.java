@@ -1,4 +1,4 @@
-package com.lovejjfg.circle;
+package com.lovejjfg.circle.view;
 
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -11,8 +11,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.lovejjfg.circle.R;
 import com.lovejjfg.circle.fragment.Fragment1;
 import com.lovejjfg.circle.fragment.Fragment2;
+import com.lovejjfg.circle.fragment.Fragment3;
+import com.lovejjfg.circle.fragment.Fragment4;
 
 import java.util.ArrayList;
 
@@ -49,9 +52,10 @@ public class TabActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         fragments = new ArrayList<>();
+        fragments.add(Fragment3.newInstance(1));
         fragments.add(Fragment1.newInstance(1));
         fragments.add(Fragment2.newInstance(1));
-        fragments.add(Fragment1.newInstance(1));
+        fragments.add(Fragment4.newInstance(1));
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
@@ -121,6 +125,8 @@ public class TabActivity extends AppCompatActivity {
                     return "SECTION 2";
                 case 2:
                     return "SECTION 3";
+                case 3:
+                    return "SECTION 4";
             }
             return null;
         }

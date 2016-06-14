@@ -6,10 +6,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SeekBar;
-import android.widget.TextView;
 
 import com.lovejjfg.circle.R;
-import com.lovejjfg.circle.RipplesView;
+import com.lovejjfg.circle.widget.RipplesView;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;

@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Circle</string>
-    <string name="title_activity_tab">TabActivity</string>
+    <string name="title_activity_tab">Circle</string>
     <string name="action_settings">Settings</string>
     <string name="section_format">Hello World from section: %1$d</string>
+    <string name="animator_over">动画结束</string>
 </resources>

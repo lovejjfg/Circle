@@ -9,7 +9,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.SeekBar;
 
-import com.lovejjfg.circle.DragBubbleView;
+import com.lovejjfg.circle.widget.DragBubbleView;
 import com.lovejjfg.circle.R;
 
 import butterknife.Bind;
