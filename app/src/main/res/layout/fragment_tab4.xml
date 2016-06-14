@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:clipChildren="false"
     android:gravity="center"
-    tools:context=".view.Test2Activity">
+    tools:context=".view.TabActivity">
 
     <com.lovejjfg.circle.widget.CircleView
         android:id="@+id/circle"
