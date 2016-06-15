@@ -53,7 +53,7 @@ public class PathTextView extends View {
     private float textHeight;
     private Paint cilclePaint;
     private float radioCenterX;
-    private float radioCenterY = defaultRadio;
+    private float radioCenterY ;
     private ObjectAnimator distanceDownAnimator;
 
     public float getAmplitude() {
@@ -64,7 +64,7 @@ public class PathTextView extends View {
         this.amplitude = amplitude;
     }
 
-    private float amplitude = 30.0f;//振幅
+    private float amplitude = 100.0f;//振幅
     private BounceInterpolator bounceInterpolator;
     private Bitmap currentBitmap;
     private int currentIndex;
@@ -93,10 +93,11 @@ public class PathTextView extends View {
         bitmaps.add(BitmapFactory.decodeResource(getResources(), R.mipmap.fruit3));
         bitmaps.add(BitmapFactory.decodeResource(getResources(), R.mipmap.fruit4));
         currentBitmap = bitmaps.get(0);
+        radioCenterY = currentBitmap.getHeight() / 2.0f;
         path = new Path();
         textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         textPaint.setStyle(Paint.Style.FILL);
-        textPaint.setTextSize(30);
+        textPaint.setTextSize(sp2px(getContext(), 16));
         textPaint.setColor(Color.RED);
         textPaint.setStrokeCap(Paint.Cap.ROUND);
         textPaint.setTextAlign(Paint.Align.LEFT);
@@ -139,6 +140,7 @@ public class PathTextView extends View {
                     currentIndex = 0;
                 }
                 currentBitmap = bitmaps.get(currentIndex);
+                radioCenterY = currentBitmap.getHeight() / 2.0f;
 //                offsetAnimator.cancel();
 //                distanceUpAnimator.cancel();
             }
@@ -207,7 +209,7 @@ public class PathTextView extends View {
         textHeight = textPaint.getFontMetrics().bottom - textPaint.getFontMetrics().top;
         defaultY = h - textHeight; //(h+textHeight*0.5f) / 2.0f;
         offsetAnimator.setFloatValues(defaultY, defaultY + amplitude, defaultY);
-        distanceDownAnimator.setFloatValues(radioCenterY, defaultY - textHeight);
+        distanceDownAnimator.setFloatValues(radioCenterY, defaultY -textHeight );//到文字的顶部就好
         if (Mode == Default) {
             distanceUpAnimator.setFloatValues(defaultY - textHeight, radioCenterY);
         } else {
@@ -327,5 +329,9 @@ public class PathTextView extends View {
         float g = (Color.green(color1) * inverseRatio) + (Color.green(color2) * ratio);
         float b = (Color.blue(color1) * inverseRatio) + (Color.blue(color2) * ratio);
         return Color.argb((int) a, (int) r, (int) g, (int) b);
+    }
+    public static float sp2px(Context context, float sp) {
+        float scaledDensity = context.getResources().getDisplayMetrics().scaledDensity;
+        return sp * scaledDensity;
     }
 }
