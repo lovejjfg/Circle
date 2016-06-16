@@ -22,56 +22,57 @@ import android.view.animation.BounceInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.LinearInterpolator;
 
+import com.lovejjfg.circle.listener.SimpleAnimatorListener;
 import com.lovejjfg.circle.R;
 
 import java.util.ArrayList;
 
 /**
  * Created by Joe on 2016-06-14
- * Email: zhangjun166@pingan.com.cn
+ * Email: lovejjfg@gmail.com
  */
 public class PathTextView extends View {
+    private static final String TAG = PathTextView.class.getSimpleName();
+
     private static String TEST = "这就是一个测试哎哟不错哦哦测试！！哎哟";
-    private static int[] COLOR = {Color.BLUE, Color.RED, Color.GRAY, Color.GREEN, Color.BLUE};
-    DecelerateInterpolator decelerateInterpolator = new DecelerateInterpolator();
-    LinearInterpolator linearInterpolator = new LinearInterpolator();
-    LinearOutSlowInInterpolator linearOutSlowInInterpolator = new LinearOutSlowInInterpolator();
-    FastOutSlowInInterpolator fastOutSlowInInterpolator = new FastOutSlowInInterpolator ();
+    //    private static int[] COLOR = {Color.BLUE, Color.RED, Color.GRAY, Color.GREEN, Color.BLUE};
+    private DecelerateInterpolator decelerateInterpolator = new DecelerateInterpolator();
+    private LinearInterpolator linearInterpolator = new LinearInterpolator();
+    private LinearOutSlowInInterpolator linearOutSlowInInterpolator = new LinearOutSlowInInterpolator();
+    private FastOutSlowInInterpolator fastOutSlowInInterpolator = new FastOutSlowInInterpolator();
+    private BounceInterpolator bounceInterpolator = new BounceInterpolator();
     private Path path;
     private float textWidth;
 
-    private static final int Default = 11;
-    private static final int Oblique = 12;
-    private int Mode = Default;
+    public static final int Default = 11;//默认
+    public static final int Bounce = 12;//反弹
+    public static final int Oblique = 13;//倾斜飞出
+
+    private int Mode = Bounce;
     private float defaultRadio = 20;
-    private float defaultX = 0;
-    private float defaultY = 0;
+    private float defaultX = 0;//文字的默认x
+    private float defaultY = 0;//文字的默认y
     private Paint textPaint;
-    private float currentOffset = -1;
+    private float currentOffset = -1;//文字偏移量
     private Paint paint;
-    private ObjectAnimator offsetAnimator;
+    private ObjectAnimator offsetAnimator;//偏移动画
     private float textHeight;
     private Paint cilclePaint;
     private float radioCenterX;
-    private float radioCenterY ;
+    private float radioCenterY;
     private ObjectAnimator distanceDownAnimator;
+    private int currentHeight;
+    private float dXXX;//x方向的偏移量
 
-    public float getAmplitude() {
-        return amplitude;
-    }
-
-    public void setAmplitude(float amplitude) {
-        this.amplitude = amplitude;
-    }
 
     private float amplitude = 100.0f;//振幅
-    private BounceInterpolator bounceInterpolator;
     private Bitmap currentBitmap;
     private int currentIndex;
     private float fraction;
     private boolean isUp;
     private boolean left;
     private ObjectAnimator distanceUpAnimator;
+    private float density;
 
     public PathTextView(Context context) {
         this(context, null);
@@ -87,6 +88,7 @@ public class PathTextView extends View {
     }
 
     private void init() {
+        density = getContext().getResources().getDisplayMetrics().density;
         final ArrayList<Bitmap> bitmaps = new ArrayList<>(4);
         bitmaps.add(BitmapFactory.decodeResource(getResources(), R.mipmap.fruit1));
         bitmaps.add(BitmapFactory.decodeResource(getResources(), R.mipmap.fruit2));
@@ -104,6 +106,7 @@ public class PathTextView extends View {
 
         textWidth = textPaint.measureText(TEST);
         paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeWidth(5);
         paint.setColor(Color.GREEN);
 
@@ -115,108 +118,121 @@ public class PathTextView extends View {
         textWidth = textPaint.measureText(TEST);
         offsetAnimator = ObjectAnimator.ofFloat(this, mOffsetProperty, 0);
         offsetAnimator.setDuration(300);
-        bounceInterpolator = new BounceInterpolator();
         offsetAnimator.setInterpolator(bounceInterpolator);
 
         distanceDownAnimator = ObjectAnimator.ofFloat(this, mDistanceProperty, 0);
-        distanceDownAnimator.setDuration(1000);
         distanceDownAnimator.setInterpolator(linearInterpolator);
-//        distanceDownAnimator.setRepeatCount(Integer.MAX_VALUE);
-//        distanceDownAnimator.setRepeatMode(ValueAnimator.INFINITE);
         distanceDownAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 fraction = animation.getAnimatedFraction();
             }
         });
-        distanceDownAnimator.addListener(new Animator.AnimatorListener() {
-            private int count;
+        distanceDownAnimator.addListener(new SimpleAnimatorListener() {
 
             @Override
             public void onAnimationStart(Animator animation) {
-                Log.i("TAG", "onAnimationEnd: 开始了！！");
                 isUp = false;
+                dXXX = 0;
                 if (++currentIndex >= bitmaps.size()) {
                     currentIndex = 0;
                 }
                 currentBitmap = bitmaps.get(currentIndex);
                 radioCenterY = currentBitmap.getHeight() / 2.0f;
-//                offsetAnimator.cancel();
-//                distanceUpAnimator.cancel();
+//
             }
 
             @Override
             public void onAnimationEnd(Animator animation) {
-                Log.i("TAG", "onAnimationEnd: 结束了！！");
-                distanceUpAnimator.start();
+                offsetAnimator.cancel();
+                offsetAnimator.setDuration(200);
+                offsetAnimator.setFloatValues(defaultY, defaultY + amplitude, defaultY);
                 offsetAnimator.start();
 
-            }
+                distanceUpAnimator.start();
 
-            @Override
-            public void onAnimationCancel(Animator animation) {
-                Log.i("TAG", "onAnimationEnd: 取消了！！");
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animation) {
             }
         });
         distanceDownAnimator.start();
 
         distanceUpAnimator = ObjectAnimator.ofFloat(this, mDistanceProperty, 0);
-        distanceUpAnimator.setDuration(Mode == Default ? 1000 : 3000);
-        // TODO: 2016-06-14 完成第二次的振幅效果
-        distanceUpAnimator.setInterpolator(Mode == Default ? decelerateInterpolator : linearOutSlowInInterpolator);
 //        distanceUpAnimator.setRepeatCount(Integer.MAX_VALUE);
 //        distanceUpAnimator.setRepeatMode(ValueAnimator.INFINITE);
         distanceUpAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 fraction = animation.getAnimatedFraction();
+                float f = (Float) animation.getAnimatedValue();
+                // TODO: 2016-06-15 这里有点儿取巧，需要优化。！！
+                if ((int) (defaultY - textHeight + density) == (int) f ) {
+//                    offsetAnimator
+                    dXXX = (left ? radioCenterX * fraction : radioCenterX * fraction * -1.0f);
+                    offsetAnimator.cancel();
+                    offsetAnimator.setDuration(300);
+                    offsetAnimator.setFloatValues(defaultY, defaultY + 50, defaultY);
+                    offsetAnimator.start();
+                    Log.i(TAG, "onAnimationUpdate: YY" + (int) f);
+                    Log.i(TAG, "onAnimationUpdate: XX" + (left ? radioCenterX * fraction : radioCenterX * fraction * -1.0f));
+                }
             }
         });
-        distanceUpAnimator.addListener(new Animator.AnimatorListener() {
+        distanceUpAnimator.addListener(new SimpleAnimatorListener() {
             @Override
             public void onAnimationStart(Animator animation) {
                 isUp = true;
                 left = !left;
-                Log.i("TAG", "onAnimationEnd: 开始了！！");
             }
 
             @Override
             public void onAnimationEnd(Animator animation) {
                 distanceDownAnimator.start();
-                Log.i("TAG", "onAnimationEnd: 结束了！！");
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animation) {
-                Log.i("TAG", "onAnimationEnd: 取消了！！");
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animation) {
-
             }
         });
-//        distanceUpAnimator.start();
     }
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        Log.i(TAG, "onSizeChanged: size改变了！！！！");
         super.onSizeChanged(w, h, oldw, oldh);
+        currentHeight = h;
+        initAnim(h);
+    }
+
+    private void initAnim(int currentHeight) {
+//        distanceUpAnimator.cancel();
+//        distanceDownAnimator.cancel();
+        radioCenterY = currentBitmap.getHeight() / 2.0f;//初始化默认高度
         textHeight = textPaint.getFontMetrics().bottom - textPaint.getFontMetrics().top;
-        defaultY = h - textHeight; //(h+textHeight*0.5f) / 2.0f;
+        defaultY = currentHeight - textHeight; //(h+textHeight*0.5f) / 2.0f;
         offsetAnimator.setFloatValues(defaultY, defaultY + amplitude, defaultY);
-        distanceDownAnimator.setFloatValues(radioCenterY, defaultY -textHeight );//到文字的顶部就好
-        if (Mode == Default) {
-            distanceUpAnimator.setFloatValues(defaultY - textHeight, radioCenterY);
-        } else {
-            distanceUpAnimator.setFloatValues(defaultY - textHeight, defaultY - 4 * textHeight, defaultY - textHeight, defaultY - 2 * textHeight);
+        distanceDownAnimator.setFloatValues(radioCenterY, defaultY - textHeight);//到文字的顶部就好
+        Log.i(TAG, "initAnim: radioCenterY:" + radioCenterY + ";;TO:" + (defaultY - textHeight));
 
+//        distanceDownAnimator.start();
+        switch (Mode) {
+            case Default:
+                distanceDownAnimator.setDuration(1000);
+                distanceUpAnimator.setDuration(1000);
+                distanceUpAnimator.setInterpolator(decelerateInterpolator);
+                distanceUpAnimator.setFloatValues(defaultY - textHeight, radioCenterY);
+                break;
+            case Oblique:
+                distanceDownAnimator.setDuration(500);
+
+                distanceUpAnimator.setDuration(1000);
+                distanceUpAnimator.setInterpolator(decelerateInterpolator);
+                distanceUpAnimator.setFloatValues(defaultY - textHeight, defaultY - 6 * textHeight);//到达不了最高处
+                break;
+            case Bounce:
+                // TODO: 2016-06-14 完成第二次的振幅效果
+                distanceDownAnimator.setDuration(1000);
+
+                distanceUpAnimator.setDuration(3000);
+                distanceUpAnimator.setInterpolator(linearOutSlowInInterpolator);
+                // TODO: 2016-06-15 这里要---1
+                distanceUpAnimator.setFloatValues(defaultY - textHeight - density, defaultY - 4 * textHeight, defaultY - textHeight + density*1.5f, defaultY - 2 * textHeight);
+                break;
         }
-
     }
 
     @Override
@@ -230,42 +246,41 @@ public class PathTextView extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
+        float dX = (left ? radioCenterX * fraction : radioCenterX * fraction * -1.0f);
         path.reset();
         path.moveTo(defaultX, defaultY);
         radioCenterX = (defaultX + textWidth) / 2.0f;
+//        radioCenterX = dXXX == 0 ? (defaultX + textWidth) / 2.0f : dXXX;
         if (currentOffset != -1) {
-            path.quadTo(radioCenterX, currentOffset, textWidth, defaultY);
+            path.quadTo(dXXX == 0 ? radioCenterX : radioCenterX + dXXX, currentOffset, textWidth, defaultY);
         } else {
             path.lineTo(textWidth, defaultY);
         }
+//        canvas.drawPoint(dXXX == 0 ? radioCenterX : -dXXX, currentOffset, paint);//测试使用！
 
-//        canvas.drawPoint(radioCenterX, currentOffset, paint);
-//        canvas.drawPath(path, paint);
         canvas.drawTextOnPath(TEST, path, 0, 0, textPaint);
-
-//        canvas.drawCircle(radioCenterX, radioCenterY, defaultRadio, cilclePaint);
+        canvas.drawPath(path, paint);//测试使用
 
         if (currentBitmap != null) {
             if (!isUp) {
-                canvas.rotate(isUp ? 360 * fraction : 360 + 360 * fraction, radioCenterX, radioCenterY);
+                canvas.rotate(360 + 360 * fraction, radioCenterX, radioCenterY);
                 canvas.drawBitmap(currentBitmap, radioCenterX - currentBitmap.getWidth() / 2.0f, radioCenterY - currentBitmap.getHeight() / 2.0f, null);
                 return;
             }
             switch (Mode) {
                 case Default:
-                    canvas.rotate(isUp ? 360 * fraction : 360 + 360 * fraction, radioCenterX, radioCenterY);
+                    canvas.rotate(360 * fraction, radioCenterX, radioCenterY);
                     canvas.drawBitmap(currentBitmap, radioCenterX - currentBitmap.getWidth() / 2.0f, radioCenterY - currentBitmap.getHeight() / 2.0f, null);
                     break;
+                case Bounce:
                 case Oblique:
-                    float x = left ? radioCenterX * fraction : radioCenterX * fraction * -1.0f;
-                    canvas.translate(x, 0);
+                    canvas.rotate(360 * fraction, radioCenterX + dX, radioCenterY);
+                    canvas.translate(dX, 0);
                     // TODO: 2016-06-14 又是旋转又是平移的中心点坐标
 //                    canvas.rotate(360 * fraction, radioCenterX+x*0.5f, radioCenterY);
                     int i1 = blendColors(Color.WHITE, Color.TRANSPARENT, fraction);
                     cilclePaint.setColor(i1);
-
                     canvas.drawBitmap(currentBitmap, radioCenterX - currentBitmap.getWidth() / 2.0f, radioCenterY - currentBitmap.getHeight() / 2.0f, cilclePaint);
-
                     break;
 
             }
@@ -330,8 +345,35 @@ public class PathTextView extends View {
         float b = (Color.blue(color1) * inverseRatio) + (Color.blue(color2) * ratio);
         return Color.argb((int) a, (int) r, (int) g, (int) b);
     }
+
     public static float sp2px(Context context, float sp) {
         float scaledDensity = context.getResources().getDisplayMetrics().scaledDensity;
         return sp * scaledDensity;
     }
+
+    public void setMode(int mode) {
+        if (Mode != mode) {
+            this.Mode = mode;
+            initAnim(currentHeight);
+        }
+    }
+
+    @SuppressWarnings("unused")
+    public float getAmplitude() {
+        return amplitude;
+    }
+
+    @SuppressWarnings("unused")
+    public void setAmplitude(float amplitude) {
+        this.amplitude = amplitude;
+    }
+
+    public static String getText() {
+        return TEST;
+    }
+
+    public static void setText(String TEST) {
+        PathTextView.TEST = TEST;
+    }
+
 }

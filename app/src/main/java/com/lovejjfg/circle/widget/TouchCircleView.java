@@ -18,7 +18,7 @@ import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 
 import com.lovejjfg.circle.R;
-import com.lovejjfg.circle.widget.drawable.MaterialProgressDrawable;
+import com.lovejjfg.circle.anim.drawable.MaterialProgressDrawable;
 
 /**
  * Created by Joe on 2016/4/3.
