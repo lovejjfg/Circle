@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.lovejjfg.circle.widget.drawable;
+package com.lovejjfg.circle.anim.drawable;
 
 import android.content.Context;
 import android.content.res.Resources;

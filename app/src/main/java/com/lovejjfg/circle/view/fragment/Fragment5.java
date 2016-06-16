@@ -1,15 +1,20 @@
-package com.lovejjfg.circle.fragment;
+package com.lovejjfg.circle.view.fragment;
 
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.lovejjfg.circle.R;
-import com.lovejjfg.circle.widget.drawable.StrokeGradientDrawable;
+import com.lovejjfg.circle.anim.drawable.StrokeGradientDrawable;
+import com.lovejjfg.circle.widget.PathTextView;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
 
 /**
@@ -21,6 +26,8 @@ public class Fragment5 extends Fragment {
      * The fragment argument representing the section number for this
      * fragment.
      */
+    @Bind(R.id.ptv)
+    PathTextView mPtv;
     private static final String ARG_SECTION_NUMBER = "section_number";
     private StrokeGradientDrawable drawable;
     private GradientDrawable gradientDrawable;
@@ -50,9 +57,28 @@ public class Fragment5 extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_tab5, container, false);
         ButterKnife.bind(this, rootView);
-
+        setHasOptionsMenu(true);
         return rootView;
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_tab, menu);
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_default:
+                mPtv.setMode(PathTextView.Default);
+                break;
+            case R.id.action_bounce:
+                mPtv.setMode(PathTextView.Bounce);
+                break;
+            case R.id.action_oblique:
+                mPtv.setMode(PathTextView.Oblique);
+                break;
+        }
+        return true;
+    }
 }

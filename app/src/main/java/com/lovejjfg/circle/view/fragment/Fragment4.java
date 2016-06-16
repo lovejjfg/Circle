@@ -1,4 +1,4 @@
-package com.lovejjfg.circle.fragment;
+package com.lovejjfg.circle.view.fragment;
 
 import android.graphics.Color;
 import android.graphics.Rect;
@@ -11,11 +11,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.lovejjfg.circle.MorphingAnimator;
-import com.lovejjfg.circle.OnAnimationEndListener;
+import com.lovejjfg.circle.anim.MorphingAnimator;
+import com.lovejjfg.circle.listener.OnAnimationEndListener;
 import com.lovejjfg.circle.R;
 import com.lovejjfg.circle.widget.CircleView;
-import com.lovejjfg.circle.widget.drawable.StrokeGradientDrawable;
+import com.lovejjfg.circle.anim.drawable.StrokeGradientDrawable;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -124,7 +124,7 @@ public class Fragment4 extends Fragment {
 //            animator.setLeft(0);
 //            animator.setoffset(2 * 36);
             MorphingAnimator animator = new MorphingAnimator(mBt, drawable);
-            animator.setDuration(10000);
+            animator.setDuration(2000);
             animator.setFromColor(Color.RED);
             animator.setToColor(Color.BLUE);
 //        animator.setPadding(25);

@@ -1,4 +1,4 @@
-package com.lovejjfg.circle;
+package com.lovejjfg.circle.anim;
 
 import android.animation.Animator;
 import android.animation.AnimatorSet;
@@ -13,7 +13,8 @@ import android.support.v4.view.animation.LinearOutSlowInInterpolator;
 import android.util.Log;
 import android.widget.TextView;
 
-import com.lovejjfg.circle.widget.drawable.StrokeGradientDrawable;
+import com.lovejjfg.circle.listener.OnAnimationEndListener;
+import com.lovejjfg.circle.anim.drawable.StrokeGradientDrawable;
 
 /**
  * Created by Joe on 2016-06-13

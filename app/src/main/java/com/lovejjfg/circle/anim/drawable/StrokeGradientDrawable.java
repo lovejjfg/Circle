@@ -1,4 +1,4 @@
-package com.lovejjfg.circle.widget.drawable;
+package com.lovejjfg.circle.anim.drawable;
 
 import android.graphics.drawable.GradientDrawable;
 

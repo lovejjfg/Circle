@@ -1,4 +1,4 @@
-package com.lovejjfg.circle.fragment;
+package com.lovejjfg.circle.view.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

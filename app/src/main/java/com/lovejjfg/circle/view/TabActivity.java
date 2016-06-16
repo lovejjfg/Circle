@@ -8,15 +8,13 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
 
 import com.lovejjfg.circle.R;
-import com.lovejjfg.circle.fragment.Fragment1;
-import com.lovejjfg.circle.fragment.Fragment2;
-import com.lovejjfg.circle.fragment.Fragment3;
-import com.lovejjfg.circle.fragment.Fragment4;
-import com.lovejjfg.circle.fragment.Fragment5;
+import com.lovejjfg.circle.view.fragment.Fragment1;
+import com.lovejjfg.circle.view.fragment.Fragment2;
+import com.lovejjfg.circle.view.fragment.Fragment3;
+import com.lovejjfg.circle.view.fragment.Fragment4;
+import com.lovejjfg.circle.view.fragment.Fragment5;
 
 import java.util.ArrayList;
 
@@ -70,27 +68,6 @@ public class TabActivity extends AppCompatActivity {
     }
 
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_tab, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
 
 
     /**
