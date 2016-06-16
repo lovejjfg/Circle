@@ -90,10 +90,14 @@ public class PathTextView extends View {
     private void init() {
         density = getContext().getResources().getDisplayMetrics().density;
         final ArrayList<Bitmap> bitmaps = new ArrayList<>(4);
-        bitmaps.add(BitmapFactory.decodeResource(getResources(), R.mipmap.fruit1));
-        bitmaps.add(BitmapFactory.decodeResource(getResources(), R.mipmap.fruit2));
-        bitmaps.add(BitmapFactory.decodeResource(getResources(), R.mipmap.fruit3));
-        bitmaps.add(BitmapFactory.decodeResource(getResources(), R.mipmap.fruit4));
+        bitmaps.add(BitmapFactory.decodeResource(getResources(), R.drawable.fruit1));
+        bitmaps.add(BitmapFactory.decodeResource(getResources(), R.drawable.fruit2));
+        bitmaps.add(BitmapFactory.decodeResource(getResources(), R.drawable.fruit3));
+        bitmaps.add(BitmapFactory.decodeResource(getResources(), R.drawable.fruit4));
+        bitmaps.add(BitmapFactory.decodeResource(getResources(), R.drawable.fruit5));
+        bitmaps.add(BitmapFactory.decodeResource(getResources(), R.drawable.fruit6));
+        bitmaps.add(BitmapFactory.decodeResource(getResources(), R.drawable.fruit7));
+        bitmaps.add(BitmapFactory.decodeResource(getResources(), R.drawable.fruit8));
         currentBitmap = bitmaps.get(0);
         radioCenterY = currentBitmap.getHeight() / 2.0f;
         path = new Path();
