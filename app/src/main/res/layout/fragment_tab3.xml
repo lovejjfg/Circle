@@ -46,8 +46,7 @@
     <!--</LinearLayout>-->
 
 
-    <com.lovejjfg.circle.widget.TouchCircleView
-        android:id="@+id/dbv"
+    <com.lovejjfg.circle.widget.LoadingView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"/>

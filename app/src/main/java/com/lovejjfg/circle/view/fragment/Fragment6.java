@@ -3,7 +3,6 @@ package com.lovejjfg.circle.view.fragment;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -13,7 +12,6 @@ import android.view.ViewGroup;
 
 import com.lovejjfg.circle.R;
 import com.lovejjfg.circle.anim.drawable.StrokeGradientDrawable;
-import com.lovejjfg.circle.widget.IndexBar;
 import com.lovejjfg.circle.widget.PathTextView;
 
 import butterknife.Bind;
@@ -23,22 +21,20 @@ import butterknife.ButterKnife;
  * Created by Joe on 2016-06-09
  * Email: zhangjun166@pingan.com.cn
  */
-public class Fragment5 extends Fragment {
+public class Fragment6 extends Fragment {
     /**
      * The fragment argument representing the section number for this
      * fragment.
      */
     @Bind(R.id.ptv)
     PathTextView mPtv;
-    @Bind(R.id.index)
-    IndexBar mIndex;
     private static final String ARG_SECTION_NUMBER = "section_number";
     private StrokeGradientDrawable drawable;
     private GradientDrawable gradientDrawable;
     private float density;
     private boolean flag;
 
-    public Fragment5() {
+    public Fragment6() {
     }
 
 //    @Bind(R.id.ptv)
@@ -48,10 +44,9 @@ public class Fragment5 extends Fragment {
      * Returns a new instance of this fragment for the given section
      * number.
      */
-    public static Fragment5 newInstance(int sectionNumber) {
-        Fragment5 fragment = new Fragment5();
+    public static Fragment6 newInstance(int sectionNumber) {
+        Fragment6 fragment = new Fragment6();
         Bundle args = new Bundle();
-//        Toast toast = new Toast(getActivity());
         args.putInt(ARG_SECTION_NUMBER, sectionNumber);
         fragment.setArguments(args);
         return fragment;
@@ -63,13 +58,6 @@ public class Fragment5 extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_tab5, container, false);
         ButterKnife.bind(this, rootView);
         setHasOptionsMenu(true);
-        mIndex.setOnLetterChangeListener(new IndexBar.OnLetterChangeListener() {
-            @Override
-            public void onLetterChange(String letter) {
-                Log.i("TAG", "onLetterChange: " + letter);
-
-            }
-        });
         return rootView;
     }
 

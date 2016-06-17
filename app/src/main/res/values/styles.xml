@@ -13,4 +13,10 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <declare-styleable name="IndexBar">
+        <attr name="normalColor" format="color"/>
+        <attr name="selecColor" format="color"/>
+        <attr name="indexSize" format="dimension"/>
+    </declare-styleable>
+
 </resources>

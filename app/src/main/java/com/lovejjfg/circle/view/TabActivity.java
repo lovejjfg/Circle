@@ -51,10 +51,10 @@ public class TabActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         fragments = new ArrayList<>();
+        fragments.add(Fragment3.newInstance(1));
         fragments.add(Fragment5.newInstance(1));
         fragments.add(Fragment1.newInstance(1));
         fragments.add(Fragment2.newInstance(1));
-        fragments.add(Fragment3.newInstance(1));
         fragments.add(Fragment4.newInstance(1));
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.

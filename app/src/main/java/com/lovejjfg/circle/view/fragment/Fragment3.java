@@ -8,8 +8,6 @@ import android.view.ViewGroup;
 
 import com.lovejjfg.circle.R;
 
-import butterknife.ButterKnife;
-
 /**
  * Created by Joe on 2016-06-09
  * Email: zhangjun166@pingan.com.cn
@@ -41,7 +39,7 @@ public class Fragment3 extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_tab3, container, false);
-        ButterKnife.bind(this, rootView);
+//        ButterKnife.bind(this, rootView);
 
         return rootView;
     }

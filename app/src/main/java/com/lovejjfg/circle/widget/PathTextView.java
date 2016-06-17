@@ -168,7 +168,7 @@ public class PathTextView extends View {
                 fraction = animation.getAnimatedFraction();
                 float f = (Float) animation.getAnimatedValue();
                 // TODO: 2016-06-15 这里有点儿取巧，需要优化。！！
-                if ((int) (defaultY - textHeight + density) == (int) f ) {
+                if ((int) (defaultY - textHeight + density) == (int) f && !offsetAnimator.isRunning()) {
 //                    offsetAnimator
                     dXXX = (left ? radioCenterX * fraction : radioCenterX * fraction * -1.0f);
                     offsetAnimator.cancel();
@@ -231,10 +231,10 @@ public class PathTextView extends View {
                 // TODO: 2016-06-14 完成第二次的振幅效果
                 distanceDownAnimator.setDuration(1000);
 
-                distanceUpAnimator.setDuration(3000);
+                distanceUpAnimator.setDuration(2000);
                 distanceUpAnimator.setInterpolator(linearOutSlowInInterpolator);
                 // TODO: 2016-06-15 这里要---1
-                distanceUpAnimator.setFloatValues(defaultY - textHeight - density, defaultY - 4 * textHeight, defaultY - textHeight + density*1.5f, defaultY - 2 * textHeight);
+                distanceUpAnimator.setFloatValues(defaultY - textHeight - density, defaultY - 4 * textHeight, (int)(defaultY - textHeight + density*1.5f), defaultY - 2 * textHeight);
                 break;
         }
     }
@@ -250,7 +250,7 @@ public class PathTextView extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        float dX = (left ? radioCenterX * fraction : radioCenterX * fraction * -1.0f);
+        float dX = (left ? radioCenterX * fraction : radioCenterX * fraction * -1.0f);//相对于中心点 0 的水平偏移量
         path.reset();
         path.moveTo(defaultX, defaultY);
         radioCenterX = (defaultX + textWidth) / 2.0f;
@@ -263,8 +263,7 @@ public class PathTextView extends View {
 //        canvas.drawPoint(dXXX == 0 ? radioCenterX : -dXXX, currentOffset, paint);//测试使用！
 
         canvas.drawTextOnPath(TEST, path, 0, 0, textPaint);
-        canvas.drawPath(path, paint);//测试使用
-
+//        canvas.drawPath(path, paint);//测试使用
         if (currentBitmap != null) {
             if (!isUp) {
                 canvas.rotate(360 + 360 * fraction, radioCenterX, radioCenterY);
@@ -280,8 +279,6 @@ public class PathTextView extends View {
                 case Oblique:
                     canvas.rotate(360 * fraction, radioCenterX + dX, radioCenterY);
                     canvas.translate(dX, 0);
-                    // TODO: 2016-06-14 又是旋转又是平移的中心点坐标
-//                    canvas.rotate(360 * fraction, radioCenterX+x*0.5f, radioCenterY);
                     int i1 = blendColors(Color.WHITE, Color.TRANSPARENT, fraction);
                     cilclePaint.setColor(i1);
                     canvas.drawBitmap(currentBitmap, radioCenterX - currentBitmap.getWidth() / 2.0f, radioCenterY - currentBitmap.getHeight() / 2.0f, cilclePaint);
