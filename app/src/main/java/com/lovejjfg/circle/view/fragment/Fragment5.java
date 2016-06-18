@@ -30,8 +30,6 @@ public class Fragment5 extends Fragment {
      */
     @Bind(R.id.ptv)
     PathTextView mPtv;
-    @Bind(R.id.index)
-    IndexBar mIndex;
     private static final String ARG_SECTION_NUMBER = "section_number";
     private StrokeGradientDrawable drawable;
     private GradientDrawable gradientDrawable;
@@ -63,13 +61,6 @@ public class Fragment5 extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_tab5, container, false);
         ButterKnife.bind(this, rootView);
         setHasOptionsMenu(true);
-        mIndex.setOnLetterChangeListener(new IndexBar.OnLetterChangeListener() {
-            @Override
-            public void onLetterChange(String letter) {
-                Log.i("TAG", "onLetterChange: " + letter);
-
-            }
-        });
         return rootView;
     }
 
