@@ -19,25 +19,7 @@
         android:layout_height="200dp"
         android:visibility="visible" />
 
-    <com.lovejjfg.circle.widget.IndexBar
-        android:id="@+id/index"
-        android:visibility="gone"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp"
-        android:layout_gravity="center_vertical"
-        android:layout_width="30dp"
 
-        app:normalColor="#444"
-        app:selecColor="#00f"
-        app:indexSize="14sp"
-        android:layout_height="match_parent" />
-
-    <com.lovejjfg.circle.widget.TestView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:layout_gravity="center"
-        />
 
 
 
