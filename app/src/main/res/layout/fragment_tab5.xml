@@ -13,6 +13,7 @@
 
     <com.lovejjfg.circle.widget.PathTextView
         android:id="@+id/ptv"
+
         android:layout_gravity="center_horizontal"
         android:layout_width="match_parent"
         android:layout_height="200dp"
@@ -20,6 +21,7 @@
 
     <com.lovejjfg.circle.widget.IndexBar
         android:id="@+id/index"
+        android:visibility="gone"
         android:layout_marginTop="20dp"
         android:layout_marginBottom="20dp"
         android:layout_gravity="center_vertical"
@@ -30,7 +32,7 @@
         app:indexSize="14sp"
         android:layout_height="match_parent" />
 
-    <TextView
+    <com.lovejjfg.circle.widget.TestView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
