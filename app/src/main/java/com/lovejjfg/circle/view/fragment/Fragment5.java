@@ -10,6 +10,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.lovejjfg.circle.R;
 import com.lovejjfg.circle.anim.drawable.StrokeGradientDrawable;
