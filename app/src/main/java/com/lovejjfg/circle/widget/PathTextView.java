@@ -175,8 +175,8 @@ public class PathTextView extends View {
                     offsetAnimator.setDuration(300);
                     offsetAnimator.setFloatValues(defaultY, defaultY + 50, defaultY);
                     offsetAnimator.start();
-                    Log.i(TAG, "onAnimationUpdate: YY" + (int) f);
-                    Log.i(TAG, "onAnimationUpdate: XX" + (left ? radioCenterX * fraction : radioCenterX * fraction * -1.0f));
+//                    Log.e(TAG, "onAnimationUpdate: YY" + (int) f);
+//                    Log.i(TAG, "onAnimationUpdate: XX" + (left ? radioCenterX * fraction : radioCenterX * fraction * -1.0f));
                 }
             }
         });
@@ -234,7 +234,7 @@ public class PathTextView extends View {
                 distanceUpAnimator.setDuration(2000);
                 distanceUpAnimator.setInterpolator(linearOutSlowInInterpolator);
                 // TODO: 2016-06-15 这里要---1
-                distanceUpAnimator.setFloatValues(defaultY - textHeight - density, defaultY - 4 * textHeight, (int)(defaultY - textHeight + density*1.5f), defaultY - 2 * textHeight);
+                distanceUpAnimator.setFloatValues(defaultY - textHeight - density, defaultY - 4 * textHeight, (int)(defaultY - textHeight + density*2f), defaultY - 2 * textHeight);
                 break;
         }
     }

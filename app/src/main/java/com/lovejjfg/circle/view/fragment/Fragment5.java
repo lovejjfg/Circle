@@ -16,6 +16,8 @@ import com.lovejjfg.circle.anim.drawable.StrokeGradientDrawable;
 import com.lovejjfg.circle.widget.IndexBar;
 import com.lovejjfg.circle.widget.PathTextView;
 
+import java.util.ArrayList;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
@@ -63,10 +65,38 @@ public class Fragment5 extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_tab5, container, false);
         ButterKnife.bind(this, rootView);
         setHasOptionsMenu(true);
+        ArrayList<String> letter =new ArrayList<>();
+        letter.add("A");
+        letter.add("B");
+        letter.add("C");
+        letter.add("D");
+        letter.add("E");
+        letter.add("F");
+        letter.add("G");
+        letter.add("H");
+        letter.add("I");
+        letter.add("J");
+        letter.add("K");
+        letter.add("L");
+        letter.add("M");
+        letter.add("N");
+        letter.add("O");
+        letter.add("P");
+        letter.add("Q");
+        letter.add("R");
+        letter.add("S");
+        letter.add("T");
+        letter.add("U");
+        letter.add("V");
+        letter.add("W");
+        letter.add("X");
+        letter.add("Y");
+        letter.add("Z");
+        mIndex.setLetters(letter);
         mIndex.setOnLetterChangeListener(new IndexBar.OnLetterChangeListener() {
             @Override
             public void onLetterChange(String letter) {
-                Log.i("TAG", "onLetterChange: " + letter);
+                Log.e("TAG", "onLetterChange: " + letter);
 
             }
         });

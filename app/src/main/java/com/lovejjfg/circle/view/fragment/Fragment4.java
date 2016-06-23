@@ -35,6 +35,7 @@ public class Fragment4 extends Fragment {
     private GradientDrawable gradientDrawable;
     private float density;
     private boolean flag;
+    private boolean isStart;
 
     public Fragment4() {
     }
@@ -86,6 +87,11 @@ public class Fragment4 extends Fragment {
     void onClick() {
         // TODO: 2016-06-12 完善Drawable的相关逻辑！
 //        mBt.setText(null);
+        Log.i("TAG", "onClick: ");
+        if (isStart) {
+            return;
+        }
+        isStart = true;
         Rect bounds = mBt.getBackground().getBounds();
         Log.i("TAG", "onAnimationUpdate:left " + bounds.left + ";;;Right:" + bounds.right);
 
@@ -107,6 +113,7 @@ public class Fragment4 extends Fragment {
                 public void onAnimationEnd() {
 //                mBt.setVisibility(View.VISIBLE);
                     Log.i("TAG", "onAnimationEnd: 动画结束！！");
+                    isStart = false;
 //                    mBt.setText(flag ? "开始" : getResources().getString(R.string.animator_over));
 
                 }

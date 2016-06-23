@@ -13,8 +13,8 @@ import android.support.v4.view.animation.LinearOutSlowInInterpolator;
 import android.util.Log;
 import android.widget.TextView;
 
-import com.lovejjfg.circle.listener.OnAnimationEndListener;
 import com.lovejjfg.circle.anim.drawable.StrokeGradientDrawable;
+import com.lovejjfg.circle.listener.OnAnimationEndListener;
 
 /**
  * Created by Joe on 2016-06-13
@@ -39,6 +39,8 @@ public class MorphingAnimator {
     private int left;
     private int right;
     private int offset;
+    private AnimatorSet animatorSet = new AnimatorSet();
+    private boolean isStart;
 
     public MorphingAnimator(TextView viewGroup, StrokeGradientDrawable drawable) {
         this.mView = viewGroup;
@@ -132,18 +134,20 @@ public class MorphingAnimator {
         ObjectAnimator strokeColorAnimation = ObjectAnimator.ofInt(this.mDrawable, "strokeColor", this.mFromStrokeColor, this.mToStrokeColor);
         strokeColorAnimation.setEvaluator(new ArgbEvaluator());
         ObjectAnimator cornerAnimation = ObjectAnimator.ofFloat(gradientDrawable, "cornerRadius", this.mFromCornerRadius, this.mToCornerRadius);
-        AnimatorSet animatorSet = new AnimatorSet();
+
         animatorSet.setInterpolator(new LinearOutSlowInInterpolator());
         animatorSet.setDuration((long) this.mDuration);
         animatorSet.playTogether(widthAnimation, bgColorAnimation, strokeColorAnimation, cornerAnimation);
         animatorSet.addListener(new Animator.AnimatorListener() {
             public void onAnimationStart(Animator animation) {
 //                mView.setVisibility(View.INVISIBLE);
+                isStart = true;
                 mView.setTextColor(Color.TRANSPARENT);
             }
 
             public void onAnimationEnd(Animator animation) {
                 mView.setTextColor(Color.WHITE);
+                isStart = false;
                 if (mListener != null) {
                     mListener.onAnimationEnd();
                 }
@@ -156,7 +160,9 @@ public class MorphingAnimator {
             public void onAnimationRepeat(Animator animation) {
             }
         });
-        animatorSet.start();
+        if (!animatorSet.isRunning()) {
+            animatorSet.start();
+        }
 
     }
 
