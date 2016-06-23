@@ -160,6 +160,7 @@ public class Fragment4 extends Fragment {
                 public void onAnimationEnd() {
 //                mBt.setVisibility(View.VISIBLE);
                     Log.i("TAG", "onAnimationEnd: 动画结束！！");
+                    isStart = false;
 //                    mBt.setText(flag ? "开始" : getResources().getString(R.string.animator_over));
 
                 }
