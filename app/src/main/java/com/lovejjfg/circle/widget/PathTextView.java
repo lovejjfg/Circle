@@ -34,13 +34,13 @@ import java.util.ArrayList;
 public class PathTextView extends View {
     private static final String TAG = PathTextView.class.getSimpleName();
 
-    private static String TEST = "这就是一个测试哎哟不错哦哦测试！！哎哟";
+    private static String TEST = "这就是一个测试 哎哟不错哦";
     //    private static int[] COLOR = {Color.BLUE, Color.RED, Color.GRAY, Color.GREEN, Color.BLUE};
-    private DecelerateInterpolator decelerateInterpolator = new DecelerateInterpolator();
-    private LinearInterpolator linearInterpolator = new LinearInterpolator();
+    private DecelerateInterpolator decelerateInterpolator = new DecelerateInterpolator();//减速插补器
+    private LinearInterpolator linearInterpolator = new LinearInterpolator();//加速插补器
     private LinearOutSlowInInterpolator linearOutSlowInInterpolator = new LinearOutSlowInInterpolator();
     private FastOutSlowInInterpolator fastOutSlowInInterpolator = new FastOutSlowInInterpolator();
-    private BounceInterpolator bounceInterpolator = new BounceInterpolator();
+    private BounceInterpolator bounceInterpolator = new BounceInterpolator();//反弹插补器
     private Path path;
     private float textWidth;
 
@@ -55,12 +55,10 @@ public class PathTextView extends View {
     private Paint textPaint;
     private float currentOffset = -1;//文字偏移量
     private Paint paint;
-    private ObjectAnimator offsetAnimator;//偏移动画
     private float textHeight;
-    private Paint cilclePaint;
+    private Paint bitmapPaint;
     private float radioCenterX;
     private float radioCenterY;
-    private ObjectAnimator distanceDownAnimator;
     private int currentHeight;
     private float dXXX;//x方向的偏移量
 
@@ -71,7 +69,9 @@ public class PathTextView extends View {
     private float fraction;
     private boolean isUp;
     private boolean left;
-    private ObjectAnimator distanceUpAnimator;
+    private ObjectAnimator distanceDownAnimator;//图片下降的动画
+    private ObjectAnimator distanceUpAnimator;//图片上升的动画
+    private ObjectAnimator offsetAnimator;//偏移动画
     private float density;
 
     public PathTextView(Context context) {
@@ -89,7 +89,7 @@ public class PathTextView extends View {
 
     private void init() {
         density = getContext().getResources().getDisplayMetrics().density;
-        final ArrayList<Bitmap> bitmaps = new ArrayList<>(4);
+        final ArrayList<Bitmap> bitmaps = new ArrayList<>();
         bitmaps.add(BitmapFactory.decodeResource(getResources(), R.drawable.fruit1));
         bitmaps.add(BitmapFactory.decodeResource(getResources(), R.drawable.fruit2));
         bitmaps.add(BitmapFactory.decodeResource(getResources(), R.drawable.fruit3));
@@ -103,7 +103,7 @@ public class PathTextView extends View {
         path = new Path();
         textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         textPaint.setStyle(Paint.Style.FILL);
-        textPaint.setTextSize(sp2px(getContext(), 16));
+        textPaint.setTextSize(sp2px(getContext(), 20));
         textPaint.setColor(Color.RED);
         textPaint.setStrokeCap(Paint.Cap.ROUND);
         textPaint.setTextAlign(Paint.Align.LEFT);
@@ -114,12 +114,11 @@ public class PathTextView extends View {
         paint.setStrokeWidth(5);
         paint.setColor(Color.GREEN);
 
-        cilclePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        cilclePaint.setStyle(Paint.Style.FILL);
-        cilclePaint.setStrokeWidth(5);
-        cilclePaint.setColor(Color.GREEN);
+        bitmapPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        bitmapPaint.setStyle(Paint.Style.FILL);
+        bitmapPaint.setStrokeWidth(5);
+        bitmapPaint.setColor(Color.GREEN);
 
-        textWidth = textPaint.measureText(TEST);
         offsetAnimator = ObjectAnimator.ofFloat(this, mOffsetProperty, 0);
         offsetAnimator.setDuration(300);
         offsetAnimator.setInterpolator(bounceInterpolator);
@@ -166,17 +165,17 @@ public class PathTextView extends View {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 fraction = animation.getAnimatedFraction();
-                float f = (Float) animation.getAnimatedValue();
                 // TODO: 2016-06-15 这里有点儿取巧，需要优化。！！
-                if ((int) (defaultY - textHeight + density) == (int) f && !offsetAnimator.isRunning()) {
+                    float f = (Float) animation.getAnimatedValue();
+                if (Mode == Bounce && (int) (defaultY - textHeight + density) == (int) (f) && !offsetAnimator.isRunning()) {
 //                    offsetAnimator
                     dXXX = (left ? radioCenterX * fraction : radioCenterX * fraction * -1.0f);
                     offsetAnimator.cancel();
-                    offsetAnimator.setDuration(300);
+                    offsetAnimator.setDuration(100);
                     offsetAnimator.setFloatValues(defaultY, defaultY + 50, defaultY);
                     offsetAnimator.start();
-//                    Log.e(TAG, "onAnimationUpdate: YY" + (int) f);
-//                    Log.i(TAG, "onAnimationUpdate: XX" + (left ? radioCenterX * fraction : radioCenterX * fraction * -1.0f));
+                    Log.i(TAG, "onAnimationUpdate: YY" + (int) f);
+                    Log.i(TAG, "onAnimationUpdate: XX" + (left ? radioCenterX * fraction : radioCenterX * fraction * -1.0f));
                 }
             }
         });
@@ -205,12 +204,14 @@ public class PathTextView extends View {
     private void initAnim(int currentHeight) {
 //        distanceUpAnimator.cancel();
 //        distanceDownAnimator.cancel();
-        radioCenterY = currentBitmap.getHeight() / 2.0f;//初始化默认高度
-        textHeight = textPaint.getFontMetrics().bottom - textPaint.getFontMetrics().top;
+        if (textHeight == 0) {
+            textHeight = textPaint.getFontMetrics().bottom - textPaint.getFontMetrics().top;
+        }
         defaultY = currentHeight - textHeight; //(h+textHeight*0.5f) / 2.0f;
         offsetAnimator.setFloatValues(defaultY, defaultY + amplitude, defaultY);
+        radioCenterY = currentBitmap.getHeight() / 2.0f;//初始化默认高度
         distanceDownAnimator.setFloatValues(radioCenterY, defaultY - textHeight);//到文字的顶部就好
-        Log.i(TAG, "initAnim: radioCenterY:" + radioCenterY + ";;TO:" + (defaultY - textHeight));
+        Log.i(TAG, "initAnim: radioCenterY:" + radioCenterY + ";;TO:" + (defaultY));
 
 //        distanceDownAnimator.start();
         switch (Mode) {
@@ -225,7 +226,7 @@ public class PathTextView extends View {
 
                 distanceUpAnimator.setDuration(1000);
                 distanceUpAnimator.setInterpolator(decelerateInterpolator);
-                distanceUpAnimator.setFloatValues(defaultY - textHeight, defaultY - 6 * textHeight);//到达不了最高处
+                distanceUpAnimator.setFloatValues(defaultY - textHeight, radioCenterY + currentBitmap.getHeight());//到达不了最高处
                 break;
             case Bounce:
                 // TODO: 2016-06-14 完成第二次的振幅效果
@@ -234,7 +235,7 @@ public class PathTextView extends View {
                 distanceUpAnimator.setDuration(2000);
                 distanceUpAnimator.setInterpolator(linearOutSlowInInterpolator);
                 // TODO: 2016-06-15 这里要---1
-                distanceUpAnimator.setFloatValues(defaultY - textHeight - density, defaultY - 4 * textHeight, (int)(defaultY - textHeight + density*2f), defaultY - 2 * textHeight);
+                distanceUpAnimator.setFloatValues(defaultY - textHeight , defaultY - 4 * textHeight, (int) (defaultY - textHeight + density * 2f), defaultY - 2 * textHeight);
                 break;
         }
     }
@@ -243,8 +244,6 @@ public class PathTextView extends View {
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         textHeight = textPaint.getFontMetrics().bottom - textPaint.getFontMetrics().top;
         widthMeasureSpec = MeasureSpec.makeMeasureSpec((int) textPaint.measureText(TEST), MeasureSpec.EXACTLY);
-//        MeasureSpec.getMode(heightMeasureSpec)==MeasureSpec.EXACTLY
-//        heightMeasureSpec = MeasureSpec.makeMeasureSpec((int) (textHeight*2), MeasureSpec.EXACTLY);
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
     }
 
@@ -266,7 +265,7 @@ public class PathTextView extends View {
 //        canvas.drawPath(path, paint);//测试使用
         if (currentBitmap != null) {
             if (!isUp) {
-                canvas.rotate(360 + 360 * fraction, radioCenterX, radioCenterY);
+                canvas.rotate(360 * fraction, radioCenterX, radioCenterY);
                 canvas.drawBitmap(currentBitmap, radioCenterX - currentBitmap.getWidth() / 2.0f, radioCenterY - currentBitmap.getHeight() / 2.0f, null);
                 return;
             }
@@ -280,8 +279,8 @@ public class PathTextView extends View {
                     canvas.rotate(360 * fraction, radioCenterX + dX, radioCenterY);
                     canvas.translate(dX, 0);
                     int i1 = blendColors(Color.WHITE, Color.TRANSPARENT, fraction);
-                    cilclePaint.setColor(i1);
-                    canvas.drawBitmap(currentBitmap, radioCenterX - currentBitmap.getWidth() / 2.0f, radioCenterY - currentBitmap.getHeight() / 2.0f, cilclePaint);
+                    bitmapPaint.setColor(i1);
+                    canvas.drawBitmap(currentBitmap, radioCenterX - currentBitmap.getWidth() / 2.0f, radioCenterY - currentBitmap.getHeight() / 2.0f, bitmapPaint);
                     break;
 
             }
