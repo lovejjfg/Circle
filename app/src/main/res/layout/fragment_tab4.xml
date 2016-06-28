@@ -8,6 +8,11 @@
     android:gravity="center"
     tools:context=".view.TabActivity">
 
+    <View
+        android:id="@+id/scrim"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
     <com.lovejjfg.circle.widget.CircleView
         android:id="@+id/circle"
         android:layout_width="match_parent"
