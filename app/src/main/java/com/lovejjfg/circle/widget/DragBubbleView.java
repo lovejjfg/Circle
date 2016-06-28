@@ -224,7 +224,7 @@ public class DragBubbleView extends View {
                 CurrentState = STATE_IDLE;
                 animSetXY.cancel();
                 startX = (int) ev.getX();
-                startY = (int) ev.getRawY();
+                startY = (int) ev.getY();
                 break;
             case MotionEvent.ACTION_MOVE://移动的时候
                 startX = (int) ev.getX();
