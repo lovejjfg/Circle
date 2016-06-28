@@ -106,7 +106,7 @@ public class CircleView extends View {
         rectF = new RectF();
         innerRectf = new RectF();
 
-        mAngleAnimator = ObjectAnimator.ofFloat(this, mAngleProperty, 0, 180);
+        mAngleAnimator = ObjectAnimator.ofFloat(this, mAngleProperty, 0, 280);
         mAngleAnimator.setInterpolator(new OvershootInterpolator());
         mAngleAnimator.setDuration(2000);
 
@@ -116,8 +116,8 @@ public class CircleView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 //        canvas.drawArc(rectF, 0, 360, false, paint);
-//        canvas.drawArc(rectF, 0, currentAngle, false, outPaint);
-        drawTriangle(canvas, 0, currentAngle);
+        canvas.drawArc(rectF, 0, currentAngle, false, outPaint);
+//        drawTriangle(canvas, 0, currentAngle);
 
     }
 
