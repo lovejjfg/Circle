@@ -1,14 +1,27 @@
 package com.lovejjfg.circle.view.fragment;
 
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
+import android.annotation.TargetApi;
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.drawable.GradientDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.view.animation.FastOutSlowInInterpolator;
+import android.support.v4.view.animation.LinearOutSlowInInterpolator;
+import android.support.v7.widget.ViewUtils;
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.lovejjfg.circle.anim.MorphingAnimator;
@@ -35,7 +48,10 @@ public class Fragment4 extends Fragment {
     private GradientDrawable gradientDrawable;
     private float density;
     private boolean flag;
-    private boolean isStart;
+    private Display display;
+    private int topMargin;
+    private LinearOutSlowInInterpolator linearOutSlowInInterpolator;
+
 
     public Fragment4() {
     }
@@ -44,6 +60,8 @@ public class Fragment4 extends Fragment {
     TextView mBt;
     @Bind(R.id.circle)
     CircleView circleView;
+    @Bind(R.id.scrim)
+    View scrim;
 
     /**
      * Returns a new instance of this fragment for the given section
@@ -62,15 +80,48 @@ public class Fragment4 extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_tab4, container, false);
         ButterKnife.bind(this, rootView);
-
+        linearOutSlowInInterpolator = new LinearOutSlowInInterpolator();
         drawable = createDrawable(Color.RED);
         gradientDrawable = drawable.getGradientDrawable();
         density = getResources().getDisplayMetrics().density;
 
         mBt.setBackgroundDrawable(gradientDrawable);
         mBt.setText(R.string.animator_over);
+        scrim.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                int y = (int) event.getY();
+                int x = (int) event.getX();
+                startBackGround(x, y);
+                return false;
+            }
+        });
 
+        WindowManager wm = (WindowManager)getActivity().getSystemService(Context.WINDOW_SERVICE);
+        display = wm.getDefaultDisplay();
+        ViewGroup.MarginLayoutParams layoutParams = (ViewGroup.MarginLayoutParams) mBt.getLayoutParams();
+        topMargin = layoutParams.topMargin;
         return rootView;
+    }
+
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private void startBackGround(int centerX,int centerY) {
+        AnimatorSet showScrim = new AnimatorSet();
+        showScrim.playTogether(
+                ViewAnimationUtils.createCircularReveal(
+                        scrim,
+                        centerX,
+                        centerY,
+                        0,
+                        (float) Math.hypot(display.getWidth(), display.getHeight())),
+                ObjectAnimator.ofArgb(
+                        scrim, "backgroundColor",
+                        Color.GRAY,
+                        getActivity().getResources().getColor(R.color.gray_1),
+                        getActivity().getResources().getColor(R.color.transWhite)));
+        showScrim.setDuration(1000L);
+        showScrim.setInterpolator(linearOutSlowInInterpolator);
+        showScrim.start();
     }
 
     private StrokeGradientDrawable createDrawable(int color) {
@@ -87,11 +138,7 @@ public class Fragment4 extends Fragment {
     void onClick() {
         // TODO: 2016-06-12 完善Drawable的相关逻辑！
 //        mBt.setText(null);
-        Log.i("TAG", "onClick: ");
-        if (isStart) {
-            return;
-        }
-        isStart = true;
+        startBackGround(display.getWidth() / 2, mBt.getMeasuredHeight() / 2+topMargin);
         Rect bounds = mBt.getBackground().getBounds();
         Log.i("TAG", "onAnimationUpdate:left " + bounds.left + ";;;Right:" + bounds.right);
 
@@ -103,7 +150,7 @@ public class Fragment4 extends Fragment {
 //            animator.setLeft(0);
 //            animator.setoffset(-2 * 36);
             MorphingAnimator animator = new MorphingAnimator(mBt, drawable);
-            animator.setDuration(1500);
+            animator.setDuration(2000);
             animator.setFromColor(Color.RED);
             animator.setToColor(Color.BLUE);
             mBt.setText("开始");
