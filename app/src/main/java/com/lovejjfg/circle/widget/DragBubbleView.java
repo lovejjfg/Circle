@@ -257,9 +257,6 @@ public class DragBubbleView extends View {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-
-        int modeWidth = MeasureSpec.getMode(widthMeasureSpec);
-        int modeHeight = MeasureSpec.getMode(heightMeasureSpec);
         widthMeasureSpec = MeasureSpec.makeMeasureSpec(DEFAULT_RADIO * 2, MeasureSpec.EXACTLY);
         heightMeasureSpec = MeasureSpec.makeMeasureSpec(DEFAULT_RADIO * 2, MeasureSpec.EXACTLY);
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
@@ -296,7 +293,7 @@ public class DragBubbleView extends View {
         DEFAULT_RADIO = progress;
         DRAG_RADIO = progress;
         MIN_RADIO = (int) (ORIGIN_RADIO * 0.4);
-        MAXDISTANCE = (int) (MIN_RADIO * 13);
+        MAXDISTANCE = MIN_RADIO * 13;
         requestLayout();
         invalidate();
     }
