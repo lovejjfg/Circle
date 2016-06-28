@@ -51,6 +51,7 @@ public class Fragment4 extends Fragment {
     private Display display;
     private int topMargin;
     private LinearOutSlowInInterpolator linearOutSlowInInterpolator;
+    private boolean isStart;
 
 
     public Fragment4() {
