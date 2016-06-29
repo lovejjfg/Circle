@@ -62,6 +62,7 @@ public class CircleView extends View {
     private int radio;
     private int mRingCenterRadius;
     private float mArrowScale = 0.6f;
+    private boolean first;
 
     private void setCurrentAngle(float value) {
         currentAngle = value;
@@ -92,21 +93,21 @@ public class CircleView extends View {
         outPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         outPaint.setStyle(Paint.Style.STROKE);
         outPaint.setAntiAlias(true);
-        outPaint.setStrokeWidth(20);
+        outPaint.setStrokeWidth(40);
         outPaint.setColor(Color.RED);
         outPaint.setAlpha(50);
         outPaint.setStrokeCap(Paint.Cap.ROUND);
         paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         paint.setStyle(Paint.Style.STROKE);
         paint.setAntiAlias(true);
-        paint.setStrokeWidth(20);
-        paint.setColor(Color.GRAY);
+        paint.setStrokeWidth(40);
+        paint.setColor(Color.WHITE);
         paint.setAlpha(50);
         paint.setStrokeCap(Paint.Cap.ROUND);
         rectF = new RectF();
         innerRectf = new RectF();
 
-        mAngleAnimator = ObjectAnimator.ofFloat(this, mAngleProperty, 0, 280);
+        mAngleAnimator = ObjectAnimator.ofFloat(this, mAngleProperty, 120, 250);
         mAngleAnimator.setInterpolator(new OvershootInterpolator());
         mAngleAnimator.setDuration(2000);
 
@@ -116,7 +117,11 @@ public class CircleView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 //        canvas.drawArc(rectF, 0, 360, false, paint);
-        canvas.drawArc(rectF, 0, currentAngle, false, outPaint);
+        canvas.drawArc(rectF, 120, 300, false, outPaint);
+        canvas.drawArc(rectF, 120, currentAngle, false, paint);
+        String s = "弧度：" + currentAngle;
+        float textWidth = mArrowPaint.measureText(s);
+        canvas.drawText("弧度：" + currentAngle, rectF.centerX()-textWidth/2 , rectF.bottom , mArrowPaint);
 //        drawTriangle(canvas, 0, currentAngle);
 
     }
@@ -170,7 +175,7 @@ public class CircleView extends View {
         // draw a triangle
         mArrowPaint.setColor(Color.RED);
         c.rotate(startAngle + sweepAngle - ARROW_OFFSET_ANGLE, centerX,
-               centerY);
+                centerY);
         c.drawPath(mArrow, mArrowPaint);
     }
 }
