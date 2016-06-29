@@ -235,6 +235,7 @@ public class PathTextView extends View {
                 distanceUpAnimator.setDuration(2000);
                 distanceUpAnimator.setInterpolator(linearOutSlowInInterpolator);
                 // TODO: 2016-06-15 这里要---1
+                distanceUpAnimator.setFloatValues(defaultY - textHeight , defaultY - 4 * textHeight, (int) (defaultY - textHeight + density * 2f), defaultY - 2 * textHeight);
                 break;
         }
     }

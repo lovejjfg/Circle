@@ -5,7 +5,6 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 
 import com.lovejjfg.circle.R;
 
@@ -41,8 +40,6 @@ public class Fragment3 extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_tab3, container, false);
 //        ButterKnife.bind(this, rootView);
-        ListView listView = new ListView();
-        listView.setSelection();
 
         return rootView;
     }

@@ -10,7 +10,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.lovejjfg.circle.R;
 import com.lovejjfg.circle.anim.drawable.StrokeGradientDrawable;
@@ -33,6 +32,8 @@ public class Fragment5 extends Fragment {
      */
     @Bind(R.id.ptv)
     PathTextView mPtv;
+    @Bind(R.id.index)
+    IndexBar mIndex;
     private static final String ARG_SECTION_NUMBER = "section_number";
     private StrokeGradientDrawable drawable;
     private GradientDrawable gradientDrawable;

@@ -32,6 +32,7 @@ public class DragBubbleView extends View {
     private int MIN_RADIO = (int) (ORIGIN_RADIO * 0.4);//最小半径
     private int MAXDISTANCE = (int) (MIN_RADIO * 13);
     private Path path;
+    private Path path1;
     private double angle;
     private boolean flag;
     private ValueAnimator valueX;
@@ -83,6 +84,7 @@ public class DragBubbleView extends View {
 
     private void initView() {
         path = new Path();
+        path1 = new Path();
         animSetXY = new AnimatorSet();
 
         valueX = ValueAnimator.ofInt(startX, CIRCLEX);
@@ -202,6 +204,9 @@ public class DragBubbleView extends View {
                 break;
 
             case STATE_UP_BREAK://画出爆裂的效果
+                // TODO: 2016-06-28 这里可以再去山寨一下QQ的最终效果
+                path1.reset();
+
                 canvas.drawCircle(startX - 25, startY - 25, 10, circlePaint);
                 canvas.drawCircle(startX + 25, startY + 25, 10, circlePaint);
                 canvas.drawCircle(startX, startY - 25, 10, circlePaint);
