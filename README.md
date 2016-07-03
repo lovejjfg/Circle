@@ -2,9 +2,7 @@
 
 ### 最终效果图：
 
-![DragBubble](http://img.blog.csdn.net/20160611125748698)
-
-![PathText](https://camo.githubusercontent.com/ee8a1a692750c5318754ab0165f00b61b1cc7d6f/687474703a2f2f75706c6f61642d696d616765732e6a69616e7368752e696f2f75706c6f61645f696d616765732f323234343239392d633961626439363364346435386166363f696d6167654d6f6772322f6175746f2d6f7269656e742f7374726970)
+![DragBubble](http://img.blog.csdn.net/20160611125748698)![PathText](https://raw.githubusercontent.com/lovejjfg/screenshort/master/PathTextgif.gif)
 
 ![IndexBar](https://raw.githubusercontent.com/lovejjfg/IndexMasterDemo/master/index.gif)
 #DragBubble
