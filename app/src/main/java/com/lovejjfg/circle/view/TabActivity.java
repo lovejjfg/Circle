@@ -86,44 +86,6 @@ public class TabActivity extends AppCompatActivity implements View.OnClickListen
 //        list.add("TEST14");
 //        popupWindow.setAdapter(new ArrayAdapter<String>(getApplicationContext(), R.layout.item_layout, R.id.ctv, list));
 //        popupWindow.show();
-        String extendInfoStr = "roomid:1,space:,price:;roomid:2,space:12,price:;roomid:3,space:11,price:3000";
-        //roomid:2,type:1,space:20,price:2200,roomtag:1|11|21"
-        StringBuilder sbInfo = new StringBuilder();
-        StringBuilder sbPrice = new StringBuilder();
-        if (extendInfoStr.contains(";")) {
-            String extendInfo[] = extendInfoStr.split(";");
-            int extendSize = extendInfo.length;
-            //roomid:1,space:,price:;roomid:2,space:12,price:2000;roomid:3,space:,price:3000
-            String mRentRoomIDValue = "";
-            String mRentRoomSpaceValue = "";
-            String mRentRoomPriceValue = "";
-            for (String itemTemp : extendInfo) {
-                if (itemTemp.contains(",")) {
-                    String itemInfo[] = itemTemp.split(",");
-                    for (int j = 0; j < itemInfo.length; j++) {
-                        if (itemInfo[j].contains("roomid")) {
-                            mRentRoomIDValue = itemInfo[j].substring(7, itemInfo[j].length());
-                        }
-                        if (itemInfo[j].contains("space")) {
-                            mRentRoomSpaceValue = itemInfo[j].substring(6, itemInfo[j].length());
-                        }
-                        if (itemInfo[j].contains("price")) {
-                            mRentRoomPriceValue = itemInfo[j].substring(6, itemInfo[j].length());
-                        }
-                        if (!TextUtils.isEmpty(mRentRoomSpaceValue) && !TextUtils.isEmpty(mRentRoomPriceValue)) {
-                            sbInfo.append("roomid:").append(mRentRoomIDValue).append(",space:").append(mRentRoomSpaceValue).append(",price:")
-                                    .append(mRentRoomPriceValue).append(";");
-                            sbPrice.append(mRentRoomPriceValue).append(",");
-                            mRentRoomIDValue = "";
-                            mRentRoomPriceValue = "";
-                            mRentRoomSpaceValue = "";
-                        }
-                    }
-                }
-            }
-        }
-        Log.e("TAG", "onClick: " + sbInfo.toString().substring(0, sbInfo.length() > 0 ? sbInfo.length() - 1 : sbInfo.length()));
-        Log.e("TAG", "onClick: " + sbPrice.toString().substring(0, sbPrice.length() > 0 ? sbPrice.length() - 1 : sbInfo.length()));
     }
 
 

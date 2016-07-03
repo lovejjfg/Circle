@@ -3,6 +3,7 @@ package com.lovejjfg.circle.view.fragment;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -49,6 +50,28 @@ public class Fragment6 extends Fragment {
         Bundle args = new Bundle();
         args.putInt(ARG_SECTION_NUMBER, sectionNumber);
         fragment.setArguments(args);
+        String join;
+        String[] strs = {"xxxx", "xhahaha", "huohuo"};
+        String tem="";
+        for (int i = 0; i < strs.length; i++) {
+            tem += strs[i];
+            if (i < strs.length - 1) {
+                tem += ",";
+            }
+        }
+        join = tem;
+        //恩，知道字符串直接拼接效率低下之后，那么又手动改为StringBuilder
+
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < strs.length; i++) {
+            sb.append(strs[i]);
+            if (i < strs.length - 1) {
+                sb.append(";");
+            }
+        }
+        join = sb.toString();
+        //最后，你才知道TextUtils里面已经定义好了这种需求,哭瞎
+        join = TextUtils.join(";", strs);
         return fragment;
     }
 

@@ -22,9 +22,11 @@ import java.util.List;
  * Email: lovejjfg@163.com
  */
 public class IndexBar extends View {
-
+    private static final String TAG = IndexBar.class.getSimpleName();
     private Paint mPaint;
     private int mHeight;
+    private int paddingTop;
+    private int paddingBottom;
 
     @SuppressWarnings("unused")
     @Nullable
@@ -33,12 +35,13 @@ public class IndexBar extends View {
     }
     @SuppressWarnings("unused")
     public void setLetters(@Nullable List<String> letters) {
+
         if (letters == null) {
             setVisibility(GONE);
             return;
         }
         this.letters = letters;
-        mHeight = getMeasuredHeight();
+        mHeight = getMeasuredHeight()-paddingTop-paddingBottom;
         mCellWidth = getMeasuredWidth();
         mCellHeight = mHeight * 1.0f / 26;
         beginY = (mHeight - mCellHeight * letters.size()) * 0.5f;
@@ -95,11 +98,11 @@ public class IndexBar extends View {
                 mPaint.getTextBounds(text, 0, text.length(), mRect);
                 float textHeight = mRect.height();
                 float x = mCellWidth * 0.5f - textWidth * 0.5f;
-                float y = mCellHeight * 0.5f + textHeight * 0.5f + mCellHeight * i + beginY;
+                float y = mCellHeight * 0.5f + textHeight * 0.5f + mCellHeight * i + beginY+paddingTop;
                 mPaint.setColor(mIndex == i ? selecColor : normalColor);
                 canvas.drawText(text, x, y, mPaint);
 //                mPaint.setColor(Color.RED);
-//                mPaint.setStrokeWidth(20);
+//                mPaint.setStrokeWidth(5);
 //                canvas.drawPoint(x, y, mPaint);
 //                mPaint.setColor(Color.GREEN);
 //                canvas.drawPoint(x, getMeasuredHeight() * 0.5f, mPaint);
@@ -116,7 +119,7 @@ public class IndexBar extends View {
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-        mHeight = getMeasuredHeight();
+        mHeight = getMeasuredHeight()-paddingTop-paddingBottom;
         mCellWidth = getMeasuredWidth();
         mCellHeight = mHeight * 1.0f / 26;
         if (letters != null) {
@@ -135,7 +138,6 @@ public class IndexBar extends View {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         float y;
-        int currentIndex;
         invalidate();
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
@@ -162,17 +164,18 @@ public class IndexBar extends View {
 
     private void checkIndex(float y) {
         int currentIndex;
-        if (y < beginY) {
+        if (y < beginY+getPaddingTop()) {
             return;
         }
-        currentIndex = (int) ((y - beginY) / mCellHeight);
+        currentIndex = (int) ((y - beginY-paddingTop) / mCellHeight);
         if (currentIndex != mIndex) {
             if (mOnLetterChangeListener != null) {
                 if (letters != null && currentIndex < letters.size()) {
-                    mOnLetterChangeListener.onLetterChange(letters.get(currentIndex));
+                    mOnLetterChangeListener.onLetterChange(currentIndex,letters.get(currentIndex));
+                    mIndex = currentIndex;
+//                    Log.i(TAG, "checkIndex: "+letters.get(currentIndex));
                 }
             }
-            mIndex = currentIndex;
         }
     }
 
@@ -199,7 +202,7 @@ public class IndexBar extends View {
     }
 
     public interface OnLetterChangeListener {
-        void onLetterChange(String letter);
+        void onLetterChange(int position, String letter);
     }
 
     private OnLetterChangeListener mOnLetterChangeListener;
@@ -213,4 +216,10 @@ public class IndexBar extends View {
         mOnLetterChangeListener = onLetterChangeListener;
     }
 
+    @Override
+    protected void onFinishInflate() {
+        super.onFinishInflate();
+        paddingTop = getPaddingTop();
+        paddingBottom = getPaddingBottom();
+    }
 }

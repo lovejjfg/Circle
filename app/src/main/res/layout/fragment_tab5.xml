@@ -26,13 +26,14 @@
 
     <com.lovejjfg.circle.widget.IndexBar
         android:id="@+id/index"
-        android:layout_marginBottom="100dp"
-        android:layout_marginTop="80dp"
         android:layout_gravity="right"
         android:layout_width="20dp"
+        android:paddingBottom="20dp"
+        android:paddingTop="30dp"
+        android:background="@drawable/selector_index_bar"
         app:normalColor="#444"
         app:selecColor="#00f"
-        app:indexSize="10sp"
+        app:indexSize="13sp"
         android:layout_height="match_parent" />
 
 

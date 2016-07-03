@@ -95,7 +95,7 @@ public class Fragment5 extends Fragment {
         mIndex.setLetters(letter);
         mIndex.setOnLetterChangeListener(new IndexBar.OnLetterChangeListener() {
             @Override
-            public void onLetterChange(String letter) {
+            public void onLetterChange(int pos,String letter) {
                 Log.e("TAG", "onLetterChange: " + letter);
 
             }
