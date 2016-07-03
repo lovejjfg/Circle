@@ -2,11 +2,7 @@
 
 ### 最终效果图：
 
-![DragBubble](http://img.blog.csdn.net/20160611125748698)
-
-![PathText](http://upload-images.jianshu.io/upload_images/2244299-c9abd963d4d58af6?imageMogr2/auto-orient/strip)
-
-![IndexBar](https://raw.githubusercontent.com/lovejjfg/IndexMasterDemo/master/index.gif)
+![DragBubble](http://img.blog.csdn.net/20160611125748698)![PathText](http://upload-images.jianshu.io/upload_images/2244299-c9abd963d4d58af6?imageMogr2/auto-orient/strip)![IndexBar](https://raw.githubusercontent.com/lovejjfg/IndexMasterDemo/master/index.gif)
 #DragBubble
 ### 基本原理
 
