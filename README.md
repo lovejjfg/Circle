@@ -6,6 +6,7 @@
 
 ![PathText](http://upload-images.jianshu.io/upload_images/2244299-c9abd963d4d58af6?imageMogr2/auto-orient/strip)
 
+![IndexBar](https://raw.githubusercontent.com/lovejjfg/IndexMasterDemo/master/index.gif)
 #DragBubble
 ### 基本原理
 
@@ -19,14 +20,12 @@
 
 [博客地址 戳我戳我](http://blog.csdn.net/lovejjfg/article/details/50990604)
 
-#PathText
+# PathText
 
 [博客地址 戳我戳我](http://www.jianshu.com/p/b655981e6ef9)
 
 # IndexBar
 
 [具体项目地址](https://github.com/lovejjfg/IndexBar)
-
-![效果图](http://upload-images.jianshu.io/upload_images/2244299-e3688d4cd7b22841.gif?imageMogr2/auto-orient/strip)
 
 [博客地址 戳我戳我](http://www.jianshu.com/p/d0d3ae674de8)
