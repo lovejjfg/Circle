@@ -1,75 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<com.lovejjfg.circle.widget.StickyNestedScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/scroll_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".view.MainActivity">
+    android:orientation="vertical">
 
-    <!--<com.lovejjfg.circle.widget.RipplesView-->
-        <!--android:id="@+id/circle"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:visibility="gone"-->
-        <!--/>-->
-    <!--<com.lovejjfg.circle.widget.TouchCircleView-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:visibility="gone"-->
-        <!--/>-->
-    <com.lovejjfg.circle.widget.DragBubbleView
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        />
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:visibility="visible"
         >
-        <!--默认半径-->
-        <TextView
+
+        <View
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="默认半径"
-            android:gravity="center"
-            />
-        <SeekBar
-            android:id="@+id/pb_cirRadius"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:max="800"
-            />
-        <!--加速度值-->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="加速度值"
-            android:gravity="center"
-            />
-        <SeekBar
-            android:id="@+id/pb_acceleration"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:max="20"
-            android:progress="3"
+            android:layout_height="220dp"
+            android:background="#00000000"
+            android:visibility="visible"
+            android:layout_marginBottom="5dp"
             />
 
-        <!--最小半径-->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="最小半径"
-            android:gravity="center"
+            android:text="@string/large_text"
+            android:textColor="@color/colorAccent"
             />
-        <SeekBar
-            android:id="@+id/pb_multipleRadius"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:max="10"
-            android:progress="5"
-            />
+
 
     </LinearLayout>
-
-</RelativeLayout>
+</com.lovejjfg.circle.widget.StickyNestedScrollView>
