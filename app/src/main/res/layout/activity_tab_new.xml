@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.lovejjfg.circle.widget.HeadViewFrameLayout
+    android:id="@+id/header_container"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+
+    <com.lovejjfg.circle.widget.FixedViewPager
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+        <ImageView
+            android:id="@+id/iv_header"
+            android:layout_width="match_parent"
+            android:layout_height="220dp"
+            android:background="@mipmap/girl2"
+            android:contentDescription="@string/action_bounce"
+            android:minHeight="220dp"
+            android:scaleType="centerCrop"/>
+
+
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tab"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:background="@color/colorAccent"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:visibility="visible"
+            app:tabMode="scrollable"
+            app:tabTextColor="#fff"
+            />
+
+    </FrameLayout>
+
+</com.lovejjfg.circle.widget.HeadViewFrameLayout>
+
