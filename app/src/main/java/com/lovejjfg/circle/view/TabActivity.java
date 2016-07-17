@@ -19,6 +19,7 @@ import com.lovejjfg.circle.view.fragment.Fragment2;
 import com.lovejjfg.circle.view.fragment.Fragment3;
 import com.lovejjfg.circle.view.fragment.Fragment4;
 import com.lovejjfg.circle.view.fragment.Fragment5;
+import com.lovejjfg.circle.view.fragment.Fragment6;
 
 import java.util.ArrayList;
 
@@ -57,6 +58,7 @@ public class TabActivity extends AppCompatActivity implements View.OnClickListen
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         fragments = new ArrayList<>();
+        fragments.add(Fragment6.newInstance(1));
         fragments.add(Fragment3.newInstance(1));
         fragments.add(Fragment5.newInstance(1));
         fragments.add(Fragment1.newInstance(1));

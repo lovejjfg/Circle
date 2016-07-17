@@ -8,7 +8,7 @@ import android.animation.Animator;
  */
 public abstract class SimpleAnimatorListener implements Animator.AnimatorListener {
     @Override
-    public abstract void onAnimationStart(Animator animation);
+    public  void onAnimationStart(Animator animation){}
 
     @Override
     public  void onAnimationEnd(Animator animation){}

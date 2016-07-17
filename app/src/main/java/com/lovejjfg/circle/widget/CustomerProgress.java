@@ -309,7 +309,7 @@ public class CustomerProgress extends View implements View.OnClickListener {
 
         @Override
         public void set(CustomerProgress object, Float value) {
-//            object.setCurrentSweepAngle(value);
+            object.setCurrentSweepAngle(value);
         }
     };
 

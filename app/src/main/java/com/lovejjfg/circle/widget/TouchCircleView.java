@@ -21,6 +21,7 @@ import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
 
 import com.lovejjfg.circle.anim.drawable.MaterialProgressDrawable;
+import com.lovejjfg.circle.listener.SimpleAnimatorListener;
 
 /**
  * Created by Joe on 2016/4/3.
@@ -46,14 +47,16 @@ public class TouchCircleView extends View {
 
     private static final Interpolator ANGLE_INTERPOLATOR = new LinearInterpolator();
     private static final Interpolator SWEEP_INTERPOLATOR = new AccelerateDecelerateInterpolator();
-    private static final int ANGLE_ANIMATOR_DURATION = 3000;//转速
-    private static final int SWEEP_ANIMATOR_DURATION = 2000;
-    private static final int DELAY_TIME = 10000;
+    private static final int ANGLE_ANIMATOR_DURATION = 1000;//转速
+    private static final int SWEEP_ANIMATOR_DURATION = 800;
+    private static final int DELAY_TIME = 5000;
 
     private float mCurrentGlobalAngleOffset;
     private float mCurrentGlobalAngle;
     private float mCurrentSweepAngle;
     private static final int MIN_SWEEP_ANGLE = 30;
+
+    private float mStrokeInset = 5f;
 
 
     private Paint secondPain;
@@ -84,11 +87,12 @@ public class TouchCircleView extends View {
     private int centerX;
     private float mBorderWidth = 4;
     private float mRingCenterRadius;
-    private boolean mModeAppearing;
+    private boolean mModeAppearing = true;
     private float mArrowScale = 1.0f;
     private float fraction;
     private Paint mHookPaint;
     private boolean mRunning;
+    private boolean isDrawTriangle;
 
 
     public int getMultipleRadius() {
@@ -189,6 +193,7 @@ public class TouchCircleView extends View {
 //                        if (dy!=angle && dy >= -360 && dy <= 360) {
                         if (dy != angle && dy >= 0 && dy <= 360) {
                             currentState = STATE_DRAW_ARC;
+                            resetAngle();
                             outRectF.set(centerX - outCirRadius, 0, centerX + outCirRadius
                                     , centerY + outCirRadius);
                             angle = dy;
@@ -198,7 +203,8 @@ public class TouchCircleView extends View {
                         }
                         if (dy > 360 && dy < 460) {
                             currentState = STATE_DRAW_ARROW;
-//                            mCurrentGlobalAngle++;
+                            mCurrentGlobalAngle++;
+                            mCurrentSweepAngle++;
                             invalidate();
                             break;
                         }
@@ -228,6 +234,7 @@ public class TouchCircleView extends View {
                     case MotionEvent.ACTION_CANCEL:
                         if (STATE_DRAW_ARROW == currentState) {
                             currentState = STATE_DRAW_PROGRESS;
+                            innerPaint.setAlpha(255);
                             start();
                             return true;
                         }
@@ -270,7 +277,7 @@ public class TouchCircleView extends View {
         mHookPaint.setStyle(Paint.Style.STROKE);
         mHookPaint.setStrokeCap(Paint.Cap.ROUND);
         mHookPaint.setStrokeWidth(mBorderWidth);
-        mHookPaint.setColor(Color.RED);
+        mHookPaint.setColor(Color.WHITE);
 
         path = new Path();
         mArrow = new Path();
@@ -301,7 +308,12 @@ public class TouchCircleView extends View {
                 canvas.drawArc(outRectF, 0, angle, false, circlePaint);
                 break;
             case STATE_DRAW_ARROW:
+                isDrawTriangle = true;
+                canvas.drawArc(outRectF, 0, 360, true, paint);
+                drawArc(canvas);
+                break;
             case STATE_DRAW_PROGRESS:
+                isDrawTriangle = false;
                 canvas.drawArc(outRectF, 0, 360, true, paint);
                 drawArc(canvas);
                 break;
@@ -342,7 +354,9 @@ public class TouchCircleView extends View {
             sweepAngle = 360 - sweepAngle - MIN_SWEEP_ANGLE;
         }
         canvas.drawArc(innerRectf, startAngle, sweepAngle, false, innerPaint);
-        drawTriangle(canvas, startAngle, sweepAngle);
+        if (isDrawTriangle) {
+            drawTriangle(canvas, startAngle, sweepAngle);
+        }
     }
 
     public void drawTriangle(Canvas c, float startAngle, float sweepAngle) {
@@ -364,7 +378,6 @@ public class TouchCircleView extends View {
         // ignored a starting negative rotation. This appears to have
         // been fixed as of API 21.
         mArrow.moveTo(0, 0);
-
         mArrow.lineTo(ARROW_WIDTH * mArrowScale, 0);
         mArrow.lineTo((ARROW_WIDTH * mArrowScale / 2), (ARROW_HEIGHT
                 * mArrowScale));
@@ -379,6 +392,7 @@ public class TouchCircleView extends View {
 
     /**
      * 画勾
+     *
      * @param canvas
      */
     private void drawHook(Canvas canvas) {
@@ -386,13 +400,14 @@ public class TouchCircleView extends View {
         mHook.moveTo(innerRectf.centerX() - innerRectf.width() * 0.25f * fraction, innerRectf.centerY());
         mHook.lineTo(innerRectf.centerX() - innerRectf.width() * 0.1f * fraction, innerRectf.centerY() + innerRectf.height() * 0.18f * fraction);
         mHook.lineTo(innerRectf.centerX() + innerRectf.width() * 0.25f * fraction, innerRectf.centerY() - innerRectf.height() * 0.20f * fraction);
+        canvas.drawArc(outRectF, 0, 360, false, paint);
         canvas.drawPath(mHook, mHookPaint);
-        canvas.drawArc(innerRectf, 0, 360, false, mHookPaint);
 
     }
 
     /**
      * 画×
+     *
      * @param canvas
      */
     private void drawError(Canvas canvas) {
@@ -401,8 +416,8 @@ public class TouchCircleView extends View {
         mError.lineTo(innerRectf.centerX() - innerRectf.width() * 0.2f * fraction, innerRectf.centerY() + innerRectf.height() * 0.2f * fraction);
         mError.moveTo(innerRectf.centerX() - innerRectf.width() * 0.2f * fraction, innerRectf.centerY() - innerRectf.height() * 0.2f * fraction);
         mError.lineTo(innerRectf.centerX() + innerRectf.width() * 0.2f * fraction, innerRectf.centerY() + innerRectf.height() * 0.2f * fraction);
+        canvas.drawArc(outRectF, 0, 360, false, paint);
         canvas.drawPath(mError, mHookPaint);
-        canvas.drawArc(innerRectf, 0, 360, false, mHookPaint);
     }
 
 
@@ -424,6 +439,8 @@ public class TouchCircleView extends View {
             return;
         }
         mRunning = true;
+        mObjectAnimatorAngle.setFloatValues(mCurrentGlobalAngle, 360f);
+        mObjectAnimatorSweep.setFloatValues(mCurrentSweepAngle, 360f - MIN_SWEEP_ANGLE * 2);
 //        mCurrentState = STATE_LOADING;
         mObjectAnimatorAngle.start();
         mObjectAnimatorSweep.start();
@@ -438,14 +455,21 @@ public class TouchCircleView extends View {
 
     public void finish() {
         stop();
+        resetAngle();
         currentState = ((int) (Math.random() * 10)) % 2 == 1 ? STATE_DRAW_ERROR : STATE_DRAW_SUCCESS;
         if (!fractionAnimator.isRunning()) {
             fractionAnimator.start();
         }
     }
 
+    private void resetAngle() {
+        mCurrentSweepAngle = 0;
+        mCurrentGlobalAngle = 0;
+        mCurrentGlobalAngleOffset = 0;
+    }
+
     private void stop() {
-        if (mRunning) {
+        if (!mRunning) {
             return;
         }
         mRunning = false;
@@ -490,35 +514,27 @@ public class TouchCircleView extends View {
     };
 
     private void setupAnimations() {
-        mObjectAnimatorAngle = ObjectAnimator.ofFloat(this, mAngleProperty, 360f);
+        mObjectAnimatorAngle = ObjectAnimator.ofFloat(this, mAngleProperty, mCurrentGlobalAngle, 360f);
         mObjectAnimatorAngle.setInterpolator(ANGLE_INTERPOLATOR);
         mObjectAnimatorAngle.setDuration(ANGLE_ANIMATOR_DURATION);
         mObjectAnimatorAngle.setRepeatMode(ValueAnimator.RESTART);
         mObjectAnimatorAngle.setRepeatCount(ValueAnimator.INFINITE);
+        mObjectAnimatorAngle.addListener(new SimpleAnimatorListener() {
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+                mObjectAnimatorAngle.setFloatValues(360f);
+            }
+        });
 
-        mObjectAnimatorSweep = ObjectAnimator.ofFloat(this, mSweepProperty, 360f - MIN_SWEEP_ANGLE * 2);
+        mObjectAnimatorSweep = ObjectAnimator.ofFloat(this, mSweepProperty, mCurrentSweepAngle, 360f - MIN_SWEEP_ANGLE * 2);
         mObjectAnimatorSweep.setInterpolator(SWEEP_INTERPOLATOR);
         mObjectAnimatorSweep.setDuration(SWEEP_ANIMATOR_DURATION);
         mObjectAnimatorSweep.setRepeatMode(ValueAnimator.RESTART);
         mObjectAnimatorSweep.setRepeatCount(ValueAnimator.INFINITE);
-        mObjectAnimatorSweep.addListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animation) {
-
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animation) {
-
-            }
-
+        mObjectAnimatorSweep.addListener(new SimpleAnimatorListener() {
             @Override
             public void onAnimationRepeat(Animator animation) {
+                mObjectAnimatorSweep.setFloatValues(360f - MIN_SWEEP_ANGLE * 2);
                 toggleAppearingMode();
             }
         });
