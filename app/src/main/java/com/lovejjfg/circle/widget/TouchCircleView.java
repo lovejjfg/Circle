@@ -1,5 +1,6 @@
 package com.lovejjfg.circle.widget;
 
+import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.Context;
@@ -12,9 +13,12 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.util.Property;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.Interpolator;
+import android.view.animation.LinearInterpolator;
 
 import com.lovejjfg.circle.anim.drawable.MaterialProgressDrawable;
 
@@ -27,15 +31,33 @@ public class TouchCircleView extends View {
     private RectF outRectF;
     private RectF innerRectf;
     private RectF secondRectf;
+    private Paint innerPaint;
+    private Paint paint;
+    private Paint circlePaint;
+
+    private Path path;
+    private Path mArrow;
+    private Path mHook;
+    private Path mError;
+
+    private ObjectAnimator mObjectAnimatorSweep;
+    private ObjectAnimator mObjectAnimatorAngle;
+    private ValueAnimator fractionAnimator;
+
+    private static final Interpolator ANGLE_INTERPOLATOR = new LinearInterpolator();
+    private static final Interpolator SWEEP_INTERPOLATOR = new AccelerateDecelerateInterpolator();
+    private static final int ANGLE_ANIMATOR_DURATION = 3000;//转速
+    private static final int SWEEP_ANIMATOR_DURATION = 2000;
+    private static final int DELAY_TIME = 10000;
 
     private float mCurrentGlobalAngleOffset;
     private float mCurrentGlobalAngle;
     private float mCurrentSweepAngle;
-    private static final int MIN_SWEEP_ANGLE = 100;
+    private static final int MIN_SWEEP_ANGLE = 30;
 
 
     private Paint secondPain;
-    private Paint innerPaint;
+
     private float innerResult;
     private float mWidth;
     private ObjectAnimator mWidthAnimator;
@@ -48,22 +70,25 @@ public class TouchCircleView extends View {
     private ValueAnimator animator;
     private int startX;
     private int startY;
-    private Path path;
-    private Path mArrow;
-    private static final int State_Draw_Arc = 1;
-    private static final int State_Draw_Path = 2;
-    private static final int State_Draw_Circle = 3;
-    private static final int State_Draw_Arrow = 4;
-    private static final int State_Draw_Progress = 5;
-    //    private static final int State_Draw_Path_Arc = 4;
+    private static final int STATE_DRAW_IDLE = 0;
+    private static final int STATE_DRAW_ARC = 1;
+    private static final int STATE_DRAW_PATH = 2;//大圆到小圆的渐变
+    private static final int STATE_DRAW_OUT_PATH = 3;//小圆到大圆的渐变
+    private static final int STATE_DRAW_CIRCLE = 4;
+    private static final int STATE_DRAW_ARROW = 5;
+    private static final int STATE_DRAW_PROGRESS = 6;
+    private static final int STATE_DRAW_ERROR = 7;
+    private static final int STATE_DRAW_SUCCESS = 8;
     private int currentState;
     private int centerY;
     private int centerX;
-    MaterialProgressDrawable drawable;
-    private float mBorderWidth =4;
+    private float mBorderWidth = 4;
     private float mRingCenterRadius;
     private boolean mModeAppearing;
     private float mArrowScale = 1.0f;
+    private float fraction;
+    private Paint mHookPaint;
+    private boolean mRunning;
 
 
     public int getMultipleRadius() {
@@ -110,17 +135,13 @@ public class TouchCircleView extends View {
     }
 
     private int outCirRadius = 100;
-    private int innerCirRadius = outCirRadius-30;
+    private int innerCirRadius = outCirRadius - 30;
     private static int ARROW_WIDTH = 20 * 2;
     private static int ARROW_HEIGHT = 10 * 2;
 
 
-    private Paint circlePaint;
-    private Paint wavePaint;
-    //    private float result;
     private long angle;
     private long paths;
-    private Paint paint;
 
     public TouchCircleView(Context context) {
         super(context);
@@ -138,11 +159,9 @@ public class TouchCircleView extends View {
 
     }
 
-    private float firstCount;
-    private boolean isAdd = true;
-    private boolean isReduce;
 
     private void initView() {
+        setupAnimations();
         innerRectf = new RectF();
         secondRectf = new RectF();
         outRectF = new RectF();
@@ -153,13 +172,13 @@ public class TouchCircleView extends View {
             public boolean onTouch(View v, MotionEvent ev) {
                 switch (ev.getAction()) {
                     case MotionEvent.ACTION_DOWN://有事件先拦截再说！！
-                        startX = (int) ev.getRawX();
-                        startY = (int) ev.getRawY();
+                        startX = (int) ev.getX();
+                        startY = (int) ev.getY();
                         outRectF.set(centerX - outCirRadius, 0, centerX + outCirRadius
                                 , centerY + outCirRadius);
                         break;
                     case MotionEvent.ACTION_MOVE://移动的时候
-                        int endY = (int) ev.getRawY();
+                        int endY = (int) ev.getY();
                         int dy = (int) ((endY - startY) * 1.5f);
                         if (dy < 0) {
                             dy = 0;
@@ -169,91 +188,76 @@ public class TouchCircleView extends View {
 //                        }
 //                        if (dy!=angle && dy >= -360 && dy <= 360) {
                         if (dy != angle && dy >= 0 && dy <= 360) {
+                            currentState = STATE_DRAW_ARC;
                             outRectF.set(centerX - outCirRadius, 0, centerX + outCirRadius
                                     , centerY + outCirRadius);
-                            currentState = State_Draw_Arc;
                             angle = dy;
                             Log.i("TAG", "onTouchEvent: " + angle);
                             invalidate();
                             break;
                         }
-                        if (dy > 360 && dy < 400) {
-                            currentState = State_Draw_Arrow;
-                            mCurrentGlobalAngle++;
+                        if (dy > 360 && dy < 460) {
+                            currentState = STATE_DRAW_ARROW;
+//                            mCurrentGlobalAngle++;
                             invalidate();
                             break;
                         }
                         //正常顺序到达这里
-                        if ( dy >= 400 && dy <= 600) {
-                            currentState = State_Draw_Path;
-
+                        if (dy >= 460 && dy <= 560) {
+                            currentState = STATE_DRAW_PATH;
                             paths = dy - 300;
-                            if (dy >= 400) {//360+半径？？
-                                float precent = (dy-400) * 1.0f / 200;
-                                outRectF.set(centerX - outCirRadius + precent * 40,    30 * precent, centerX + outCirRadius - precent * 40
-                                        , centerY + outCirRadius - 20 * precent);
-
+                            if (dy >= 460) {//360+半径？？
+                                float precent = (dy - 460) * 1.0f / 100;
+                                innerPaint.setAlpha((int) ((1 - precent) * 255));
+                                outRectF.set(centerX - outCirRadius + precent * 20, 15 * precent, centerX + outCirRadius - precent * 20
+                                        , centerY + outCirRadius - 10 * precent);
                             }
                             invalidate();
                             break;
                         }
 
                         if (dy >= 600) {
-                            currentState = State_Draw_Circle;
+                            currentState = STATE_DRAW_CIRCLE;
                             invalidate();
                             break;
                         }
 
 
                         break;
+                    case MotionEvent.ACTION_UP:
+                    case MotionEvent.ACTION_CANCEL:
+                        if (STATE_DRAW_ARROW == currentState) {
+                            currentState = STATE_DRAW_PROGRESS;
+                            start();
+                            return true;
+                        }
+                        stop();
+                        currentState = STATE_DRAW_IDLE;
+                        invalidate();
+                        break;
                 }
                 return true;
             }
         });
-        post(new Runnable() {
+        initPaintPath();
 
 
-            @Override
-            public void run() {
-//                centerX = getMeasuredWidth() / 2;
-//                centerY = getMeasuredHeight() / 2 - 200;
-                Log.e("TAG111", "run: " + centerX);
-//                outRectF.set(centerX - outCirRadius, centerY - outCirRadius, centerX + outCirRadius
-//                        , centerY + outCirRadius);
-                animator = ValueAnimator.ofInt(0, 360);
-                animator.setInterpolator(new AccelerateDecelerateInterpolator());
-                animator.setDuration(5000);
-                animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                    @Override
-                    public void onAnimationUpdate(ValueAnimator animation) {
-                        angle1 = (Integer) animation.getAnimatedValue();
-                        TouchCircleView.this.invalidate();
-                        Log.i("TAG", "onAnimationUpdate: " + angle1);
+    }
 
-                    }
-                });
-//                animator.start();
-
-            }
-        });
+    private void initPaintPath() {
         circlePaint = new Paint();
         circlePaint.setColor(Color.BLUE);
         circlePaint.setStrokeWidth(10);
         circlePaint.setStyle(Paint.Style.STROKE);
         circlePaint.setAntiAlias(true);
         circlePaint.setAlpha(50);
-        path = new Path();
-        mArrow = new Path();
-
 
         paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         paint.setStyle(Paint.Style.FILL);
         paint.setAntiAlias(true);
         paint.setStrokeWidth(20);
         paint.setColor(Color.RED);
-//        paint.setAlpha(50);
         paint.setStrokeCap(Paint.Cap.SQUARE);
-
 
         innerPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         innerPaint.setStyle(Paint.Style.STROKE);
@@ -262,25 +266,25 @@ public class TouchCircleView extends View {
         innerPaint.setStrokeWidth(mBorderWidth);
 
 
+        mHookPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mHookPaint.setStyle(Paint.Style.STROKE);
+        mHookPaint.setStrokeCap(Paint.Cap.ROUND);
+        mHookPaint.setStrokeWidth(mBorderWidth);
+        mHookPaint.setColor(Color.RED);
+
+        path = new Path();
+        mArrow = new Path();
+        mHook = new Path();
+        mError = new Path();
     }
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
         int min = Math.min(w, h);
-        centerX = w/2;
+        centerX = w / 2;
         centerY = outCirRadius;
-
-//        outRectF.set(min-outCirRadius, min-outCirRadius, min+outCirRadius, min+outCirRadius);
-//        secondRectf.set(min-80, min-80, min+80, min +80);
-//        innerRectf.left = mBorderWidth * 2f + .5f;
-//        innerRectf.right = min - mBorderWidth * 2f - .5f;
-//        innerRectf.top = mBorderWidth * 2f + .5f;
-//        innerRectf.bottom = min - mBorderWidth * 2f - .5f;
         innerRectf.set(centerX - innerCirRadius, centerY - innerCirRadius, centerX + innerCirRadius, centerY + innerCirRadius);
-
-
-//        mRingCenterRadius = Math.min(w, h)+mBorderWidth/2;
         mRingCenterRadius = Math.min(innerRectf.centerX() - innerRectf.left, innerRectf.centerY() - innerRectf.top) - mBorderWidth;
 
     }
@@ -290,22 +294,32 @@ public class TouchCircleView extends View {
     protected void onDraw(Canvas canvas) {
         //动画的
         switch (currentState) {
-            case State_Draw_Arc:
+            case STATE_DRAW_IDLE:
+                break;
+            case STATE_DRAW_ARC:
                 canvas.drawArc(outRectF, 0, angle, true, paint);
                 canvas.drawArc(outRectF, 0, angle, false, circlePaint);
                 break;
-            case State_Draw_Arrow:
+            case STATE_DRAW_ARROW:
+            case STATE_DRAW_PROGRESS:
                 canvas.drawArc(outRectF, 0, 360, true, paint);
                 drawArc(canvas);
                 break;
-            case State_Draw_Path:
+            case STATE_DRAW_SUCCESS:
+                drawHook(canvas);
+                break;
+            case STATE_DRAW_ERROR:
+                drawError(canvas);
+                break;
+            case STATE_DRAW_PATH:
                 path.reset();
                 path.moveTo((float) (outRectF.centerX() - Math.cos(180 / Math.PI * 30) * (outRectF.centerX() - outRectF.left)), (float) (outRectF.centerY() - Math.sin(180 / Math.PI * 30) * (outRectF.centerY() - outRectF.top)));
                 path.quadTo(outRectF.centerX(), outRectF.centerY() + paths, (float) (outRectF.centerX() + Math.cos(180 / Math.PI * 30) * (outRectF.centerX() - outRectF.left)), (float) (outRectF.centerY() - Math.sin(180 / Math.PI * 30) * (outRectF.centerY() - outRectF.top)));
                 canvas.drawPath(path, paint);
                 canvas.drawArc(outRectF, 0, 360, true, paint);
+                drawArc(canvas);
                 break;
-            case State_Draw_Circle:
+            case STATE_DRAW_CIRCLE:
                 canvas.drawCircle(outRectF.centerX(), outRectF.centerY() + outRectF.bottom - outRectF.top, 80, paint);
                 break;
         }
@@ -363,9 +377,181 @@ public class TouchCircleView extends View {
 
     }
 
-//    @Override
-//    public boolean onTouchEvent(MotionEvent ev) {
-//
-//    }
+    /**
+     * 画勾
+     * @param canvas
+     */
+    private void drawHook(Canvas canvas) {
+        mHook.reset();
+        mHook.moveTo(innerRectf.centerX() - innerRectf.width() * 0.25f * fraction, innerRectf.centerY());
+        mHook.lineTo(innerRectf.centerX() - innerRectf.width() * 0.1f * fraction, innerRectf.centerY() + innerRectf.height() * 0.18f * fraction);
+        mHook.lineTo(innerRectf.centerX() + innerRectf.width() * 0.25f * fraction, innerRectf.centerY() - innerRectf.height() * 0.20f * fraction);
+        canvas.drawPath(mHook, mHookPaint);
+        canvas.drawArc(innerRectf, 0, 360, false, mHookPaint);
+
+    }
+
+    /**
+     * 画×
+     * @param canvas
+     */
+    private void drawError(Canvas canvas) {
+        mError.reset();
+        mError.moveTo(innerRectf.centerX() + innerRectf.width() * 0.2f * fraction, innerRectf.centerY() - innerRectf.height() * 0.2f * fraction);
+        mError.lineTo(innerRectf.centerX() - innerRectf.width() * 0.2f * fraction, innerRectf.centerY() + innerRectf.height() * 0.2f * fraction);
+        mError.moveTo(innerRectf.centerX() - innerRectf.width() * 0.2f * fraction, innerRectf.centerY() - innerRectf.height() * 0.2f * fraction);
+        mError.lineTo(innerRectf.centerX() + innerRectf.width() * 0.2f * fraction, innerRectf.centerY() + innerRectf.height() * 0.2f * fraction);
+        canvas.drawPath(mError, mHookPaint);
+        canvas.drawArc(innerRectf, 0, 360, false, mHookPaint);
+    }
+
+
+    private static int gradient(int color1, int color2, float p) {
+        int r1 = (color1 & 0xff0000) >> 16;
+        int g1 = (color1 & 0xff00) >> 8;
+        int b1 = color1 & 0xff;
+        int r2 = (color2 & 0xff0000) >> 16;
+        int g2 = (color2 & 0xff00) >> 8;
+        int b2 = color2 & 0xff;
+        int newr = (int) (r2 * p + r1 * (1 - p));
+        int newg = (int) (g2 * p + g1 * (1 - p));
+        int newb = (int) (b2 * p + b1 * (1 - p));
+        return Color.argb(255, newr, newg, newb);
+    }
+
+    private void start() {
+        if (mRunning) {
+            return;
+        }
+        mRunning = true;
+//        mCurrentState = STATE_LOADING;
+        mObjectAnimatorAngle.start();
+        mObjectAnimatorSweep.start();
+        postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                finish();
+            }
+        }, DELAY_TIME);
+        invalidate();
+    }
+
+    public void finish() {
+        stop();
+        currentState = ((int) (Math.random() * 10)) % 2 == 1 ? STATE_DRAW_ERROR : STATE_DRAW_SUCCESS;
+        if (!fractionAnimator.isRunning()) {
+            fractionAnimator.start();
+        }
+    }
+
+    private void stop() {
+        if (mRunning) {
+            return;
+        }
+        mRunning = false;
+        mObjectAnimatorAngle.cancel();
+        mObjectAnimatorSweep.cancel();
+        invalidate();
+    }
+
+    private void toggleAppearingMode() {
+        mModeAppearing = !mModeAppearing;
+        if (mModeAppearing) {
+//            mCurrentColorIndex = ++mCurrentColorIndex % 4;
+//            mNextColorIndex = ++mNextColorIndex % 4;
+            mCurrentGlobalAngleOffset = (mCurrentGlobalAngleOffset + MIN_SWEEP_ANGLE * 2) % 360;
+        }
+    }
+    // ////////////////////////////////////////////////////////////////////////////
+    // ////////////// Animation
+
+    private Property<TouchCircleView, Float> mAngleProperty = new Property<TouchCircleView, Float>(Float.class, "angle") {
+        @Override
+        public Float get(TouchCircleView object) {
+            return object.getCurrentGlobalAngle();
+        }
+
+        @Override
+        public void set(TouchCircleView object, Float value) {
+            object.setCurrentGlobalAngle(value);
+        }
+    };
+
+    private Property<TouchCircleView, Float> mSweepProperty = new Property<TouchCircleView, Float>(Float.class, "arc") {
+        @Override
+        public Float get(TouchCircleView object) {
+            return object.getCurrentSweepAngle();
+        }
+
+        @Override
+        public void set(TouchCircleView object, Float value) {
+            object.setCurrentSweepAngle(value);
+        }
+    };
+
+    private void setupAnimations() {
+        mObjectAnimatorAngle = ObjectAnimator.ofFloat(this, mAngleProperty, 360f);
+        mObjectAnimatorAngle.setInterpolator(ANGLE_INTERPOLATOR);
+        mObjectAnimatorAngle.setDuration(ANGLE_ANIMATOR_DURATION);
+        mObjectAnimatorAngle.setRepeatMode(ValueAnimator.RESTART);
+        mObjectAnimatorAngle.setRepeatCount(ValueAnimator.INFINITE);
+
+        mObjectAnimatorSweep = ObjectAnimator.ofFloat(this, mSweepProperty, 360f - MIN_SWEEP_ANGLE * 2);
+        mObjectAnimatorSweep.setInterpolator(SWEEP_INTERPOLATOR);
+        mObjectAnimatorSweep.setDuration(SWEEP_ANIMATOR_DURATION);
+        mObjectAnimatorSweep.setRepeatMode(ValueAnimator.RESTART);
+        mObjectAnimatorSweep.setRepeatCount(ValueAnimator.INFINITE);
+        mObjectAnimatorSweep.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+                toggleAppearingMode();
+            }
+        });
+
+        fractionAnimator = ValueAnimator.ofInt(0, 255);
+        fractionAnimator.setInterpolator(ANGLE_INTERPOLATOR);
+        fractionAnimator.setDuration(100);
+        fractionAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                fraction = animation.getAnimatedFraction();
+                mHookPaint.setAlpha((Integer) animation.getAnimatedValue());
+                invalidate();
+            }
+        });
+    }
+
+    public void setCurrentGlobalAngle(float currentGlobalAngle) {
+        mCurrentGlobalAngle = currentGlobalAngle;
+        invalidate();
+    }
+
+    public float getCurrentGlobalAngle() {
+        return mCurrentGlobalAngle;
+    }
+
+    public void setCurrentSweepAngle(float currentSweepAngle) {
+        mCurrentSweepAngle = currentSweepAngle;
+        invalidate();
+    }
+
+    public float getCurrentSweepAngle() {
+        return mCurrentSweepAngle;
+    }
 
 }
