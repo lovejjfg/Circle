@@ -19,4 +19,8 @@
         <attr name="indexSize" format="dimension"/>
     </declare-styleable>
 
+    <declare-styleable name="CustomerProgress">
+        <attr name="progressBorderWidth" format="dimension" />
+    </declare-styleable>
+
 </resources>
