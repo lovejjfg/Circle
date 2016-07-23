@@ -19,8 +19,9 @@
         <attr name="indexSize" format="dimension"/>
     </declare-styleable>
 
-    <declare-styleable name="CustomerProgress">
+    <declare-styleable name="CircleProgress">
         <attr name="progressBorderWidth" format="dimension" />
+        <attr name="showArrow" format="boolean" />
     </declare-styleable>
 
 </resources>

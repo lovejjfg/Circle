@@ -20,7 +20,6 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
 
-import com.lovejjfg.circle.anim.drawable.MaterialProgressDrawable;
 import com.lovejjfg.circle.listener.SimpleAnimatorListener;
 
 /**
@@ -77,7 +76,7 @@ public class TouchCircleView extends View {
     private static final int STATE_DRAW_ARC = 1;
     private static final int STATE_DRAW_PATH = 2;//大圆到小圆的渐变
     private static final int STATE_DRAW_OUT_PATH = 3;//小圆到大圆的渐变
-    private static final int STATE_DRAW_CIRCLE = 4;
+    private static final int STATE_DRAW_SECARC = 4;
     private static final int STATE_DRAW_ARROW = 5;
     private static final int STATE_DRAW_PROGRESS = 6;
     private static final int STATE_DRAW_ERROR = 7;
@@ -93,6 +92,7 @@ public class TouchCircleView extends View {
     private Paint mHookPaint;
     private boolean mRunning;
     private boolean isDrawTriangle;
+    private int currentDy;
 
 
     public int getMultipleRadius() {
@@ -139,6 +139,7 @@ public class TouchCircleView extends View {
     }
 
     private int outCirRadius = 100;
+    private int secCirRadius = 80;
     private int innerCirRadius = outCirRadius - 30;
     private static int ARROW_WIDTH = 20 * 2;
     private static int ARROW_HEIGHT = 10 * 2;
@@ -174,12 +175,13 @@ public class TouchCircleView extends View {
         setOnTouchListener(new OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent ev) {
+                if (currentState == STATE_DRAW_PROGRESS) {
+                    return true;
+                }
                 switch (ev.getAction()) {
                     case MotionEvent.ACTION_DOWN://有事件先拦截再说！！
                         startX = (int) ev.getX();
                         startY = (int) ev.getY();
-                        outRectF.set(centerX - outCirRadius, 0, centerX + outCirRadius
-                                , centerY + outCirRadius);
                         break;
                     case MotionEvent.ACTION_MOVE://移动的时候
                         int endY = (int) ev.getY();
@@ -192,6 +194,7 @@ public class TouchCircleView extends View {
 //                        }
 //                        if (dy!=angle && dy >= -360 && dy <= 360) {
                         if (dy != angle && dy >= 0 && dy <= 360) {
+                            currentDy = 0;
                             currentState = STATE_DRAW_ARC;
                             resetAngle();
                             outRectF.set(centerX - outCirRadius, 0, centerX + outCirRadius
@@ -201,19 +204,31 @@ public class TouchCircleView extends View {
                             invalidate();
                             break;
                         }
-                        if (dy > 360 && dy < 460) {
+                        if (dy > 360 && dy < 500) {
                             currentState = STATE_DRAW_ARROW;
-                            mCurrentGlobalAngle++;
-                            mCurrentSweepAngle++;
+                            if (currentDy > dy) {
+                                break;
+                            }
+                            innerPaint.setAlpha(255);
+                            currentDy = dy;
+                            int i = currentDy - 360;
+                            mCurrentGlobalAngle = i;
+                            mCurrentSweepAngle =i;
                             invalidate();
                             break;
                         }
                         //正常顺序到达这里
-                        if (dy >= 460 && dy <= 560) {
+                        if (dy >= 500 && dy <= 600) {
+                            // TODO: 2016/7/17
+//                            if (currentState == STATE_DRAW_SECARC) {
+//                                currentState = STATE_DRAW_OUT_PATH;
+//                                invalidate();
+//                                break;
+//                            }
                             currentState = STATE_DRAW_PATH;
                             paths = dy - 300;
-                            if (dy >= 460) {//360+半径？？
-                                float precent = (dy - 460) * 1.0f / 100;
+                            if (dy >= 500) {//360+半径？？
+                                float precent = (dy - 500) * 1.0f / 100;
                                 innerPaint.setAlpha((int) ((1 - precent) * 255));
                                 outRectF.set(centerX - outCirRadius + precent * 20, 15 * precent, centerX + outCirRadius - precent * 20
                                         , centerY + outCirRadius - 10 * precent);
@@ -223,7 +238,7 @@ public class TouchCircleView extends View {
                         }
 
                         if (dy >= 600) {
-                            currentState = STATE_DRAW_CIRCLE;
+                            currentState = STATE_DRAW_SECARC;
                             invalidate();
                             break;
                         }
@@ -232,11 +247,13 @@ public class TouchCircleView extends View {
                         break;
                     case MotionEvent.ACTION_UP:
                     case MotionEvent.ACTION_CANCEL:
-                        if (STATE_DRAW_ARROW == currentState) {
-                            currentState = STATE_DRAW_PROGRESS;
-                            innerPaint.setAlpha(255);
-                            start();
-                            return true;
+                        switch (currentState) {
+                            case STATE_DRAW_ARROW:
+                            case STATE_DRAW_PATH:
+                                currentState = STATE_DRAW_PROGRESS;
+                                innerPaint.setAlpha(255);
+                                start();
+                                return true;
                         }
                         stop();
                         currentState = STATE_DRAW_IDLE;
@@ -288,10 +305,10 @@ public class TouchCircleView extends View {
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-        int min = Math.min(w, h);
         centerX = w / 2;
         centerY = outCirRadius;
         innerRectf.set(centerX - innerCirRadius, centerY - innerCirRadius, centerX + innerCirRadius, centerY + innerCirRadius);
+        secondRectf.set(centerX - secCirRadius, centerY - secCirRadius+outCirRadius, centerX + secCirRadius, centerY + secCirRadius+outCirRadius);
         mRingCenterRadius = Math.min(innerRectf.centerX() - innerRectf.left, innerRectf.centerY() - innerRectf.top) - mBorderWidth;
 
     }
@@ -312,7 +329,7 @@ public class TouchCircleView extends View {
                 canvas.drawArc(outRectF, 0, 360, true, paint);
                 drawArc(canvas);
                 break;
-            case STATE_DRAW_PROGRESS:
+            case STATE_DRAW_PROGRESS://转圈效果
                 isDrawTriangle = false;
                 canvas.drawArc(outRectF, 0, 360, true, paint);
                 drawArc(canvas);
@@ -331,8 +348,17 @@ public class TouchCircleView extends View {
                 canvas.drawArc(outRectF, 0, 360, true, paint);
                 drawArc(canvas);
                 break;
-            case STATE_DRAW_CIRCLE:
-                canvas.drawCircle(outRectF.centerX(), outRectF.centerY() + outRectF.bottom - outRectF.top, 80, paint);
+            case STATE_DRAW_OUT_PATH:
+                path.reset();
+                path.moveTo((float) (secondRectf.centerX() - Math.cos(180 / Math.PI * 30) * (secondRectf.centerX() - secondRectf.left)), (float) (secondRectf.centerY() - Math.sin(180 / Math.PI * 30) * (secondRectf.centerY() - secondRectf.top)));
+                path.quadTo(secondRectf.centerX(), secondRectf.centerY() - paths, (float) (secondRectf.centerX() + Math.cos(180 / Math.PI * 30) * (secondRectf.centerX() - secondRectf.left)), (float) (secondRectf.centerY() - Math.sin(180 / Math.PI * 30) * (secondRectf.centerY() - secondRectf.top)));
+                canvas.drawPath(path, paint);
+                canvas.drawArc(outRectF, 0, 360, true, paint);
+                drawArc(canvas);
+                break;
+            case STATE_DRAW_SECARC:
+//                canvas.drawCircle(outRectF.centerX(), outRectF.centerY() + outRectF.bottom - outRectF.top, 80, paint);
+                canvas.drawArc(secondRectf, 0, 360, true, paint);
                 break;
         }
 

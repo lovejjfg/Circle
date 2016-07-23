@@ -19,14 +19,15 @@ import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
 
 import com.lovejjfg.circle.R;
+import com.lovejjfg.circle.listener.SimpleAnimatorListener;
 
 
-public class CustomerProgress extends View implements View.OnClickListener {
+public class CircleProgress extends View implements View.OnClickListener {
 
     private static final Interpolator ANGLE_INTERPOLATOR = new LinearInterpolator();
     private static final Interpolator SWEEP_INTERPOLATOR = new AccelerateDecelerateInterpolator();
-    private static final int ANGLE_ANIMATOR_DURATION = 3000;//转速
-    private static final int SWEEP_ANIMATOR_DURATION = 2000;
+    private static final int ANGLE_ANIMATOR_DURATION = 1500;//转速
+    private static final int SWEEP_ANIMATOR_DURATION = 1000;
     private static final int DELAY_TIME = 10000;
     private static final int MIN_SWEEP_ANGLE = 30;
     private static final int DEFAULT_BORDER_WIDTH = 3;
@@ -40,7 +41,7 @@ public class CustomerProgress extends View implements View.OnClickListener {
     private float mCurrentGlobalAngleOffset;
     private float mCurrentGlobalAngle;
     private float mCurrentSweepAngle;
-    private float mBorderWidth ;
+    private float mBorderWidth;
     private boolean mRunning;
     private int[] mColors;
     private int mCurrentColorIndex;
@@ -61,23 +62,25 @@ public class CustomerProgress extends View implements View.OnClickListener {
     private static final float ARROW_OFFSET_ANGLE = 5;
     private float fraction;
     private Path mError;
+    private boolean showArrow;
 
 
-    public CustomerProgress(Context context) {
+    public CircleProgress(Context context) {
         this(context, null);
     }
 
-    public CustomerProgress(Context context, AttributeSet attrs) {
+    public CircleProgress(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public CustomerProgress(Context context, AttributeSet attrs, int defStyleAttr) {
+    public CircleProgress(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
         float density = context.getResources().getDisplayMetrics().density;
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.CustomerProgress, defStyleAttr, 0);
-        mBorderWidth = a.getDimension(R.styleable.CustomerProgress_progressBorderWidth,
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.CircleProgress, defStyleAttr, 0);
+        mBorderWidth = a.getDimension(R.styleable.CircleProgress_progressBorderWidth,
                 DEFAULT_BORDER_WIDTH * density);
+        showArrow = a.getBoolean(R.styleable.CircleProgress_showArrow, false);
         a.recycle();
         ARROW_WIDTH = (int) (mBorderWidth * 2);
         ARROW_HEIGHT = (int) mBorderWidth;
@@ -232,7 +235,9 @@ public class CustomerProgress extends View implements View.OnClickListener {
             sweepAngle = 360 - sweepAngle - MIN_SWEEP_ANGLE;
         }
         canvas.drawArc(fBounds, startAngle, sweepAngle, false, mPaint);
-        drawTriangle(canvas, startAngle, sweepAngle);
+        if (showArrow) {
+            drawTriangle(canvas, startAngle, sweepAngle);
+        }
     }
 
     public void drawTriangle(Canvas c, float startAngle, float sweepAngle) {
@@ -243,25 +248,17 @@ public class CustomerProgress extends View implements View.OnClickListener {
             mArrow.reset();
         }
 
-        // Adjust the position of the triangle so that it is inset as
-        // much as the arc, but also centered on the arc.
-//        float inset = (int) mStrokeInset / 2 * mArrowScale;
-        float x = (float) (mRingCenterRadius * Math.cos(0) + fBounds.centerX());
-        float y = (float) (mRingCenterRadius * Math.sin(0) + fBounds.centerY());
-
-        // Update the path each time. This works around an issue in SKIA
-        // where concatenating a rotation matrix to a scale matrix
-        // ignored a starting negative rotation. This appears to have
-        // been fixed as of API 21.
+        float x = (float) (mRingCenterRadius + fBounds.centerX());
+        float y = (float) (  fBounds.centerY());
         mArrow.moveTo(0, 0);
         mArrow.lineTo(ARROW_WIDTH * mArrowScale, 0);
         mArrow.lineTo((ARROW_WIDTH * mArrowScale / 2), (ARROW_HEIGHT
                 * mArrowScale));
         mArrow.offset(x, y);
         mArrow.close();
-        // draw a triangle
         c.rotate(startAngle + sweepAngle, fBounds.centerX(),
                 fBounds.centerY());
+        c.drawPoint(x, y, mPaint);
         c.drawPath(mArrow, mPaint);
     }
 
@@ -289,26 +286,26 @@ public class CustomerProgress extends View implements View.OnClickListener {
     // ////////////////////////////////////////////////////////////////////////////
     // ////////////// Animation
 
-    private Property<CustomerProgress, Float> mAngleProperty = new Property<CustomerProgress, Float>(Float.class, "angle") {
+    private Property<CircleProgress, Float> mAngleProperty = new Property<CircleProgress, Float>(Float.class, "angle") {
         @Override
-        public Float get(CustomerProgress object) {
+        public Float get(CircleProgress object) {
             return object.getCurrentGlobalAngle();
         }
 
         @Override
-        public void set(CustomerProgress object, Float value) {
+        public void set(CircleProgress object, Float value) {
             object.setCurrentGlobalAngle(value);
         }
     };
 
-    private Property<CustomerProgress, Float> mSweepProperty = new Property<CustomerProgress, Float>(Float.class, "arc") {
+    private Property<CircleProgress, Float> mSweepProperty = new Property<CircleProgress, Float>(Float.class, "arc") {
         @Override
-        public Float get(CustomerProgress object) {
+        public Float get(CircleProgress object) {
             return object.getCurrentSweepAngle();
         }
 
         @Override
-        public void set(CustomerProgress object, Float value) {
+        public void set(CircleProgress object, Float value) {
             object.setCurrentSweepAngle(value);
         }
     };
@@ -325,28 +322,12 @@ public class CustomerProgress extends View implements View.OnClickListener {
         mObjectAnimatorSweep.setDuration(SWEEP_ANIMATOR_DURATION);
         mObjectAnimatorSweep.setRepeatMode(ValueAnimator.RESTART);
         mObjectAnimatorSweep.setRepeatCount(ValueAnimator.INFINITE);
-        mObjectAnimatorSweep.addListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animation) {
-
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animation) {
-
-            }
-
+        mObjectAnimatorSweep.addListener(new SimpleAnimatorListener() {
             @Override
             public void onAnimationRepeat(Animator animation) {
                 toggleAppearingMode();
             }
         });
-
         fractionAnimator = ValueAnimator.ofInt(0, 255);
         fractionAnimator.setInterpolator(ANGLE_INTERPOLATOR);
         fractionAnimator.setDuration(100);
