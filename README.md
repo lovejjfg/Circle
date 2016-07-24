@@ -1,13 +1,17 @@
 
 
 ### 最终效果图：
-# CircleProgress && TouchCircleView
+
 ![旋转过程的角标](https://raw.githubusercontent.com/lovejjfg/screenshort/master/progress.gif)
-[博客地址 戳我戳我](http://www.jianshu.com/p/98bb533afa9c)
+
 
 ![DragBubble](http://img.blog.csdn.net/20160611125748698)![PathText](https://raw.githubusercontent.com/lovejjfg/screenshort/master/PathTextgif.gif)
 
 ![IndexBar](https://raw.githubusercontent.com/lovejjfg/IndexMasterDemo/master/index.gif)
+
+# CircleProgress && TouchCircleView
+[博客地址 戳我戳我](http://www.jianshu.com/p/98bb533afa9c)
+
 #DragBubble
 ### 基本原理
 
