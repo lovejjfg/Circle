@@ -222,7 +222,9 @@ public class DragBubbleView extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
-
+        if (!isEnabled()) {
+            return true;
+        }
         switch (ev.getAction()) {
             case MotionEvent.ACTION_DOWN://有事件先拦截再说！！
                 getParent().requestDisallowInterceptTouchEvent(true);
