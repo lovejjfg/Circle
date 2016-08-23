@@ -57,6 +57,7 @@ public class Fragment2 extends Fragment implements CompoundButton.OnCheckedChang
         ButterKnife.bind(this, rootView);
         mCbFill.setChecked(mBubble.getFillDraw());
         mCbCircle.setChecked(mBubble.isShowCircle());
+//        mBubble.setEnabled(false);
         mCbFill.setOnCheckedChangeListener(this);
         mPbRadio.setOnSeekBarChangeListener(this);
         mCbCircle.setOnCheckedChangeListener(this);
