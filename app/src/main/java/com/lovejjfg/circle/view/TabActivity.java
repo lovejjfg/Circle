@@ -20,6 +20,7 @@ import com.lovejjfg.circle.view.fragment.Fragment3;
 import com.lovejjfg.circle.view.fragment.Fragment4;
 import com.lovejjfg.circle.view.fragment.Fragment5;
 import com.lovejjfg.circle.view.fragment.Fragment6;
+import com.lovejjfg.circle.view.fragment.Fragment7;
 
 import java.util.ArrayList;
 
@@ -64,6 +65,7 @@ public class TabActivity extends AppCompatActivity implements View.OnClickListen
         fragments.add(Fragment1.newInstance(1));
         fragments.add(Fragment2.newInstance(1));
         fragments.add(Fragment4.newInstance(1));
+        fragments.add(Fragment7.newInstance(1));
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());

@@ -10,27 +10,23 @@ import android.graphics.Path;
 import android.graphics.PointF;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 
 import com.lovejjfg.circle.listener.SimpleAnimatorListener;
+
+import static android.transition.Fade.IN;
 
 /**
  * Created by Joe on 2016-06-16
  * Email: zhangjun166@pingan.com.cn
  */
 public class TestView extends View {
-    private static String TEST = "这就是一个测试 哎哟不错哦";
-    private BezierEvaluator evaluator;
+    private static final String TAG = "TEST";
     private Paint paint;
-    private float fraction;
-    private PointF pointF;
-    private ValueAnimator animator;
-    private int count;
-    private boolean reduce;
-    private int radio = 20;
-    private int each;
-    private int offset;
     private Path path;
+    private float currentX;
+    private float currentY;
 
     public TestView(Context context) {
         this(context, null);
@@ -46,17 +42,23 @@ public class TestView extends View {
     }
 
     private void init() {
-        evaluator = new BezierEvaluator(new PointF(100, 400), new PointF(200, 0), new PointF(300, 400));
         paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         paint.setStyle(Paint.Style.FILL);
         paint.setStrokeWidth(5);
         paint.setColor(Color.RED);
-
-        paint.setTextSize(50);
-
         path = new Path();
 
 
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        getParent().requestDisallowInterceptTouchEvent(true);
+        currentX = event.getRawX();
+        currentY = event.getRawY();
+        Log.e(TAG, "onTouchEvent: " + currentX + ";;;" + currentY);
+        invalidate();
+        return true;
     }
 
     @Override
@@ -66,22 +68,8 @@ public class TestView extends View {
 //        }
 //        canvas.drawLine(0, 400, getMeasuredWidth(), 400, paint);
         path.reset();
-        path.moveTo(100, 100);
-        path.lineTo(300, 200);
-        path.lineTo(700, 600);
-        canvas.translate(0, 100);
-        paint.setStyle(Paint.Style.FILL);
-        canvas.drawText(TEST, 0, 0, paint);
-        canvas.translate(0, 300);
-        canvas.drawTextOnPath(TEST, path, 0, 0, paint);
-        paint.setStyle(Paint.Style.STROKE);
-        canvas.drawPath(path, paint);
-        path.reset();
-        path.moveTo(0, 500);
-        path.quadTo(400, 800, 800, 500);
-        paint.setStyle(Paint.Style.FILL);
-        canvas.drawTextOnPath(TEST, path, 0, 0, paint);
-        paint.setStyle(Paint.Style.STROKE);
+        path.moveTo(0, 0);
+        path.quadTo(currentX, currentY, getWidth(), 0);
         canvas.drawPath(path, paint);
     }
 }
