@@ -5,22 +5,20 @@
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:layout_gravity="center"
               android:clipChildren="false"
-              android:gravity="center"
               android:orientation="vertical"
               tools:context=".view.TabActivity">
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:background="#f00"
-        />
 
 <com.lovejjfg.circle.widget.TestView
     android:id="@+id/ts"
+    android:background="#f00"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"/>
+    android:layout_height="200dp"/>
+<View
+    android:background="#aff0"
+    android:layout_width="match_parent"
+    android:layout_height="200dp"/>
 
 
 

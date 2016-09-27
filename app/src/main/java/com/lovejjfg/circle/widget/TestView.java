@@ -81,8 +81,8 @@ public class TestView extends View {
 //        }
 //        canvas.drawLine(0, 400, getMeasuredWidth(), 400, paint);
         path.reset();
-        path.moveTo(0, 0);
-        path.quadTo(currentX, currentY, getWidth(), 0);
+        path.moveTo(0, getMeasuredHeight());
+        path.quadTo(currentX, currentY + getMeasuredHeight(), getWidth(), getMeasuredHeight());
         canvas.drawPath(path, paint);
     }
 }
