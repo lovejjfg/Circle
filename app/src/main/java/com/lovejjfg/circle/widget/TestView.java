@@ -53,11 +53,24 @@ public class TestView extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        getParent().requestDisallowInterceptTouchEvent(true);
-        currentX = event.getRawX();
-        currentY = event.getRawY();
-        Log.e(TAG, "onTouchEvent: " + currentX + ";;;" + currentY);
-        invalidate();
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                getParent().requestDisallowInterceptTouchEvent(true);
+                return true;
+            case MotionEvent.ACTION_MOVE:
+                currentX = event.getRawX();
+                float rawY = event.getRawY();
+                currentY = rawY >= 100 ? 100 : rawY;
+                Log.e(TAG, "onTouchEvent: " + currentX + ";;;" + currentY);
+                invalidate();
+                break;
+            case MotionEvent.ACTION_UP:
+            case MotionEvent.ACTION_CANCEL:
+                currentX = 0;
+                currentY = 0;
+                invalidate();
+                break;
+        }
         return true;
     }
 
