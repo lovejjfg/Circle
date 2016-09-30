@@ -21,6 +21,7 @@ public class CurveLayout extends FrameLayout {
 
     private float currentY;
     private float currentX;
+    private float totalY;
 
     public CurveLayout(Context context) {
         super(context);
@@ -67,14 +68,17 @@ public class CurveLayout extends FrameLayout {
 //                currentY = rawY - currentY;//rawY >= 200 ? 200 : rawY;
                 Log.e(TAG, "onTouchEvent: " + ";;;" + dy);
 //                targetView.setTranslationY(currentY *0.5f);
-                dispatcher(rawX, dy);
+
+                totalY += dy;
+                dispatcher(rawX, totalY);
                 currentY = rawY;
                 break;
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
                 Log.e(TAG, "onTouchEvent: " + ";;;" + "松手了!");
                 currentY = 0;
-                dispatcherUp();
+                totalY = 0;
+                dispatcher(0, totalY);
                 break;
         }
         return true;

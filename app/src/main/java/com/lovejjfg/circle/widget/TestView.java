@@ -84,7 +84,7 @@ public class TestView extends View implements CurveLayout.Dispatcher {
 //        if (currentY == dy) {
 //            return;
 //        }
-        currentY += dy;
+        currentY = dy;
         currentX = dx;
         targetView.setTranslationY(currentY * 0.5f);
         invalidate();
