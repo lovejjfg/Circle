@@ -1,22 +1,27 @@
 package com.lovejjfg.circle.view.fragment;
 
-import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.lovejjfg.circle.R;
-import com.lovejjfg.circle.anim.drawable.StrokeGradientDrawable;
+import com.lovejjfg.circle.widget.CurveLayout;
+import com.lovejjfg.circle.widget.TestView;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
+
+import static android.content.ContentValues.TAG;
 
 /**
  * Created by Joe on 2016-06-09
  * Email: zhangjun166@pingan.com.cn
  */
-public class Fragment7 extends Fragment {
+public class Fragment7 extends Fragment implements View.OnClickListener {
     /**
      * The fragment argument representing the section number for this
      * fragment.
@@ -39,12 +44,38 @@ public class Fragment7 extends Fragment {
         return fragment;
     }
 
+    @Bind(R.id.ts)
+    TestView mTestView;
+
+    @Bind(R.id.view)
+    View mView;
+
+    @Bind(R.id.curve_container)
+    CurveLayout mContainer;
+
+    @Bind(R.id.tv1)
+    TextView mTv1;
+    @Bind(R.id.tv2)
+    TextView mTv2;
+    @Bind(R.id.tv3)
+    TextView mTv3;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         View rootView = inflater.inflate(R.layout.fragment_tab7, container, false);
         ButterKnife.bind(this, rootView);
+        mTestView.setTarget(mView);
+        mContainer.addmDispatcher(mTestView);
+        mTv1.setOnClickListener(this);
+        mTv2.setOnClickListener(this);
+        mTv3.setOnClickListener(this);
         return rootView;
     }
 
+    @Override
+    public void onClick(View v) {
+        Log.e(TAG, "onClick: " + v.getId());
+    }
 }
