@@ -2,7 +2,7 @@ package com.lovejjfg.circle.widget;
 
 /**
  * Created by Joe on 2016-06-16
- * Email: zhangjun166@pingan.com.cn
+ * Email: lovejjfg@gmail.com
  */
 
 import android.animation.TypeEvaluator;
