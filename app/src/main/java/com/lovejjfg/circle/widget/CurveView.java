@@ -2,10 +2,8 @@ package com.lovejjfg.circle.widget;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
-import android.support.annotation.ColorInt;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -19,7 +17,7 @@ import butterknife.ButterKnife;
  * Created by Joe on 2016-06-16
  * Email: lovejjfg@gmail.com
  */
-public class TestView extends View implements CurveLayout.Dispatcher {
+public class CurveView extends View implements CurveLayout.Dispatcher {
     private static final String TAG = "TEST";
     private Paint paint;
     private Path path;
@@ -32,15 +30,15 @@ public class TestView extends View implements CurveLayout.Dispatcher {
     int MAX_DRAG;
 
 
-    public TestView(Context context) {
+    public CurveView(Context context) {
         this(context, null);
     }
 
-    public TestView(Context context, AttributeSet attrs) {
+    public CurveView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public TestView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public CurveView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         ButterKnife.bind(this);
         init();

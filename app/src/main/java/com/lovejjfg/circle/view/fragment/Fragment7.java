@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.lovejjfg.circle.R;
 import com.lovejjfg.circle.widget.CurveLayout;
-import com.lovejjfg.circle.widget.TestView;
+import com.lovejjfg.circle.widget.CurveView;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -45,7 +45,7 @@ public class Fragment7 extends Fragment implements View.OnClickListener {
     }
 
     @Bind(R.id.ts)
-    TestView mTestView;
+    CurveView mCurveView;
 
     @Bind(R.id.view)
     View mView;
@@ -66,8 +66,8 @@ public class Fragment7 extends Fragment implements View.OnClickListener {
 
         View rootView = inflater.inflate(R.layout.fragment_tab7, container, false);
         ButterKnife.bind(this, rootView);
-        mTestView.setTarget(mView);
-        mContainer.addmDispatcher(mTestView);
+        mCurveView.setTarget(mView);
+        mContainer.addmDispatcher(mCurveView);
         mTv1.setOnClickListener(this);
         mTv2.setOnClickListener(this);
         mTv3.setOnClickListener(this);
