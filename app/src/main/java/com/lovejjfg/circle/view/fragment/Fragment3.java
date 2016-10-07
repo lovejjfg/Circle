@@ -10,7 +10,7 @@ import com.lovejjfg.circle.R;
 
 /**
  * Created by Joe on 2016-06-09
- * Email: zhangjun166@pingan.com.cn
+ * Email: lovejjfg@gmail.com
  */
 public class Fragment3 extends Fragment {
 

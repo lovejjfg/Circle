@@ -19,7 +19,7 @@ import static android.content.ContentValues.TAG;
 
 /**
  * Created by Joe on 2016-06-09
- * Email: zhangjun166@pingan.com.cn
+ * Email: lovejjfg@gmail.com
  */
 public class Fragment7 extends Fragment implements View.OnClickListener {
     /**

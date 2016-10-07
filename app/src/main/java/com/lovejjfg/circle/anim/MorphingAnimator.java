@@ -18,7 +18,7 @@ import com.lovejjfg.circle.listener.OnAnimationEndListener;
 
 /**
  * Created by Joe on 2016-06-13
- * Email: zhangjun166@pingan.com.cn
+ * Email: lovejjfg@gmail.com
  */
 public class MorphingAnimator {
     public static final int DURATION_NORMAL = 400;

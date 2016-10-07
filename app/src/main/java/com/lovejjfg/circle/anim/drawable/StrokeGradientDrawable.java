@@ -4,7 +4,7 @@ import android.graphics.drawable.GradientDrawable;
 
 /**
  * Created by Joe on 2016-06-13
- * Email: zhangjun166@pingan.com.cn
+ * Email: lovejjfg@gmail.com
  */
 public class StrokeGradientDrawable {
     private int mStrokeWidth;

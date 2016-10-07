@@ -17,7 +17,7 @@ import butterknife.ButterKnife;
 
 /**
  * Created by Joe on 2016-06-16
- * Email: zhangjun166@pingan.com.cn
+ * Email: lovejjfg@gmail.com
  */
 public class TestView extends View implements CurveLayout.Dispatcher {
     private static final String TAG = "TEST";

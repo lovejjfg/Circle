@@ -20,7 +20,7 @@ import butterknife.ButterKnife;
 
 /**
  * Created by Joe on 2016-06-09
- * Email: zhangjun166@pingan.com.cn
+ * Email: lovejjfg@gmail.com
  */
 public class Fragment6 extends Fragment {
     /**

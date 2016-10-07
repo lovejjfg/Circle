@@ -15,7 +15,7 @@ import com.lovejjfg.circle.listener.SimpleAnimatorListener;
 
 /**
  * Created by Joe on 2016-06-16
- * Email: zhangjun166@pingan.com.cn
+ * Email: lovejjfg@gmail.com
  */
 public class LoadingView extends View {
 
