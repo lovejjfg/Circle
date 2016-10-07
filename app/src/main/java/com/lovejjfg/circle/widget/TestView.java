@@ -5,8 +5,15 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.support.annotation.ColorInt;
 import android.util.AttributeSet;
 import android.view.View;
+
+import com.lovejjfg.circle.R;
+
+import butterknife.BindColor;
+import butterknife.BindDimen;
+import butterknife.ButterKnife;
 
 /**
  * Created by Joe on 2016-06-16
@@ -19,6 +26,11 @@ public class TestView extends View implements CurveLayout.Dispatcher {
     private float currentX;
     private float currentY;
     private View targetView;
+    @BindColor(R.color.uc_blue)
+    int UC_COLOR;
+    @BindDimen(R.dimen.max_drag)
+    int MAX_DRAG;
+
 
     public TestView(Context context) {
         this(context, null);
@@ -30,14 +42,15 @@ public class TestView extends View implements CurveLayout.Dispatcher {
 
     public TestView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        ButterKnife.bind(this);
         init();
+
     }
 
     private void init() {
         paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         paint.setStyle(Paint.Style.FILL);
-        paint.setStrokeWidth(5);
-        paint.setColor(Color.BLUE);
+        paint.setColor(UC_COLOR);
         path = new Path();
     }
 
@@ -81,10 +94,7 @@ public class TestView extends View implements CurveLayout.Dispatcher {
 
     @Override
     public void onDispatch(float dx, float dy) {
-//        if (currentY == dy) {
-//            return;
-//        }
-        currentY = dy;
+        currentY = dy > MAX_DRAG ? MAX_DRAG : dy;
         currentX = dx;
         targetView.setTranslationY(currentY * 0.5f);
         invalidate();

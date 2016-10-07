@@ -24,14 +24,14 @@
             android:id="@+id/ts"
             android:layout_width="match_parent"
             android:layout_height="200dp"
-            android:background="#00f"/>
+            android:background="@drawable/uc"/>
 
         <LinearLayout
             android:id="@+id/view"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:background="#fff"
+            android:background="@drawable/uc2"
             android:orientation="horizontal">
 
             <TextView
