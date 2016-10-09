@@ -25,5 +25,6 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.2.1'
     compile 'com.jakewharton:butterknife:7.0.1'
     compile 'com.android.support:design:23.2.1'
+    compile 'com.kogitune:pre-lollipop-activity-transition:1.3.2'
 
 }
