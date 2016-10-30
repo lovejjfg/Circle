@@ -206,12 +206,32 @@ public class NewTouchCircleView extends View {
         p11 = new CirclePoint(mWidth / 2 - m, mHeight / 2 - mCircleRadius);
     }
 
+    private void resetPoints() {
+        float m = mCircleRadius * CIRCLE_VALUE;
+
+        p0.setPoint(mWidth / 2, mHeight / 2 - mCircleRadius);
+        p1.setPoint(mWidth / 2 + m, mHeight / 2 - mCircleRadius);
+        p2.setPoint(mWidth / 2 + mCircleRadius, mHeight / 2 - m);
+        p3.setPoint(mWidth / 2 + mCircleRadius, mHeight / 2);
+
+        p4.setPoint(mWidth / 2 + mCircleRadius, mHeight / 2 + m);
+        p5.setPoint(mWidth / 2 + m, mHeight / 2 + mCircleRadius);
+        p6.setPoint(mWidth / 2, mHeight / 2 + mCircleRadius);
+
+        p7.setPoint(mWidth / 2 - m, mHeight / 2 + mCircleRadius);
+        p8.setPoint(mWidth / 2 - mCircleRadius, mHeight / 2 + m);
+        p9.setPoint(mWidth / 2 - mCircleRadius, mHeight / 2);
+
+        p10.setPoint(mWidth / 2 - mCircleRadius, mHeight / 2 - m);
+        p11.setPoint(mWidth / 2 - m, mHeight / 2 - mCircleRadius);
+    }
+
 
     /**
      * 通过贝塞尔曲线画圆
      */
     private void drawCirclePath(Canvas canvas, float distance) {
-        initPoints();
+        resetPoints();
         if (mIsPath) {
             // 0 5  y轴加 变宽
             // 2 8 x轴改变
@@ -221,7 +241,7 @@ public class NewTouchCircleView extends View {
 
             //0->9 1->10 2->
             if (distance > 0) {
-                p0.y -= mChange*0.1f;
+                p0.y -= mChange * 0.1f;
                 p11.y = p1.y = p0.y;//竖直方向变大
                 //上边 +
                 p5.y += distance;
@@ -233,14 +253,12 @@ public class NewTouchCircleView extends View {
                 //右边 -
                 p2.x -= mChange / 2;
                 p3.x = p4.x = p2.x;
-
-
             } else {
                 //下边
                 p0.y += distance;
                 p11.y = p1.y = p0.y;//竖直方向变大
 //                //上边 +
-                p5.y += mChange*0.1f;
+                p5.y += mChange * 0.1f;
                 p7.y = p6.y = p5.y;
                 //左边 +
                 p8.x -= mChange / 2;
@@ -353,6 +371,11 @@ public class NewTouchCircleView extends View {
         float y;
 
         public CirclePoint(float x, float y) {
+            this.x = x;
+            this.y = y;
+        }
+
+        public void setPoint(float x, float y) {
             this.x = x;
             this.y = y;
         }
