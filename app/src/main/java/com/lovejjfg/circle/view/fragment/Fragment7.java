@@ -44,12 +44,12 @@ public class Fragment7 extends Fragment implements View.OnClickListener {
         return fragment;
     }
 
-    @Bind(R.id.ts)
-    CurveView mCurveView;
 
     @Bind(R.id.view)
     View mView;
 
+    @Bind(R.id.ts)
+    CurveView mCurveView;
     @Bind(R.id.curve_container)
     CurveLayout mContainer;
 
