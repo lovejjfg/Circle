@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    android:id="@+id/container"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipChildren="false"
+    android:orientation="vertical"
+    >
+
+    <SeekBar
+        android:visibility="gone"
+        android:id="@+id/sb_left"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:max="100"/>
+
+    <SeekBar
+        android:visibility="gone"
+        android:id="@+id/sb_right"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:max="100"/>
+
+    <SeekBar
+        android:visibility="gone"
+        android:id="@+id/sb_top"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:max="100"/>
+
+    <SeekBar
+        android:visibility="gone"
+        android:id="@+id/sb_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:max="100"/>
+
+    <com.lovejjfg.circle.widget.JumpBall
+        android:id="@+id/jump_ball"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_gravity="center"/>
+
+</LinearLayout>
