@@ -134,7 +134,6 @@ public class TouchCircleView extends View {
     private float mBorderWidth = 4;
     private float mRingCenterRadius;
     private boolean mModeAppearing;
-    private float mArrowScale = 1.0f;
     private float fraction;
     private Paint mHookPaint;
 
@@ -620,6 +619,7 @@ public class TouchCircleView extends View {
         // ignored a starting negative rotation. This appears to have
         // been fixed as of API 21.
         mArrow.moveTo(0, 0);
+        float mArrowScale = 1.0f;
         mArrow.lineTo(ARROW_WIDTH * mArrowScale, 0);
         mArrow.lineTo((ARROW_WIDTH * mArrowScale / 2), (ARROW_HEIGHT
                 * mArrowScale));

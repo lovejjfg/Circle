@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.SeekBar;
 
 import com.lovejjfg.circle.R;
@@ -13,6 +14,7 @@ import com.lovejjfg.circle.widget.JumpBall;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 import static android.content.ContentValues.TAG;
 
@@ -43,16 +45,14 @@ public class Fragment8 extends Fragment implements View.OnClickListener, SeekBar
         return fragment;
     }
 
-    @Bind(R.id.sb_bottom)
-    SeekBar bottomSeek;
-    @Bind(R.id.sb_top)
-    SeekBar topSeek;
-    @Bind(R.id.sb_left)
-    SeekBar leftSeek;
-    @Bind(R.id.sb_right)
-    SeekBar rightSeek;
     @Bind(R.id.jump_ball)
     JumpBall mJumpBall;
+//    @Bind(R.id.bt_again)
+//    Button mBtAgain;
+//    @Bind(R.id.bt_pause)
+//    Button mBtPause;
+//    @Bind(R.id.bt_finish)
+//    Button mBtFinish;
 
 
     @Override
@@ -62,35 +62,37 @@ public class Fragment8 extends Fragment implements View.OnClickListener, SeekBar
         View rootView = inflater.inflate(R.layout.fragment_jump_ball, container, false);
         ButterKnife.bind(this, rootView);
 
-        bottomSeek.setOnSeekBarChangeListener(this);
-        topSeek.setOnSeekBarChangeListener(this);
-        leftSeek.setOnSeekBarChangeListener(this);
-        rightSeek.setOnSeekBarChangeListener(this);
+//        bottomSeek.setOnSeekBarChangeListener(this);
+//        topSeek.setOnSeekBarChangeListener(this);
+//        leftSeek.setOnSeekBarChangeListener(this);
+//        rightSeek.setOnSeekBarChangeListener(this);
+//        mBtAgain.setOnClickListener(this);
         return rootView;
     }
 
     @Override
     public void onClick(View v) {
         Log.e(TAG, "onClick: " + v.getId());
+        mJumpBall.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-        switch (seekBar.getId()) {
-            case R.id.sb_bottom:
-                mJumpBall.setBottomChange(progress);
-                break;
-            case R.id.sb_left:
-                mJumpBall.setLeftChange(progress);
-                break;
-            case R.id.sb_right:
-                mJumpBall.setRightChange(progress);
-                break;
-            case R.id.sb_top:
-                mJumpBall.setTopChange(progress);
-                break;
-        }
-        mJumpBall.invalidate();
+//        switch (seekBar.getId()) {
+//            case R.id.sb_bottom:
+//                mJumpBall.setBottomChange(progress);
+//                break;
+//            case R.id.sb_left:
+//                mJumpBall.setLeftChange(progress);
+//                break;
+//            case R.id.sb_right:
+//                mJumpBall.setRightChange(progress);
+//                break;
+//            case R.id.sb_top:
+//                mJumpBall.setTopChange(progress);
+//                break;
+//        }
+//        mJumpBall.invalidate();
     }
 
     @Override
@@ -101,5 +103,23 @@ public class Fragment8 extends Fragment implements View.OnClickListener, SeekBar
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
 
+    }
+
+    @OnClick({R.id.bt_finish, R.id.bt_pause, R.id.bt_again})
+    public void onClicked(View view) {
+        switch (view.getId()) {
+            case R.id.bt_again:
+                mJumpBall.start();
+                break;
+
+            case R.id.bt_finish:
+                mJumpBall.finish();
+                break;
+
+            case R.id.bt_pause:
+                mJumpBall.pause();
+                break;
+
+        }
     }
 }

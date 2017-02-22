@@ -4,9 +4,12 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -47,14 +50,7 @@ public class JumpBall extends View {
     private int mWidth;
     private int mHeight;
     private float mTranslateValue = 0;
-    private boolean mIsPath = false;
-    private double currentY;
     private int mChange;
-    private int mTopChange;
-    private int mLeftChange;
-    private int mRightChange;
-    private int mBottomChange;
-    private float mPathDistance;
     private boolean isEnd;
     private int dropHeight = 300;
     private int pullRange = (int) (dropHeight * 0.15);
@@ -73,27 +69,36 @@ public class JumpBall extends View {
 
     public JumpBall(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init(context);
+        final TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.JumpBall, defStyleAttr, 0);
+//        a.getDimensionPixelSize(R.styleable.JumpBall_ballRadius,)
+        mCircleRadius = a.getDimension(R.styleable.JumpBall_ballRadius, getResources().getDisplayMetrics().density * 20);
+        dropHeight = (int) (4 * mCircleRadius);
+        pullRange = (int) (mCircleRadius * 0.5);
+        a.recycle();
+        init();
     }
 
     private void resetPoints() {
         float m = mCircleRadius * CIRCLE_VALUE;
+        int centerY = (int) ((mHeight - dropHeight) / 2 + mCircleRadius);
+        int topY = (mHeight - dropHeight) / 2;
+        int BottomY = (int) ((mHeight - dropHeight) / 2 + 2 * mCircleRadius);
 
-        p0.setPoint(mWidth / 2, Math.abs(mHeight / 2 - mCircleRadius));
-        p1.setPoint(mWidth / 2 + m, Math.abs(mHeight / 2 - mCircleRadius));
-        p2.setPoint(mWidth / 2 + mCircleRadius, Math.abs(mHeight / 2 - m));
-        p3.setPoint(mWidth / 2 + mCircleRadius, mHeight / 2);
+        p2.setPoint(mWidth / 2 + mCircleRadius, centerY + m);
+        p3.setPoint(mWidth / 2 + mCircleRadius, centerY);
+        p4.setPoint(mWidth / 2 + mCircleRadius, centerY - m);
 
-        p4.setPoint(mWidth / 2 + mCircleRadius, mHeight / 2 + m);
-        p5.setPoint(mWidth / 2 + m, mHeight / 2 + mCircleRadius);
-        p6.setPoint(mWidth / 2, mHeight / 2 + mCircleRadius);
+        p5.setPoint(mWidth / 2 + m, topY);
+        p6.setPoint(mWidth / 2, topY);
+        p7.setPoint(mWidth / 2 - m, topY);
 
-        p7.setPoint(Math.abs(mWidth / 2 - m), mHeight / 2 + mCircleRadius);
-        p8.setPoint(Math.abs(mWidth / 2 - mCircleRadius), mHeight / 2 + m);
-        p9.setPoint(Math.abs(mWidth / 2 - mCircleRadius), mHeight / 2);
+        p8.setPoint(mWidth / 2 - mCircleRadius, centerY - m);
+        p9.setPoint(mWidth / 2 - mCircleRadius, centerY);
+        p10.setPoint(mWidth / 2 - mCircleRadius, centerY + m);
 
-        p10.setPoint(Math.abs(mWidth / 2 - mCircleRadius), Math.abs(mHeight / 2 - m));
-        p11.setPoint(Math.abs(mWidth / 2 - m), Math.abs(mHeight / 2 - mCircleRadius));
+        p11.setPoint(mWidth / 2 - m, BottomY);
+        p0.setPoint(mWidth / 2, BottomY);
+        p1.setPoint(mWidth / 2 + m, BottomY);
     }
 
     /**
@@ -103,22 +108,25 @@ public class JumpBall extends View {
 
     private void initPoints() {
         float m = mCircleRadius * CIRCLE_VALUE;
+        int centerY = (int) ((mHeight - dropHeight) / 2 + mCircleRadius);
+        int topY = (mHeight - dropHeight) / 2;
+        int BottomY = (int) ((mHeight - dropHeight) / 2 + 2 * mCircleRadius);
 
-        p0 = new CirclePoint(mWidth / 2, mHeight / 2 - mCircleRadius);
-        p1 = new CirclePoint(mWidth / 2 + m, mHeight / 2 - mCircleRadius);
-        p2 = new CirclePoint(mWidth / 2 + mCircleRadius, mHeight / 2 - m);
-        p3 = new CirclePoint(mWidth / 2 + mCircleRadius, mHeight / 2);
+        p2 = new CirclePoint(mWidth / 2 + mCircleRadius, centerY + m);//2m
+        p3 = new CirclePoint(mWidth / 2 + mCircleRadius, centerY);//m
+        p4 = new CirclePoint(mWidth / 2 + mCircleRadius, centerY - m);//0
 
-        p4 = new CirclePoint(mWidth / 2 + mCircleRadius, mHeight / 2 + m);
-        p5 = new CirclePoint(mWidth / 2 + m, mHeight / 2 + mCircleRadius);
-        p6 = new CirclePoint(mWidth / 2, mHeight / 2 + mCircleRadius);
+        p5 = new CirclePoint(mWidth / 2 + m, topY);
+        p6 = new CirclePoint(mWidth / 2, topY);
+        p7 = new CirclePoint(mWidth / 2 - m, topY);
 
-        p7 = new CirclePoint(mWidth / 2 - m, mHeight / 2 + mCircleRadius);
-        p8 = new CirclePoint(mWidth / 2 - mCircleRadius, mHeight / 2 + m);
-        p9 = new CirclePoint(mWidth / 2 - mCircleRadius, mHeight / 2);
+        p8 = new CirclePoint(mWidth / 2 - mCircleRadius, centerY - m);
+        p9 = new CirclePoint(mWidth / 2 - mCircleRadius, centerY);
+        p10 = new CirclePoint(mWidth / 2 - mCircleRadius, centerY + m);
 
-        p10 = new CirclePoint(mWidth / 2 - mCircleRadius, mHeight / 2 - m);
-        p11 = new CirclePoint(mWidth / 2 - m, mHeight / 2 - mCircleRadius);
+        p11 = new CirclePoint(mWidth / 2 - m, BottomY);
+        p0 = new CirclePoint(mWidth / 2, BottomY);
+        p1 = new CirclePoint(mWidth / 2 + m, BottomY);
     }
 
     @Override
@@ -127,14 +135,14 @@ public class JumpBall extends View {
         mHeight = h;
         initPoints();
         if (radioAnimator == null) {
-            radioAnimator = ValueAnimator.ofFloat(mCircleRadius, mWidth*2);
+            radioAnimator = ValueAnimator.ofFloat(mCircleRadius, mWidth * 2);
         } else {
-            radioAnimator.setFloatValues(mCircleRadius, mWidth*2);
+            radioAnimator.setFloatValues(mCircleRadius, mWidth * 2);
         }
         super.onSizeChanged(w, h, oldw, oldh);
     }
 
-    private void init(Context context) {
+    private void init() {
         if (mPaint == null) {
             mPaint = new Paint();
             mPaint.setAntiAlias(true);
@@ -226,22 +234,13 @@ public class JumpBall extends View {
             }
         });
 //        radioAnimator.start();
-        postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                pullAnimator.cancel();
-                dropAnimator.cancel();
-                radioAnimator.start();
-                isEnd = true;
-            }
-        }, 5000);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         if (!isEnd) {
-            drawCirclePath(canvas, mPathDistance);
+            drawCirclePath(canvas);
         } else {
             canvas.drawCircle(mWidth / 2, mHeight / 2 + mTranslateValue, mCurrentRadio, mPaint);
         }
@@ -252,7 +251,7 @@ public class JumpBall extends View {
      * 通过贝塞尔曲线画圆
      * 下落到最低点 8 9 10 （左 - dx）  4 3 2 （右 + dx）  5 6 7（上 + dy）  11 0 1（下 ）
      */
-    private void drawCirclePath(Canvas canvas, float distance) {
+    private void drawCirclePath(Canvas canvas) {
         resetPoints();
         p0.y += mTranslateValue;
         p6.y += mTranslateValue;
@@ -275,9 +274,9 @@ public class JumpBall extends View {
         p3.x += mChange;
         p2.x += mChange;
 
-        p11.y += mChange;
-        p0.y += mChange;
-        p1.y += mChange;
+        p5.y += mChange;
+        p6.y += mChange;
+        p7.y += mChange;
 
         mPath.reset();
         mPath.moveTo(p0.x, p0.y);
@@ -286,39 +285,45 @@ public class JumpBall extends View {
         mPath.cubicTo(p7.x, p7.y, p8.x, p8.y, p9.x, p9.y);
         mPath.cubicTo(p10.x, p10.y, p11.x, p11.y, p0.x, p0.y);
         canvas.drawPath(mPath, mPaint);
-//        canvas.translate(0, mTranslateValue);
     }
 
-    public void setBottomChange(int progress) {
-        mBottomChange = progress;
+    public void start() {
+        setVisibility(VISIBLE);
+        if (!dropAnimator.isRunning() || !pullAnimator.isRunning()) {
+            dropAnimator.start();
+        }
     }
 
-    public void setLeftChange(int progress) {
-        mLeftChange = progress;
+    public void finish() {
+        pullAnimator.cancel();
+        dropAnimator.cancel();
+        radioAnimator.start();
+        isEnd = true;
     }
 
-    public void setRightChange(int progress) {
-        mRightChange = progress;
-    }
+    public void pause() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            pullAnimator.pause();
+            dropAnimator.pause();
+            radioAnimator.pause();
+        }
 
-    public void setTopChange(int progress) {
-        dropHeight = 300 + progress;
-        pullRange = (int) (dropHeight * 0.15);
     }
 
     private class CirclePoint {
         float x;
         float y;
 
-        public CirclePoint(float x, float y) {
+        CirclePoint(float x, float y) {
             this.x = x;
             this.y = y;
         }
 
-        public void setPoint(float x, float y) {
+        void setPoint(float x, float y) {
             this.x = x;
             this.y = y;
         }
+
     }
 
     @Override
@@ -330,7 +335,7 @@ public class JumpBall extends View {
     }
 
     @Override
-    protected void onVisibilityChanged(View changedView, int visibility) {
+    protected void onVisibilityChanged(@NonNull View changedView, int visibility) {
         if (visibility == INVISIBLE || visibility == GONE) {
             pullAnimator.cancel();
             dropAnimator.cancel();

@@ -208,8 +208,8 @@ public class RippleView extends View {
 //                / 2 + minRadius,height / 2 + minRadius);
 
         canvas.drawArc(innerRectf, 0, 180, true, wavePaint);
-        double lineX = 0;
-        double lineY = 0;
+        double lineX;
+        double lineY;
         // 根据正弦绘制波浪
         for (int i = width / 2 - minRadius; i < width / 2 + minRadius; i++) {
             lineX = i;

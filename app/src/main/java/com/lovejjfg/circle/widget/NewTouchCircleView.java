@@ -20,10 +20,6 @@ import com.lovejjfg.circle.R;
 public class NewTouchCircleView extends View {
     private Paint mPaint;
     /**
-     * 当前状态
-     */
-    private int mCurrentStatus;
-    /**
      * 中心圆的半径
      */
     private float mCircleRadius;
@@ -180,7 +176,10 @@ public class NewTouchCircleView extends View {
      */
     private void initData() {
         mTranslateValue = 0;
-        mCurrentStatus = STATUS_NORNAL;
+        /*
+      当前状态
+     */
+        int mCurrentStatus = STATUS_NORNAL;
         mCircleRadius = dp2px(getContext(), 40);
         mPathDistance = 0;
 

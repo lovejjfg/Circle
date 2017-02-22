@@ -4,17 +4,13 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.annotation.TargetApi;
 import android.content.Context;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.support.v4.view.animation.LinearOutSlowInInterpolator;
-import android.support.v7.widget.ViewUtils;
 import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -46,7 +42,6 @@ public class Fragment4 extends Fragment {
      */
     private static final String ARG_SECTION_NUMBER = "section_number";
     private StrokeGradientDrawable drawable;
-    private GradientDrawable gradientDrawable;
     private float density;
     private boolean flag;
     private Display display;
@@ -84,7 +79,7 @@ public class Fragment4 extends Fragment {
         ButterKnife.bind(this, rootView);
         linearOutSlowInInterpolator = new LinearOutSlowInInterpolator();
         drawable = createDrawable(Color.RED);
-        gradientDrawable = drawable.getGradientDrawable();
+        GradientDrawable gradientDrawable = drawable.getGradientDrawable();
         density = getResources().getDisplayMetrics().density;
 
         mBt.setBackgroundDrawable(gradientDrawable);

@@ -73,10 +73,6 @@ public class MaterialProgressDrawable extends Drawable implements Animatable {
     private static final float CENTER_RADIUS_LARGE = 12.5f;
     private static final float STROKE_WIDTH_LARGE = 3f;
 
-    private final int[] COLORS = new int[]{
-            Color.BLACK
-    };
-
     /**
      * The value in the linear interpolator for animating the drawable at which
      * the color transition should start
@@ -135,7 +131,26 @@ public class MaterialProgressDrawable extends Drawable implements Animatable {
         mParent = parent;
         mResources = context.getResources();
 
+        Callback mCallback = new Callback() {
+            @Override
+            public void invalidateDrawable(Drawable d) {
+                invalidateSelf();
+            }
+
+            @Override
+            public void scheduleDrawable(Drawable d, Runnable what, long when) {
+                scheduleSelf(what, when);
+            }
+
+            @Override
+            public void unscheduleDrawable(Drawable d, Runnable what) {
+                unscheduleSelf(what);
+            }
+        };
         mRing = new Ring(mCallback);
+        int[] COLORS = new int[]{
+                Color.BLACK
+        };
         mRing.setColors(COLORS);
 
         updateSizes(DEFAULT);
@@ -459,23 +474,6 @@ public class MaterialProgressDrawable extends Drawable implements Animatable {
         });
         mAnimation = animation;
     }
-
-    private final Callback mCallback = new Callback() {
-        @Override
-        public void invalidateDrawable(Drawable d) {
-            invalidateSelf();
-        }
-
-        @Override
-        public void scheduleDrawable(Drawable d, Runnable what, long when) {
-            scheduleSelf(what, when);
-        }
-
-        @Override
-        public void unscheduleDrawable(Drawable d, Runnable what) {
-            unscheduleSelf(what);
-        }
-    };
 
     private static class Ring {
         private final RectF mTempBounds = new RectF();
