@@ -21,7 +21,6 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Interpolator;
 import android.view.animation.LinearInterpolator;
 
-
 import com.lovejjfg.circle.R;
 
 import java.util.ArrayList;
@@ -538,7 +537,7 @@ public class TouchCircleView extends View {
         boolean isDrawPath = distance != 0;
         if (isDrawPath) {
             if (distance > 0) {
-                p0.y -= changeDy ;
+                p0.y -= changeDy;
                 p11.y = p1.y = p0.y;//竖直方向变大
                 //上边 +
                 p5.y += distance;
@@ -555,7 +554,7 @@ public class TouchCircleView extends View {
                 p0.y += distance;
                 p11.y = p1.y = p0.y;//竖直方向变大
                 //上边 +
-                p5.y += changeDy ;
+                p5.y += changeDy;
                 p7.y = p6.y = p5.y;
                 //左边 +
                 p8.x -= changeDy / 2;

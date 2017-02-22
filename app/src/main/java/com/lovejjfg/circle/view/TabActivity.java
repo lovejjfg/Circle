@@ -58,14 +58,14 @@ public class TabActivity extends AppCompatActivity implements View.OnClickListen
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         fragments = new ArrayList<>();
+        fragments.add(Fragment8.newInstance(1));
         fragments.add(Fragment6.newInstance(1));
-        fragments.add(Fragment3.newInstance(1));
         fragments.add(Fragment5.newInstance(1));
         fragments.add(Fragment1.newInstance(1));
         fragments.add(Fragment2.newInstance(1));
         fragments.add(Fragment4.newInstance(1));
         fragments.add(Fragment7.newInstance(1));
-        fragments.add(Fragment8.newInstance(1));
+
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
