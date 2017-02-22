@@ -84,12 +84,13 @@ public class JumpBall extends View {
     }
 
     private void initData() {
-        dropHeight = (int) (5 * mCircleRadius);
+        dropHeight = (int) (6 * mCircleRadius);
         pullRange = (int) (mCircleRadius * 0.5f);
-        dropTime = (int) (dropHeight * 1.2f);
+        dropTime = (int) (Math.sqrt(dropHeight*800));
     }
 
     private void resetPoints() {
+        //Care about dropHeight bigger than mHeight
         float m = mCircleRadius * CIRCLE_VALUE;
         int centerY = (int) ((mHeight - dropHeight) / 2 + mCircleRadius);
         int topY = (mHeight - dropHeight) / 2;
@@ -118,6 +119,7 @@ public class JumpBall extends View {
     private static final float CIRCLE_VALUE = 0.551915024494f;
 
     private void initPoints() {
+        //Care about dropHeight bigger than mHeight
         float m = mCircleRadius * CIRCLE_VALUE;
         int centerY = (int) ((mHeight - dropHeight) / 2 + mCircleRadius);
         int topY = (mHeight - dropHeight) / 2;
@@ -166,7 +168,7 @@ public class JumpBall extends View {
         }
 
         pullAnimator = ValueAnimator.ofInt(0, pullRange, 0);
-        pullAnimator.setDuration(300);
+        pullAnimator.setDuration((long) (dropTime*0.5f));
         pullAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
