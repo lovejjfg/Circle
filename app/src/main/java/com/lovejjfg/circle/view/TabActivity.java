@@ -12,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import com.lovejjfg.circle.R;
+import com.lovejjfg.circle.ShakeHelper;
 import com.lovejjfg.circle.view.fragment.Fragment1;
 import com.lovejjfg.circle.view.fragment.Fragment2;
 import com.lovejjfg.circle.view.fragment.Fragment4;
@@ -37,12 +38,14 @@ public class TabActivity extends AppCompatActivity implements View.OnClickListen
     @Bind(R.id.fab)
     FloatingActionButton mFab;
     private ArrayList<Fragment> fragments;
+    private ShakeHelper shakeHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tab);
         ButterKnife.bind(this);
+        shakeHelper = ShakeHelper.initShakeHelper(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -73,6 +76,18 @@ public class TabActivity extends AppCompatActivity implements View.OnClickListen
         mFab.setOnClickListener(this);
 
 
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        shakeHelper.onPause();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        shakeHelper.onStart();
     }
 
     @Override
