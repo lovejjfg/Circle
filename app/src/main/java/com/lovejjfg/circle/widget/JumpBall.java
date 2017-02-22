@@ -58,6 +58,7 @@ public class JumpBall extends View {
     private ValueAnimator dropAnimator;
     private ValueAnimator radioAnimator;
     private float mCurrentRadio;
+    private int dropTime;
 
     public JumpBall(Context context) {
         this(context, null);
@@ -67,15 +68,25 @@ public class JumpBall extends View {
         this(context, attrs, -1);
     }
 
+    @SuppressWarnings("unused")
+    public void setBallRadius(float mCircleRadius) {
+        this.mCircleRadius = mCircleRadius;
+        initData();
+    }
+
     public JumpBall(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         final TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.JumpBall, defStyleAttr, 0);
-//        a.getDimensionPixelSize(R.styleable.JumpBall_ballRadius,)
         mCircleRadius = a.getDimension(R.styleable.JumpBall_ballRadius, getResources().getDisplayMetrics().density * 20);
-        dropHeight = (int) (4 * mCircleRadius);
-        pullRange = (int) (mCircleRadius * 0.5);
+        initData();
         a.recycle();
         init();
+    }
+
+    private void initData() {
+        dropHeight = (int) (5 * mCircleRadius);
+        pullRange = (int) (mCircleRadius * 0.5f);
+        dropTime = (int) (dropHeight * 1.2f);
     }
 
     private void resetPoints() {
@@ -110,7 +121,7 @@ public class JumpBall extends View {
         float m = mCircleRadius * CIRCLE_VALUE;
         int centerY = (int) ((mHeight - dropHeight) / 2 + mCircleRadius);
         int topY = (mHeight - dropHeight) / 2;
-        int BottomY = (int) ((mHeight - dropHeight) / 2 + 2 * mCircleRadius);
+        int bottomY = (int) ((mHeight - dropHeight) / 2 + 2 * mCircleRadius);
 
         p2 = new CirclePoint(mWidth / 2 + mCircleRadius, centerY + m);//2m
         p3 = new CirclePoint(mWidth / 2 + mCircleRadius, centerY);//m
@@ -124,9 +135,9 @@ public class JumpBall extends View {
         p9 = new CirclePoint(mWidth / 2 - mCircleRadius, centerY);
         p10 = new CirclePoint(mWidth / 2 - mCircleRadius, centerY + m);
 
-        p11 = new CirclePoint(mWidth / 2 - m, BottomY);
-        p0 = new CirclePoint(mWidth / 2, BottomY);
-        p1 = new CirclePoint(mWidth / 2 + m, BottomY);
+        p11 = new CirclePoint(mWidth / 2 - m, bottomY);
+        p0 = new CirclePoint(mWidth / 2, bottomY);
+        p1 = new CirclePoint(mWidth / 2 + m, bottomY);
     }
 
     @Override
@@ -155,17 +166,14 @@ public class JumpBall extends View {
         }
 
         pullAnimator = ValueAnimator.ofInt(0, pullRange, 0);
-//        pullAnimator.setRepeatMode(ValueAnimator.REVERSE);
-//        pullAnimator.setRepeatCount(20);
         pullAnimator.setDuration(300);
-//        pullAnimator.setInterpolator(new BounceInterpolator());
         pullAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 mChange = (Integer) animation.getAnimatedValue();
                 if (animation.getAnimatedFraction() > 0.3) {
                     dropAnimator.setIntValues(dropHeight, 0, dropHeight);
-                    dropAnimator.setDuration(800);
+                    dropAnimator.setDuration(dropTime*2);
                     dropAnimator.start();
                 }
                 Log.e("TAG", "onAnimationUpdate: " + mChange);
@@ -185,7 +193,7 @@ public class JumpBall extends View {
         dropAnimator = ValueAnimator.ofInt(0, dropHeight);
 //        dropAnimator.setRepeatMode(ValueAnimator.REVERSE);
 //        dropAnimator.setRepeatCount(20);
-        dropAnimator.setDuration(400);
+        dropAnimator.setDuration(dropTime);
         dropAnimator.setInterpolator(new LinearInterpolator());
         dropAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
