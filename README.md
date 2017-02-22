@@ -2,11 +2,11 @@
 
 ### 最终效果图：
 
-![旋转过程的角标](https://raw.githubusercontent.com/lovejjfg/screenshort/master/progress.gif)![IndexBar](https://raw.githubusercontent.com/lovejjfg/IndexMasterDemo/master/index.gif)
-
+![旋转过程的角标](https://raw.githubusercontent.com/lovejjfg/screenshort/master/progress.gif) ![JumpBall](https://raw.githubusercontent.com/lovejjfg/screenshort/master/jumpBall.gif)
 
 ![DragBubble](https://raw.githubusercontent.com/lovejjfg/screenshort/master/DragBubble.gif)![PathText](https://raw.githubusercontent.com/lovejjfg/screenshort/master/PathTextgif.gif)
 
+![IndexBar](https://raw.githubusercontent.com/lovejjfg/IndexMasterDemo/master/index.gif)
 
 
 # CircleProgress && TouchCircleView
