@@ -56,8 +56,6 @@ public class CircleProgress extends View implements View.OnClickListener {
     private float mRingCenterRadius;
     private static int ARROW_WIDTH = 10 * 2;
     private static int ARROW_HEIGHT = 5 * 2;
-    private Paint mArrowPaint;
-    private float mArrowScale = 1f;
     private float mStrokeInset = 2.5f;
     private static final float ARROW_OFFSET_ANGLE = 5;
     private float fraction;
@@ -99,7 +97,7 @@ public class CircleProgress extends View implements View.OnClickListener {
         mPaint.setColor(mColors[mCurrentColorIndex]);
 
         mHookPaint = new Paint(mPaint);
-        mArrowPaint = new Paint(mPaint);
+        Paint mArrowPaint = new Paint(mPaint);
 
         mHook = new Path();
         mError = new Path();
@@ -251,6 +249,7 @@ public class CircleProgress extends View implements View.OnClickListener {
         float x = (float) (mRingCenterRadius + fBounds.centerX());
         float y = (float) (  fBounds.centerY());
         mArrow.moveTo(0, 0);
+        float mArrowScale = 1f;
         mArrow.lineTo(ARROW_WIDTH * mArrowScale, 0);
         mArrow.lineTo((ARROW_WIDTH * mArrowScale / 2), (ARROW_HEIGHT
                 * mArrowScale));

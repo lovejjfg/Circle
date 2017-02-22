@@ -45,7 +45,7 @@
 
     <!--</LinearLayout>-->
 
-    <com.lovejjfg.circle.widget.LoadingView
+    <com.lovejjfg.circle.widget.TouchCircleView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="center"/>

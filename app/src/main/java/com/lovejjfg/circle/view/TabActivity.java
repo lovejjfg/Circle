@@ -9,18 +9,16 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 
 import com.lovejjfg.circle.R;
 import com.lovejjfg.circle.view.fragment.Fragment1;
 import com.lovejjfg.circle.view.fragment.Fragment2;
-import com.lovejjfg.circle.view.fragment.Fragment3;
 import com.lovejjfg.circle.view.fragment.Fragment4;
 import com.lovejjfg.circle.view.fragment.Fragment5;
 import com.lovejjfg.circle.view.fragment.Fragment6;
 import com.lovejjfg.circle.view.fragment.Fragment7;
+import com.lovejjfg.circle.view.fragment.Fragment8;
 
 import java.util.ArrayList;
 
@@ -28,16 +26,6 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class TabActivity extends AppCompatActivity implements View.OnClickListener {
-
-    /**
-     * The {@link android.support.v4.view.PagerAdapter} that will provide
-     * fragments for each of the sections. We use a
-     * {@link FragmentPagerAdapter} derivative, which will keep every
-     * loaded fragment in memory. If this becomes too memory intensive, it
-     * may be best to switch to a
-     * {@link android.support.v4.app.FragmentStatePagerAdapter}.
-     */
-    private SectionsPagerAdapter mSectionsPagerAdapter;
 
     /**
      * The {@link ViewPager} that will host the section contents.
@@ -59,16 +47,25 @@ public class TabActivity extends AppCompatActivity implements View.OnClickListen
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         fragments = new ArrayList<>();
+        fragments.add(Fragment8.newInstance(1));
         fragments.add(Fragment6.newInstance(1));
-        fragments.add(Fragment3.newInstance(1));
         fragments.add(Fragment5.newInstance(1));
         fragments.add(Fragment1.newInstance(1));
         fragments.add(Fragment2.newInstance(1));
         fragments.add(Fragment4.newInstance(1));
         fragments.add(Fragment7.newInstance(1));
+
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        /*
+      The {@link android.support.v4.view.PagerAdapter} that will provide
+      fragments for each of the sections. We use a
+      {@link FragmentPagerAdapter} derivative, which will keep every
+      loaded fragment in memory. If this becomes too memory intensive, it
+      may be best to switch to a
+      {@link android.support.v4.app.FragmentStatePagerAdapter}.
+     */
+        SectionsPagerAdapter mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
         // Set up the ViewPager with the sections adapter.
         mViewPager.setAdapter(mSectionsPagerAdapter);
         mTab.setupWithViewPager(mViewPager);
@@ -135,8 +132,9 @@ public class TabActivity extends AppCompatActivity implements View.OnClickListen
                     return "6";
                 case 6:
                     return "7";
+                default:
+                    return "tittle";
             }
-            return null;
         }
     }
 }
