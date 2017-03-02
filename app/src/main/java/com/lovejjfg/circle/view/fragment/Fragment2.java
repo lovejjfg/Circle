@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.SeekBar;
@@ -14,6 +15,7 @@ import com.lovejjfg.circle.widget.DragBubbleView;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by Joe on 2016-06-09
@@ -92,5 +94,10 @@ public class Fragment2 extends Fragment implements CompoundButton.OnCheckedChang
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
 
+    }
+
+    @OnClick(R.id.bt_reset)
+    public void onClick(View view) {
+        mBubble.reset();
     }
 }
