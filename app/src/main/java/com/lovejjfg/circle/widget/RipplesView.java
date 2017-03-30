@@ -34,7 +34,6 @@ public class RipplesView extends View {
     private ObjectAnimator mWidthAnimator;
     private ObjectAnimator mInnerWidthAnimator;
     private Bitmap bitmap;
-    private Rect rect;
     private RectF bitmapRectf;
     private int rotate = 30;
     private int count;
@@ -84,10 +83,6 @@ public class RipplesView extends View {
     }
 
     private int cirRadius;
-    private Paint circlePaint;
-    private Paint wavePaint;
-    //    private float result;
-    private Paint containPaint;
     private long angle;
     private Paint paint;
 
@@ -115,18 +110,18 @@ public class RipplesView extends View {
         innerRectf = new RectF();
         bitmapRectf = new RectF();
         bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
-        rect = new Rect(0, 0, bitmap.getWidth() + 100, bitmap.getHeight() + 100);
+        Rect rect = new Rect(0, 0, bitmap.getWidth() + 100, bitmap.getHeight() + 100);
 
 
         cirRadius = 200;
-        circlePaint = new Paint();
+        Paint circlePaint = new Paint();
         circlePaint.setColor(Color.WHITE);
         circlePaint.setStyle(Paint.Style.STROKE);
         circlePaint.setAntiAlias(true);
         circlePaint.setAlpha(50);
-        wavePaint = new Paint(circlePaint);
+        Paint wavePaint = new Paint(circlePaint);
         wavePaint.setStyle(Paint.Style.FILL);
-        containPaint = new Paint(circlePaint);
+        Paint containPaint = new Paint(circlePaint);
         containPaint.setStrokeWidth(10);
         containPaint.setAntiAlias(true);
         containPaint.setAlpha(1);

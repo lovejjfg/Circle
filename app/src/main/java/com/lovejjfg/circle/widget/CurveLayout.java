@@ -65,10 +65,7 @@ public class CurveLayout extends FrameLayout {
                 float rawY = event.getY();
                 float rawX = event.getX();
                 float dy = rawY - currentY;
-//                currentY = rawY - currentY;//rawY >= 200 ? 200 : rawY;
                 Log.e(TAG, "onTouchEvent: " + ";;;" + dy);
-//                targetView.setTranslationY(currentY *0.5f);
-
                 totalY += dy;
                 dispatcher(rawX, totalY);
                 currentY = rawY;

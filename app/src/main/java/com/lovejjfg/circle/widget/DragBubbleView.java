@@ -3,17 +3,23 @@ package com.lovejjfg.circle.widget;
 import android.animation.AnimatorSet;
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.content.res.TypedArray;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.Rect;
+import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.OvershootInterpolator;
 
 import com.lovejjfg.circle.R;
+
+import java.util.ArrayList;
 
 /**
  * Created by Joe on 2016/4/3.
@@ -21,25 +27,33 @@ import com.lovejjfg.circle.R;
  */
 public class DragBubbleView extends View {
 
+    @SuppressWarnings("unused")
     private static final String TAG = DragBubbleView.class.getSimpleName();
     private int startX;
     private int startY;
     private static int DEFAULT_RADIO = 30;
     private int ORIGIN_RADIO = DEFAULT_RADIO;
-    private int DRAG_RADIO = ORIGIN_RADIO;
+    private int dragRadio = ORIGIN_RADIO;
     private int CIRCLEX;
     private int CIRCLEY;
     private int MIN_RADIO = (int) (ORIGIN_RADIO * 0.4);//最小半径
     private int MAXDISTANCE = (int) (MIN_RADIO * 13);
     private Path path;
-    private Path path1;
     private double angle;
     private boolean flag;
     private ValueAnimator valueX;
     private ValueAnimator valueY;
     private AnimatorSet animSetXY;
-    //    private boolean isLeave;
     private boolean fillDraw = true;
+    private ArrayList<Bitmap> bubbles;
+    private Paint bitmapPaint;
+    private Paint textPaint;
+    private int textHeight;
+    private String msg = "99";
+    private float textWidth;
+    private int bubbleColor;
+    private int textColor;
+    private float textSize;
 
     public boolean isShowCircle() {
         return showCircle;
@@ -60,33 +74,41 @@ public class DragBubbleView extends View {
     private final static int STATE_UP_BACK = 5;//放手后的没有断裂的返回的状态
     private final static int STATE_UP_DRAG_BREAK_BACK = 6;//拖拽断裂又返回的状态
     private int CurrentState = STATE_IDLE;
+    private int currentPos = 0;
 
-
-    private Paint circlePaint;
     private Paint paint;
 
     public DragBubbleView(Context context) {
-        super(context);
-        initView();
+        this(context, null);
     }
 
     public DragBubbleView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        initView();
+        this(context, attrs, -1);
     }
 
     public DragBubbleView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        final TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.DragBubbleView, defStyleAttr, 0);
+        int r = (int) a.getDimension(R.styleable.DragBubbleView_bubbleRadius, getResources().getDisplayMetrics().density * 20);
+        bubbleColor = a.getColor(R.styleable.DragBubbleView_bubbleColor, Color.RED);
+        textColor = a.getColor(R.styleable.DragBubbleView_msgColor, Color.BLACK);
+        textSize = a.getDimension(R.styleable.DragBubbleView_msgTextSize, getResources().getDisplayMetrics().scaledDensity * 15);
+        setOriginR(r);
+        a.recycle();
         initView();
 
+    }
+
+    public void reset() {
+        CurrentState = STATE_IDLE;
+        currentPos = 0;
+        invalidate();
     }
 
 
     private void initView() {
         path = new Path();
-        path1 = new Path();
         animSetXY = new AnimatorSet();
-
         valueX = ValueAnimator.ofInt(startX, CIRCLEX);
         valueY = ValueAnimator.ofInt(startY, CIRCLEY);
         animSetXY.playTogether(valueX, valueY);
@@ -98,7 +120,6 @@ public class DragBubbleView extends View {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 startX = (int) animation.getAnimatedValue();
-                Log.e(TAG, "onAnimationUpdate-startX: " + startX);
                 invalidate();
             }
 
@@ -107,32 +128,54 @@ public class DragBubbleView extends View {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 startY = (int) animation.getAnimatedValue();
-                Log.e(TAG, "onAnimationUpdate-startY: " + startY);
                 invalidate();
 
             }
         });
-
         paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-
         paint.setStyle(fillDraw ? Paint.Style.FILL : Paint.Style.STROKE);
-//        paint.setAntiAlias(true);
-//        paint.setStrokeWidth(10);
-        paint.setColor(Color.RED);
-//        paint.setAlpha(50);
-//        paint.setStrokeCap(Paint.Cap.SQUARE);
+        paint.setColor(bubbleColor);
 
-        circlePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        initText();
+        initBubbles();
 
-        circlePaint.setStyle(Paint.Style.STROKE);
-//        paint.setAntiAlias(true);
-        circlePaint.setStrokeWidth(10);
-        //noinspection deprecation
-        circlePaint.setColor(getResources().getColor(R.color.transWhite));
-//        paint.setAlpha(50);
-//        paint.setStrokeCap(Paint.Cap.SQUARE);
+    }
 
+    private void initBubbles() {
+        if (bitmapPaint == null) {
+            bitmapPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+            bitmapPaint.setStyle(Paint.Style.FILL);
+        }
+        bubbles = new ArrayList<>(5);
+        bubbles.add(BitmapFactory.decodeResource(getResources(), R.mipmap.bubble_one));
+        bubbles.add(BitmapFactory.decodeResource(getResources(), R.mipmap.bubble_two));
+        bubbles.add(BitmapFactory.decodeResource(getResources(), R.mipmap.bubble_three));
+        bubbles.add(BitmapFactory.decodeResource(getResources(), R.mipmap.bubble_four));
+        bubbles.add(BitmapFactory.decodeResource(getResources(), R.mipmap.bubble_five));
+    }
 
+    private void initText() {
+        if (textPaint == null) {
+            textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+            textPaint.setStyle(Paint.Style.FILL);
+            textPaint.setTextSize(textSize);
+            textPaint.setColor(textColor);
+            textPaint.setStrokeCap(Paint.Cap.ROUND);
+            textPaint.setTextAlign(Paint.Align.LEFT);
+        }
+        Rect rect = new Rect();
+        textPaint.getTextBounds(msg, 0, msg.length(), rect);
+        textWidth = rect.width();
+        textHeight = rect.height();
+    }
+
+    @SuppressWarnings("unused")
+    public void setMsg(String msg) {
+        if (TextUtils.equals(msg, this.msg)) {
+            return;
+        }
+        this.msg = msg;
+        initText();
     }
 
     private void updatePath() {
@@ -147,23 +190,23 @@ public class DragBubbleView extends View {
                 CurrentState = STATE_DRAG_NORMAL;
             }
             ORIGIN_RADIO = (int) (DEFAULT_RADIO - (dis / MAXDISTANCE) * (DEFAULT_RADIO - MIN_RADIO));
-            Log.e(TAG, "distance: " + (int) ((1 - dis / MAXDISTANCE) * MIN_RADIO));
-            Log.i(TAG, "distance: " + ORIGIN_RADIO);
         } else {
             CurrentState = STATE_DRAG_BREAK;
         }
 //        distance = dis;
         flag = (startY - CIRCLEY) * (startX - CIRCLEX) <= 0;
-        Log.i("TAG", "updatePath: " + flag);
         angle = Math.atan(dy * 1.0 / dx);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
+        int cx = startX == 0 ? CIRCLEX : startX;
+        int cy = startY == 0 ? CIRCLEY : startY;
         switch (CurrentState) {
             case STATE_IDLE://空闲状态，就画默认的圆
                 if (showCircle) {
-                    canvas.drawCircle(CIRCLEX, CIRCLEY, ORIGIN_RADIO, paint);//默认的
+                    canvas.drawCircle(CIRCLEX, CIRCLEY, dragRadio, paint);//默认的
+                    drawMsg(canvas, CIRCLEX, CIRCLEY);
                 }
                 break;
             case STATE_UP_BACK://执行返回的动画
@@ -173,8 +216,8 @@ public class DragBubbleView extends View {
                     //第一个点
                     path.moveTo((float) (CIRCLEX - Math.sin(angle) * ORIGIN_RADIO), (float) (CIRCLEY - Math.cos(angle) * ORIGIN_RADIO));
 
-                    path.quadTo((float) ((startX + CIRCLEX) * 0.5), (float) ((startY + CIRCLEY) * 0.5), (float) (startX - Math.sin(angle) * DRAG_RADIO), (float) (startY - Math.cos(angle) * DRAG_RADIO));
-                    path.lineTo((float) (startX + Math.sin(angle) * DRAG_RADIO), (float) (startY + Math.cos(angle) * DRAG_RADIO));
+                    path.quadTo((float) ((startX + CIRCLEX) * 0.5), (float) ((startY + CIRCLEY) * 0.5), (float) (startX - Math.sin(angle) * dragRadio), (float) (startY - Math.cos(angle) * dragRadio));
+                    path.lineTo((float) (startX + Math.sin(angle) * dragRadio), (float) (startY + Math.cos(angle) * dragRadio));
 
                     path.quadTo((float) ((startX + CIRCLEX) * 0.5), (float) ((startY + CIRCLEY) * 0.5), (float) (CIRCLEX + Math.sin(angle) * ORIGIN_RADIO), (float) (CIRCLEY + Math.cos(angle) * ORIGIN_RADIO));
                     path.close();
@@ -183,8 +226,8 @@ public class DragBubbleView extends View {
                     //第一个点
                     path.moveTo((float) (CIRCLEX - Math.sin(angle) * ORIGIN_RADIO), (float) (CIRCLEY + Math.cos(angle) * ORIGIN_RADIO));
 
-                    path.quadTo((float) ((startX + CIRCLEX) * 0.5), (float) ((startY + CIRCLEY) * 0.5), (float) (startX - Math.sin(angle) * DRAG_RADIO), (float) (startY + Math.cos(angle) * DRAG_RADIO));
-                    path.lineTo((float) (startX + Math.sin(angle) * DRAG_RADIO), (float) (startY - Math.cos(angle) * DRAG_RADIO));
+                    path.quadTo((float) ((startX + CIRCLEX) * 0.5), (float) ((startY + CIRCLEY) * 0.5), (float) (startX - Math.sin(angle) * dragRadio), (float) (startY + Math.cos(angle) * dragRadio));
+                    path.lineTo((float) (startX + Math.sin(angle) * dragRadio), (float) (startY - Math.cos(angle) * dragRadio));
 
                     path.quadTo((float) ((startX + CIRCLEX) * 0.5), (float) ((startY + CIRCLEY) * 0.5), (float) (CIRCLEX + Math.sin(angle) * ORIGIN_RADIO), (float) (CIRCLEY - Math.cos(angle) * ORIGIN_RADIO));
                     path.close();
@@ -192,33 +235,36 @@ public class DragBubbleView extends View {
                 }
                 if (showCircle) {
                     canvas.drawCircle(CIRCLEX, CIRCLEY, ORIGIN_RADIO, paint);//默认的
-                    canvas.drawCircle(startX == 0 ? CIRCLEX : startX, startY == 0 ? CIRCLEY : startY, DRAG_RADIO, paint);//拖拽的
+                    canvas.drawCircle(cx, cy, dragRadio, paint);//拖拽的
+                    drawMsg(canvas, cx, cy);
                 }
                 break;
 
             case STATE_DRAG_BREAK://拖拽到了上限，画拖拽的圆:
             case STATE_UP_DRAG_BREAK_BACK:
                 if (showCircle) {
-                    canvas.drawCircle(startX == 0 ? CIRCLEX : startX, startY == 0 ? CIRCLEY : startY, DRAG_RADIO, paint);//拖拽的
+                    canvas.drawCircle(cx, cy, dragRadio, paint);//拖拽的
+                    drawMsg(canvas, cx, cy);
                 }
                 break;
 
             case STATE_UP_BREAK://画出爆裂的效果
-                // TODO: 2016-06-28 这里可以再去山寨一下QQ的最终效果
-                path1.reset();
-
-                canvas.drawCircle(startX - 25, startY - 25, 10, circlePaint);
-                canvas.drawCircle(startX + 25, startY + 25, 10, circlePaint);
-                canvas.drawCircle(startX, startY - 25, 10, circlePaint);
-                canvas.drawCircle(startX, startY, 18, circlePaint);
-                canvas.drawCircle(startX - 25, startY, 10, circlePaint);
+                if (currentPos < 0 || currentPos >= bubbles.size()) {
+                    currentPos = 0;
+                    CurrentState = STATE_IDLE;
+                    return;
+                }
+                Bitmap currentBitmap = bubbles.get(currentPos);
+                canvas.drawBitmap(currentBitmap, startX - currentBitmap.getWidth() * 0.5f, startY - currentBitmap.getHeight() * 0.5f, bitmapPaint);
+                currentPos++;
+                postInvalidateDelayed(50);
                 break;
-
         }
-
-
     }
 
+    private void drawMsg(Canvas canvas, float x, float y) {
+        canvas.drawText(msg, x - textWidth * 0.5f, y + textHeight * 0.5f, textPaint);
+    }
 
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
@@ -298,11 +344,12 @@ public class DragBubbleView extends View {
     public void setOriginR(int progress) {
         ORIGIN_RADIO = progress;
         DEFAULT_RADIO = progress;
-        DRAG_RADIO = progress;
+        dragRadio = progress;
         MIN_RADIO = (int) (ORIGIN_RADIO * 0.4);
         MAXDISTANCE = MIN_RADIO * 13;
         requestLayout();
         invalidate();
     }
+
 }
 

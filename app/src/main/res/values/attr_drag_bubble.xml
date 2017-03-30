@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="DragBubbleView">
+        <attr name="bubbleRadius" format="dimension" />
+        <attr name="msgTextSize" format="dimension" />
+        <attr name="bubbleColor" format="color" />
+        <attr name="msgColor" format="color" />
+    </declare-styleable>
+</resources>

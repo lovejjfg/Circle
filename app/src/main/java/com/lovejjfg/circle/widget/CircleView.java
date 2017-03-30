@@ -34,12 +34,6 @@ public class CircleView extends View {
 
     private Paint paint;
     private RectF rectF;
-    private RectF innerRectf;
-    private int width;
-    private int height;
-    private int SecondRadius = 200;
-    private int result = 10;
-    private float mStrokeInset = 2.5f;
     private final Paint mArrowPaint = new Paint();
     private Paint outPaint;
 
@@ -61,7 +55,6 @@ public class CircleView extends View {
     private float centerY;
     private int radio;
     private int mRingCenterRadius;
-    private float mArrowScale = 0.6f;
     private boolean first;
 
     private void setCurrentAngle(float value) {
@@ -105,7 +98,7 @@ public class CircleView extends View {
         paint.setAlpha(50);
         paint.setStrokeCap(Paint.Cap.ROUND);
         rectF = new RectF();
-        innerRectf = new RectF();
+        RectF innerRectf = new RectF();
 
         mAngleAnimator = ObjectAnimator.ofFloat(this, mAngleProperty, 120, 250);
         mAngleAnimator.setInterpolator(new OvershootInterpolator());
@@ -129,11 +122,13 @@ public class CircleView extends View {
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
-        width = getWidth();
-        height = getHeight();
+        int width = getWidth();
+        int height = getHeight();
         mRingCenterRadius = Math.min(width, height);
-        rectF.set((float) (width / 2 - (SecondRadius + result)), (float) (height / 2 - (SecondRadius + result)), (float) (width
-                / 2 + (SecondRadius + result)), (float) (height / 2 + (SecondRadius + result)));
+        int result = 10;
+        int secondRadius = 200;
+        rectF.set((float) (width / 2 - (secondRadius + result)), (float) (height / 2 - (secondRadius + result)), (float) (width
+                / 2 + (secondRadius + result)), (float) (height / 2 + (secondRadius + result)));
         centerX = rectF.centerX();
         centerY = rectF.centerY();
     }
@@ -158,6 +153,8 @@ public class CircleView extends View {
 
         // Adjust the position of the triangle so that it is inset as
         // much as the arc, but also centered on the arc.
+        float mArrowScale = 0.6f;
+        float mStrokeInset = 2.5f;
         float inset = (int) mStrokeInset / 2 * mArrowScale;
         float x = (float) (mRingCenterRadius * Math.cos(0) + centerX);
         float y = (float) (mRingCenterRadius * Math.sin(0) + centerY);
