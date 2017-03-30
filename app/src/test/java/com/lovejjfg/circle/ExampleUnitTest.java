@@ -10,6 +10,9 @@ import static org.junit.Assert.*;
 public class ExampleUnitTest {
     @Test
     public void addition_isCorrect() throws Exception {
-        assertEquals(4, 2 + 2);
+        // TODO: 2017/3/30  
+        float cos = (float) (Math.cos(Math.toRadians(90)) * 90);
+        System.out.println(cos);
+
     }
 }
