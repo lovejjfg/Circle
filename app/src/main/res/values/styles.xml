@@ -13,4 +13,15 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <declare-styleable name="IndexBar">
+        <attr name="normalColor" format="color"/>
+        <attr name="selecColor" format="color"/>
+        <attr name="indexSize" format="dimension"/>
+    </declare-styleable>
+
+    <declare-styleable name="CircleProgress">
+        <attr name="progressBorderWidth" format="dimension" />
+        <attr name="showArrow" format="boolean" />
+    </declare-styleable>
+
 </resources>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="HeaderProgress">
+        <attr name="circleBorderWidth" format="dimension" />
+        <attr name="outRadius" format="dimension" />
+        <attr name="innerRadius" format="dimension" />
+
+    </declare-styleable>
+</resources>

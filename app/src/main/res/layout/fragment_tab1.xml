@@ -4,9 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.lovejjfg.circle.MainActivity">
+    tools:context=".view.MainActivity">
 
-    <com.lovejjfg.circle.RipplesView
+    <com.lovejjfg.circle.widget.RipplesView
         android:id="@+id/circle"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
