@@ -69,8 +69,8 @@ public class TimeIndicatorView extends View {
         centerX = (int) (getMeasuredWidth() * 0.5f);
         centerY = getMeasuredHeight();
         mRectF.set(0, getPaddingTop(), getMeasuredWidth(), getMeasuredWidth() + getPaddingTop());
-        cx = (float) (Math.abs(Math.sin(2 * Math.PI / 360 * 270) * centerX));
-        cy = (float) (Math.abs(Math.cos(2 * Math.PI / 360 * 270) * centerX)) + getPaddingTop();
+        cx = (float) (Math.abs(Math.sin(2 * Math.PI / 360 * 270) * (centerX - halfWidth)));
+        cy = (float) (Math.abs(Math.cos(2 * Math.PI / 360 * 270) * (getPaddingTop() - halfHeight)));
 
     }
 
@@ -82,7 +82,7 @@ public class TimeIndicatorView extends View {
 //        canvas.drawCircle(centerX, centerY, centerX, paint);
         canvas.drawArc(mRectF, 210, 60, false, paint);
         canvas.drawArc(mRectF, 270, 60, false, fillPaint);
-        canvas.drawBitmap(bitmap, cx - halfWidth, cy - halfHeight, paint);
+        canvas.drawBitmap(bitmap, cx, cy, paint);
         super.onDraw(canvas);
     }
 }
