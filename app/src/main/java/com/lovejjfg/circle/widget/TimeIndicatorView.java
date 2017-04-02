@@ -7,7 +7,10 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.PathEffect;
+import android.graphics.PathMeasure;
+import android.graphics.Point;
 import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -33,6 +36,15 @@ public class TimeIndicatorView extends View {
     private int cy;
     private float halfWidth;
     private float halfHeight;
+    private Path mPath;
+    private PathMeasure pathMeasure;
+    private Point mPoint;
+    private float[] mCoords;
+    private int total = 6;
+    private static final int START = 210;
+    private static final int TOTAL_ANGLE = 120;
+    private int firtAngle = 1;
+    private Path mPath2;
 
     public TimeIndicatorView(Context context) {
         this(context, null);
@@ -44,20 +56,25 @@ public class TimeIndicatorView extends View {
 
     public TimeIndicatorView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        mRectF = new RectF();
-        paint = new Paint();
 
+        mRectF = new RectF();
+        paint = new Paint(Paint.ANTI_ALIAS_FLAG);
         //画蓝色矩形区域
         paint.setColor(Color.RED);
         paint.setStyle(Paint.Style.FILL);
         paint.setStyle(Paint.Style.STROKE); //空心
         paint.setStrokeWidth(3);
 
+        mPath = new Path();
+        mPath2 = new Path();
+        pathMeasure = new PathMeasure();
+        mCoords = new float[]{0f, 0f};
+
         fillPaint = new Paint(paint);
 
 
         //设置画虚线，如果之后不再使用虚线，调用paint.setPathEffect(null);
-        PathEffect effects = new DashPathEffect(new float[]{5, 5, 5, 5}, 1);
+        PathEffect effects = new DashPathEffect(new float[]{10, 10, 10, 10}, 1);
         paint.setPathEffect(effects);
 
         bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.artboard);
@@ -65,7 +82,6 @@ public class TimeIndicatorView extends View {
         halfHeight = bitmap.getHeight() * 0.5f;
     }
 
-    private int angle = 270;
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
@@ -88,9 +104,26 @@ public class TimeIndicatorView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
 //        canvas.drawCircle(centerX, centerY, centerX, paint);
-        canvas.drawArc(mRectF, 210, 60, false, paint);
-        canvas.drawArc(mRectF, 270, 60, false, fillPaint);
-        canvas.drawBitmap(bitmap, cx, cy, paint);
+        mPath.reset();
+        mPath2.reset();
+        mPath.addArc(mRectF, START, firtAngle);
+        mPath2.addArc(mRectF, START + firtAngle + 1, TOTAL_ANGLE - firtAngle);
+        pathMeasure.setPath(mPath, false);
+//        canvas.drawArc(mRectF, 210, 60, false, paint);
+//        canvas.drawArc(mRectF, 270, 60, false, fillPaint);
+        canvas.drawPath(mPath, paint);
+        canvas.drawPath(mPath2, fillPaint);
+        pathMeasure.getPosTan(pathMeasure.getLength(), mCoords, null);
+        canvas.drawBitmap(bitmap, mCoords[0] - halfWidth, mCoords[1] - halfHeight, paint);
+//        for (int i = 0; i <= total; i++) {
+//            pathMeasure.getPosTan(i * pathMeasure.getLength() / total, mCoords, null);
+//            canvas.drawBitmap(bitmap, mCoords[0] - halfWidth, mCoords[1] - halfHeight, paint);
+//        }
+        if ( firtAngle < TOTAL_ANGLE) {
+            firtAngle += 5;
+            postInvalidateDelayed(2000);
+        }
         super.onDraw(canvas);
     }
+
 }

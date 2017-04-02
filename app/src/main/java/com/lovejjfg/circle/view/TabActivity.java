@@ -21,6 +21,7 @@ import com.lovejjfg.circle.view.fragment.Fragment6;
 import com.lovejjfg.circle.view.fragment.Fragment7;
 import com.lovejjfg.circle.view.fragment.Fragment8;
 import com.lovejjfg.circle.view.fragment.Fragment9;
+import com.lovejjfg.circle.widget.CustomTabLayout;
 
 import java.util.ArrayList;
 
@@ -33,7 +34,7 @@ public class TabActivity extends AppCompatActivity implements View.OnClickListen
      * The {@link ViewPager} that will host the section contents.
      */
     @Bind(R.id.tab)
-    TabLayout mTab;
+    CustomTabLayout mTab;
     @Bind(R.id.container)
     ViewPager mViewPager;
     @Bind(R.id.fab)
@@ -144,11 +145,11 @@ public class TabActivity extends AppCompatActivity implements View.OnClickListen
                 case 3:
                     return "4";
                 case 4:
-                    return "5";
+                    return "这就是5";
                 case 5:
-                    return "6";
+                    return "这是6";
                 case 6:
-                    return "7";
+                    return "这是7";
                 default:
                     return "tittle";
             }

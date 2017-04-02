@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="CustomTabLayout">
+        <attr name="ctlIndicatorColor" format="color" />
+        <attr name="ctlIndicatorHeight" format="dimension" />
+        <attr name="ctlTabPaddingLeftRight" format="dimension" />
+        <attr name="ctlScrollOffset" format="dimension" />
+        <attr name="ctlTabBackground" format="reference" />
+        <attr name="ctlShouldExpand" format="boolean" />
+        <attr name="ctlTextAllCaps" format="boolean" />
+        <attr name="ctlDefaultTextColor" format="color" />
+        <attr name="ctlTextSize" format="dimension" />
+        <attr name="ctlGapTextIndicator" format="dimension" />
+    </declare-styleable>
+</resources>

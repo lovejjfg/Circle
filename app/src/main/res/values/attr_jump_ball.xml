@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="JumpBall">
-        <attr name="ballRadius" format="dimension" />
+        <attr name="ballRadius" format="dimension"/>
     </declare-styleable>
 </resources>
