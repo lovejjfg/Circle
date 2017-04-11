@@ -1,13 +1,14 @@
 package com.lovejjfg.circle.view.fragment;
 
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.lovejjfg.circle.R;
-import com.lovejjfg.circle.widget.JumpBall;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -45,6 +46,9 @@ public class Fragment9 extends Fragment {
 //    @Bind(R.id.bt_finish)
 //    Button mBtFinish;
 
+//    @Bind(R.id.iv_loading)
+//    ImageView mIvLoading;
+    int i = 0;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -53,6 +57,19 @@ public class Fragment9 extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_time_indicator, container, false);
         ButterKnife.bind(this, rootView);
 
+        final AnimationDrawable frameAnimation = (AnimationDrawable) getContext().getResources().getDrawable(R.drawable.iv_background);
+        final int numberOfFrames = frameAnimation.getNumberOfFrames();
+//        mIvLoading.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                if (i < numberOfFrames) {
+//                    mIvLoading.setImageDrawable(frameAnimation.getFrame(i));
+//                    i++;
+//                    mIvLoading.postDelayed(this, 1000);
+//                }
+//            }
+//        }, 1000);
+//        frameAnimation.start();
 //        bottomSeek.setOnSeekBarChangeListener(this);
 //        topSeek.setOnSeekBarChangeListener(this);
 //        leftSeek.setOnSeekBarChangeListener(this);

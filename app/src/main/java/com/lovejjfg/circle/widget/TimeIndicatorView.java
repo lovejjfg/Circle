@@ -46,6 +46,16 @@ public class TimeIndicatorView extends View {
     private int firtAngle = 1;
     private Path mPath2;
 
+    /**
+     * Mon - Monday
+     2.Tue - Tuesday
+     3.Wed - Wednesday
+     4.Thur- Thursday
+     5.Fri- Friday
+     6.Sat- Saturday
+     日.Sun - Sunday
+     */
+
     public TimeIndicatorView(Context context) {
         this(context, null);
     }
@@ -111,8 +121,8 @@ public class TimeIndicatorView extends View {
         pathMeasure.setPath(mPath, false);
 //        canvas.drawArc(mRectF, 210, 60, false, paint);
 //        canvas.drawArc(mRectF, 270, 60, false, fillPaint);
-        canvas.drawPath(mPath, paint);
-        canvas.drawPath(mPath2, fillPaint);
+        canvas.drawPath(mPath, fillPaint);
+        canvas.drawPath(mPath2, paint);
         pathMeasure.getPosTan(pathMeasure.getLength(), mCoords, null);
         canvas.drawBitmap(bitmap, mCoords[0] - halfWidth, mCoords[1] - halfHeight, paint);
 //        for (int i = 0; i <= total; i++) {
@@ -120,7 +130,7 @@ public class TimeIndicatorView extends View {
 //            canvas.drawBitmap(bitmap, mCoords[0] - halfWidth, mCoords[1] - halfHeight, paint);
 //        }
         if ( firtAngle < TOTAL_ANGLE) {
-            firtAngle += 5;
+            firtAngle += 10;
             postInvalidateDelayed(2000);
         }
         super.onDraw(canvas);
