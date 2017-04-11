@@ -18,6 +18,11 @@ import android.view.View;
 
 import com.lovejjfg.circle.R;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 
 /**
  * Created by Joe on 2017/3/30.
@@ -48,12 +53,12 @@ public class TimeIndicatorView extends View {
 
     /**
      * Mon - Monday
-     2.Tue - Tuesday
-     3.Wed - Wednesday
-     4.Thur- Thursday
-     5.Fri- Friday
-     6.Sat- Saturday
-     日.Sun - Sunday
+     * 2.Tue - Tuesday
+     * 3.Wed - Wednesday
+     * 4.Thur- Thursday
+     * 5.Fri- Friday
+     * 6.Sat- Saturday
+     * 日.Sun - Sunday
      */
 
     public TimeIndicatorView(Context context) {
@@ -129,11 +134,48 @@ public class TimeIndicatorView extends View {
 //            pathMeasure.getPosTan(i * pathMeasure.getLength() / total, mCoords, null);
 //            canvas.drawBitmap(bitmap, mCoords[0] - halfWidth, mCoords[1] - halfHeight, paint);
 //        }
-        if ( firtAngle < TOTAL_ANGLE) {
+        if (firtAngle < TOTAL_ANGLE) {
             firtAngle += 10;
             postInvalidateDelayed(2000);
         }
         super.onDraw(canvas);
+    }
+//1483221600000   06:00:00
+//1483264799000   17:59:59
+//result 43199 (0~43199) 十二小时
+
+
+//1483264800000   18:00:00
+//1483307999000   05:59:59
+//1483304399000   04:59:59  -3600  //39600  //39599
+//1483308000000   06:00:00
+//    白天-6点的时间就是结果
+//    晚上-6点的时间 大于零-43199  小于零+43199
+//x/y>1?x/y-1:x/y<1?x/y+1
+
+    /*
+    白天模式直接获取早上的六点就好
+
+     */
+    private static void method(int hour, int min) {
+        // 获取系统年月日
+        SimpleDateFormat myFmt = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+        Date now = new Date();
+        String time = myFmt.format(now);
+        time = time + hour + ":" + min;
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.ENGLISH);
+            Date date;
+            date = sdf.parse(time);
+            // 获取指定时间的毫秒值
+            long longDate = date.getTime();
+            System.out.println("系统时间：" + System.currentTimeMillis());
+            System.out.println("指定时间：" + longDate);
+            System.out.println("差值：" + (System.currentTimeMillis() - longDate));
+            System.out.println();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
 
 }
