@@ -1,14 +1,20 @@
 package com.lovejjfg.circle.view.fragment;
 
+import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
+import android.graphics.drawable.StateListDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.widget.Button;
+import android.widget.CheckedTextView;
+import android.widget.TextView;
 
 import com.lovejjfg.circle.R;
+import com.lovejjfg.circle.widget.BorderDrawable;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -46,9 +52,17 @@ public class Fragment9 extends Fragment {
 //    @Bind(R.id.bt_finish)
 //    Button mBtFinish;
 
-//    @Bind(R.id.iv_loading)
+    //    @Bind(R.id.iv_loading)
 //    ImageView mIvLoading;
     int i = 0;
+    @Bind(R.id.text)
+    TextView mText;
+    @Bind(R.id.text2)
+    Button mText2;
+    @Bind(R.id.text3)
+    CheckedTextView mText3;
+    @Bind(R.id.text4)
+    CheckedTextView mText4;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -56,6 +70,33 @@ public class Fragment9 extends Fragment {
 
         View rootView = inflater.inflate(R.layout.fragment_time_indicator, container, false);
         ButterKnife.bind(this, rootView);
+
+        StateListDrawable stateListDrawable = new StateListDrawable();
+        stateListDrawable.addState(new int[]{android.R.attr.state_checked}, new BorderDrawable(BorderDrawable.STATE_CHECKED, Color.GREEN));
+        stateListDrawable.addState(new int[]{-android.R.attr.state_enabled}, new BorderDrawable(BorderDrawable.STATE_UNABLE, Color.BLUE));
+        stateListDrawable.addState(new int[]{}, new BorderDrawable(BorderDrawable.STATE_NORMAL, Color.BLACK));
+        StateListDrawable stateListDrawable2 = new StateListDrawable();
+        stateListDrawable2.addState(new int[]{android.R.attr.state_checked}, new BorderDrawable(BorderDrawable.STATE_CHECKED, Color.GREEN));
+        stateListDrawable2.addState(new int[]{-android.R.attr.state_enabled}, new BorderDrawable(BorderDrawable.STATE_UNABLE, Color.BLUE));
+        stateListDrawable2.addState(new int[]{}, new BorderDrawable(BorderDrawable.STATE_NORMAL, Color.BLACK));
+
+
+        mText3.setBackgroundDrawable(stateListDrawable);
+        mText4.setBackgroundDrawable(stateListDrawable2);
+        mText2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.e("TAG", "onClick: ..mText1");
+                mText3.setEnabled(!mText3.isEnabled());
+            }
+        });
+        mText3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.e("TAG", "onClick: ..mText3");
+                mText3.setChecked(!mText3.isChecked());
+            }
+        });
 
         final AnimationDrawable frameAnimation = (AnimationDrawable) getContext().getResources().getDrawable(R.drawable.iv_background);
         final int numberOfFrames = frameAnimation.getNumberOfFrames();

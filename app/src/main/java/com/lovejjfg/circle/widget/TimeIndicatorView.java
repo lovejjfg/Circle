@@ -157,21 +157,27 @@ public class TimeIndicatorView extends View {
     白天模式直接获取早上的六点就好
 
      */
-    private static void method(int hour, int min) {
-        // 获取系统年月日
-        SimpleDateFormat myFmt = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
-        Date now = new Date();
-        String time = myFmt.format(now);
-        time = time + hour + ":" + min;
+    private static void method() {
         try {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.ENGLISH);
+            // 获取系统年月日
+            int hour = 6;
+            int min = 0;
+            int second = 0;
+            SimpleDateFormat myFmt = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+            Date now = new Date();
+            String time = myFmt.format(now);
+            time = time + " " + hour + ":" + min + ":" + second;
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ENGLISH);
             Date date;
             date = sdf.parse(time);
             // 获取指定时间的毫秒值
             long longDate = date.getTime();
-            System.out.println("系统时间：" + System.currentTimeMillis());
+            long speTime = System.currentTimeMillis();
+            System.out.println("系统时间：" + speTime);
             System.out.println("指定时间：" + longDate);
-            System.out.println("差值：" + (System.currentTimeMillis() - longDate));
+            long dt = speTime - longDate;
+            System.out.println("差值：" + dt);
+            System.out.println("百分比：" + dt / 43199000.f);
             System.out.println();
         } catch (ParseException e) {
             e.printStackTrace();

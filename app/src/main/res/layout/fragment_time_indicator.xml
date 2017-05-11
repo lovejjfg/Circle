@@ -1,41 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<FrameLayout
-    android:id="@+id/container"
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="200dp"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
     >
 
-
-    <com.lovejjfg.circle.widget.TimeIndicatorView
-        android:background="#ccc"
-        android:paddingTop="16dp"
-        android:id="@+id/time_view"
+    <FrameLayout
+        android:id="@+id/container"
+        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        />
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_marginTop="50dp"
-        android:gravity="center_horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <ImageView
-            android:layout_width="93dp"
-            android:layout_height="28dp"
-            android:layout_gravity="center_horizontal"
-            android:src="@drawable/ic_fri_night"
-            />
-        <TextView
+        >
+
+
+        <com.lovejjfg.circle.widget.TimeIndicatorView
+            android:background="#ccc"
+            android:paddingTop="16dp"
+            android:id="@+id/time_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:text="xxxxxxxxxxxxx"
+            android:layout_height="200dp"
             />
 
-    </LinearLayout>
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_marginTop="50dp"
+            android:gravity="center_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_width="93dp"
+                android:layout_height="28dp"
+                android:layout_gravity="center_horizontal"
+                android:src="@drawable/ic_fri_night"
+                />
+
+        </LinearLayout>
 
 
+    </FrameLayout>
 
-</FrameLayout>
+    <TextView
+        android:id="@+id/text"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_margin="10dp"
+        android:text="xxxxxxxxxxxxx"
+        />
+    <Button
+        android:id="@+id/text2"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_margin="10dp"
+        android:text="xxxxxxxxxxxxx"
+        />
+    <CheckedTextView
+        android:id="@+id/text3"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_margin="10dp"
+        android:text="xxxxxxxxxxxxx"
+        />
+    <CheckedTextView
+        android:id="@+id/text4"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_margin="10dp"
+        android:text="xxxxxxxxxxxxx"
+        />
+</LinearLayout>
