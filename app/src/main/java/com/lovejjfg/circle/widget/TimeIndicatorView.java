@@ -103,7 +103,7 @@ public class TimeIndicatorView extends View {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         centerX = (int) (getMeasuredWidth() * 0.5f);
         centerY = getMeasuredHeight();
-        mRectF.set(0, getPaddingTop(), getMeasuredWidth(), getMeasuredWidth() + getPaddingTop());
+        mRectF.set(-60, getPaddingTop(), getMeasuredWidth()+60, getMeasuredWidth() + getPaddingTop());
         cx = (int) Math.abs(Math.sin(Math.toRadians(210)) * (centerX - halfWidth));
         cy = (int) Math.cos(Math.toRadians(210) * (centerX - halfHeight) + getPaddingTop());
 //                cy = (int) (((int) Math.abs()) * (centerX - halfHeight)) + getPaddingTop());

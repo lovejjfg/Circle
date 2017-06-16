@@ -14,6 +14,7 @@ import android.view.View;
 import com.lovejjfg.circle.R;
 import com.lovejjfg.circle.ShakeHelper;
 import com.lovejjfg.circle.view.fragment.Fragment1;
+import com.lovejjfg.circle.view.fragment.Fragment10;
 import com.lovejjfg.circle.view.fragment.Fragment2;
 import com.lovejjfg.circle.view.fragment.Fragment4;
 import com.lovejjfg.circle.view.fragment.Fragment5;
@@ -52,6 +53,7 @@ public class TabActivity extends AppCompatActivity implements View.OnClickListen
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         fragments = new ArrayList<>();
+        fragments.add(Fragment10.newInstance(1));
         fragments.add(Fragment9.newInstance(1));
         fragments.add(Fragment8.newInstance(1));
         fragments.add(Fragment6.newInstance(1));
