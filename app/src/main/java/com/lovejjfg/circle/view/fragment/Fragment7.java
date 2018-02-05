@@ -12,7 +12,7 @@ import com.lovejjfg.circle.R;
 import com.lovejjfg.circle.widget.CurveLayout;
 import com.lovejjfg.circle.widget.CurveView;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static android.content.ContentValues.TAG;
@@ -45,19 +45,19 @@ public class Fragment7 extends Fragment implements View.OnClickListener {
     }
 
 
-    @Bind(R.id.view)
+    @BindView(R.id.view)
     View mView;
 
-    @Bind(R.id.ts)
+    @BindView(R.id.ts)
     CurveView mCurveView;
-    @Bind(R.id.curve_container)
+    @BindView(R.id.curve_container)
     CurveLayout mContainer;
 
-    @Bind(R.id.tv1)
+    @BindView(R.id.tv1)
     TextView mTv1;
-    @Bind(R.id.tv2)
+    @BindView(R.id.tv2)
     TextView mTv2;
-    @Bind(R.id.tv3)
+    @BindView(R.id.tv3)
     TextView mTv3;
 
     @Override

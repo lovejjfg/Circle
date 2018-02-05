@@ -10,7 +10,8 @@ import android.widget.SeekBar;
 import com.lovejjfg.circle.R;
 import com.lovejjfg.circle.widget.RipplesView;
 
-import butterknife.Bind;
+
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -19,13 +20,13 @@ import butterknife.ButterKnife;
  */
 public class Fragment1 extends Fragment implements SeekBar.OnSeekBarChangeListener {
 
-        @Bind(R.id.circle)
+        @BindView(R.id.circle)
         RipplesView rippleView;
-    @Bind(R.id.pb_acceleration)
+    @BindView(R.id.pb_acceleration)
     SeekBar pb_acceleration;
-    @Bind(R.id.pb_cirRadius)
+    @BindView(R.id.pb_cirRadius)
     SeekBar pb_cirRadius;
-    @Bind(R.id.pb_multipleRadius)
+    @BindView(R.id.pb_multipleRadius)
     SeekBar pb_multipleRadius;
     /**
      * The fragment argument representing the section number for this

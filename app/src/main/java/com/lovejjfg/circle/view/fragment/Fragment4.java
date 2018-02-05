@@ -27,7 +27,8 @@ import com.lovejjfg.circle.R;
 import com.lovejjfg.circle.widget.CircleView;
 import com.lovejjfg.circle.anim.drawable.StrokeGradientDrawable;
 
-import butterknife.Bind;
+
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -53,11 +54,11 @@ public class Fragment4 extends Fragment {
     public Fragment4() {
     }
 
-    @Bind(R.id.bt)
+    @BindView(R.id.bt)
     TextView mBt;
-    @Bind(R.id.circle)
+    @BindView(R.id.circle)
     CircleView circleView;
-    @Bind(R.id.scrim)
+    @BindView(R.id.scrim)
     View scrim;
 
     /**

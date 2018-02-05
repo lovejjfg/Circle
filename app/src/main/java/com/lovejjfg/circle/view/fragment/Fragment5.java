@@ -18,7 +18,8 @@ import com.lovejjfg.circle.widget.PathTextView;
 
 import java.util.ArrayList;
 
-import butterknife.Bind;
+
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -30,9 +31,9 @@ public class Fragment5 extends Fragment {
      * The fragment argument representing the section number for this
      * fragment.
      */
-    @Bind(R.id.ptv)
+    @BindView(R.id.ptv)
     PathTextView mPtv;
-    @Bind(R.id.index)
+    @BindView(R.id.index)
     IndexBar mIndex;
     private static final String ARG_SECTION_NUMBER = "section_number";
     private StrokeGradientDrawable drawable;
@@ -43,7 +44,7 @@ public class Fragment5 extends Fragment {
     public Fragment5() {
     }
 
-//    @Bind(R.id.ptv)
+//    @BindView(R.id.ptv)
 //    PathTextView mPtv;
 
     /**

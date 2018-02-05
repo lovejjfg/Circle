@@ -12,7 +12,8 @@ import android.widget.SeekBar;
 import com.lovejjfg.circle.R;
 import com.lovejjfg.circle.widget.JumpBall;
 
-import butterknife.Bind;
+
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -45,13 +46,13 @@ public class Fragment8 extends Fragment implements View.OnClickListener, SeekBar
         return fragment;
     }
 
-    @Bind(R.id.jump_ball)
+    @BindView(R.id.jump_ball)
     JumpBall mJumpBall;
-//    @Bind(R.id.bt_again)
+//    @BindView(R.id.bt_again)
 //    Button mBtAgain;
-//    @Bind(R.id.bt_pause)
+//    @BindView(R.id.bt_pause)
 //    Button mBtPause;
-//    @Bind(R.id.bt_finish)
+//    @BindView(R.id.bt_finish)
 //    Button mBtFinish;
 
 

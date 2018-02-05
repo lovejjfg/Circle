@@ -26,7 +26,8 @@ import com.lovejjfg.circle.widget.CustomTabLayout;
 
 import java.util.ArrayList;
 
-import butterknife.Bind;
+
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class TabActivity extends AppCompatActivity implements View.OnClickListener {
@@ -34,11 +35,11 @@ public class TabActivity extends AppCompatActivity implements View.OnClickListen
     /**
      * The {@link ViewPager} that will host the section contents.
      */
-    @Bind(R.id.tab)
+    @BindView(R.id.tab)
     CustomTabLayout mTab;
-    @Bind(R.id.container)
+    @BindView(R.id.container)
     ViewPager mViewPager;
-    @Bind(R.id.fab)
+    @BindView(R.id.fab)
     FloatingActionButton mFab;
     private ArrayList<Fragment> fragments;
     private ShakeHelper shakeHelper;

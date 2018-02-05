@@ -13,7 +13,8 @@ import android.widget.SeekBar;
 import com.lovejjfg.circle.R;
 import com.lovejjfg.circle.widget.DragBubbleView;
 
-import butterknife.Bind;
+
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -27,13 +28,13 @@ public class Fragment2 extends Fragment implements CompoundButton.OnCheckedChang
      * The fragment argument representing the section number for this
      * fragment.
      */
-    @Bind(R.id.cb_fill)
+    @BindView(R.id.cb_fill)
     CheckBox mCbFill;
-    @Bind(R.id.cb_circle)
+    @BindView(R.id.cb_circle)
     CheckBox mCbCircle;
-    @Bind(R.id.pb_cirRadius)
+    @BindView(R.id.pb_cirRadius)
     SeekBar mPbRadio;
-    @Bind(R.id.dbv)
+    @BindView(R.id.dbv)
     DragBubbleView mBubble;
     private static final String ARG_SECTION_NUMBER = "section_number";
 

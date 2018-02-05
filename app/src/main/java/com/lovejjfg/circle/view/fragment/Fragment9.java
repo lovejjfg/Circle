@@ -16,7 +16,8 @@ import android.widget.TextView;
 import com.lovejjfg.circle.R;
 import com.lovejjfg.circle.widget.BorderDrawable;
 
-import butterknife.Bind;
+
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -47,21 +48,21 @@ public class Fragment9 extends Fragment {
     }
 
 //    Button mBtAgain;
-//    @Bind(R.id.bt_pause)
+//    @BindView(R.id.bt_pause)
 //    Button mBtPause;
-//    @Bind(R.id.bt_finish)
+//    @BindView(R.id.bt_finish)
 //    Button mBtFinish;
 
-    //    @Bind(R.id.iv_loading)
+    //    @BindView(R.id.iv_loading)
 //    ImageView mIvLoading;
     int i = 0;
-    @Bind(R.id.text)
+    @BindView(R.id.text)
     TextView mText;
-    @Bind(R.id.text2)
+    @BindView(R.id.text2)
     Button mText2;
-    @Bind(R.id.text3)
+    @BindView(R.id.text3)
     CheckedTextView mText3;
-    @Bind(R.id.text4)
+    @BindView(R.id.text4)
     CheckedTextView mText4;
 
     @Override

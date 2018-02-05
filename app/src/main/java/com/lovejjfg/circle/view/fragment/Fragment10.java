@@ -11,7 +11,8 @@ import android.widget.Button;
 import com.lovejjfg.circle.R;
 import com.lovejjfg.circle.widget.GradienTextView;
 
-import butterknife.Bind;
+
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -42,16 +43,16 @@ public class Fragment10 extends Fragment {
     }
 
 //    Button mBtAgain;
-//    @Bind(R.id.bt_pause)
+//    @BindView(R.id.bt_pause)
 //    Button mBtPause;
-//    @Bind(R.id.bt_finish)
+//    @BindView(R.id.bt_finish)
 //    Button mBtFinish;
 
-    @Bind(R.id.bt_start)
+    @BindView(R.id.bt_start)
     Button mStart;
-    @Bind(R.id.gt_two)
+    @BindView(R.id.gt_two)
     GradienTextView mTwo;
-    @Bind(R.id.gt_one)
+    @BindView(R.id.gt_one)
     GradienTextView mOne;
 
     @Override
