@@ -7,21 +7,31 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:windowFullscreen">true</item>
+
     </style>
 
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
 
     <declare-styleable name="IndexBar">
-        <attr name="normalColor" format="color"/>
-        <attr name="selecColor" format="color"/>
-        <attr name="indexSize" format="dimension"/>
+        <attr format="color" name="normalColor"/>
+        <attr format="color" name="selecColor"/>
+        <attr format="dimension" name="indexSize"/>
     </declare-styleable>
 
     <declare-styleable name="CircleProgress">
-        <attr name="progressBorderWidth" format="dimension" />
-        <attr name="showArrow" format="boolean" />
+        <attr format="dimension" name="progressBorderWidth"/>
+        <attr format="boolean" name="showArrow"/>
     </declare-styleable>
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="TestNormalStyle">
+
+    </style>
 
 </resources>
