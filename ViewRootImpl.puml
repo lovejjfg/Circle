@@ -1,0 +1,34 @@
+@startuml
+
+start
+:draw();
+
+if (!dirtyOpaque)
+  : drawBackGround(canvas);
+  : onDraw(canvas);
+endif
+  if(dispatchDraw(canvas)?) then  ( \n isViewGroup\n)
+    :drawChild(Canvas canvas, View child, long drawingTime);
+    :View.draw(Canvas canvas, ViewGroup parent, long drawingTime);
+
+    while(View.updateDisplayListIfDirty();)
+     if(三个条件都不满足)
+     end
+     else if (invalidate) then (\n 重新绘制 \n)
+         :dispatchGetDisplayList();
+         :parent.recreateChildDisplayList(child);
+          end
+      else (\n创建Canvas\n)
+          :View.draw(canvas);
+           end
+      endif
+      end while
+   else (   isView 空实现)
+   endif
+
+   :drawAutofilledHighlight(canvas);
+          : onDrawForeground(canvas);
+          :drawDefaultFocusHighlight(canvas);
+
+stop
+@enduml

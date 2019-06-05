@@ -1,36 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
+<com.lovejjfg.circle.TestLinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:tag="topParent"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".TestActivity">
+    android:layout_height="match_parent">
 
-    <android.support.design.widget.AppBarLayout
+    <com.lovejjfg.circle.TestFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/parent_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/AppTheme.AppBarOverlay">
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:background="@color/colorAccent"
+        android:clipChildren="false">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay"/>
+        <com.lovejjfg.circle.TestView
+            android:id="@+id/progressbar"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_gravity="center"
+            android:background="@color/colorPrimaryDark"
+            android:text="xxxxxxxxxxxxx"/>
 
-    </android.support.design.widget.AppBarLayout>
+        <ImageView
+            android:id="@+id/snapShot"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"/>
 
-    <include layout="@layout/content_test"
-        android:id="@+id/includeContainer"/>
+    </com.lovejjfg.circle.TestFrameLayout>
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@android:drawable/ic_dialog_email"/>
 
-</android.support.design.widget.CoordinatorLayout>
+</com.lovejjfg.circle.TestLinearLayout>

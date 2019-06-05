@@ -1,0 +1,22 @@
+@startuml
+start
+:View.measure(int widthMeasureSpec, int heightMeasureSpec);
+if(PFLAG_FORCE_LAYOUT || needLayout)
+: mPrivateFlags &= ~PFLAG_MEASURED_DIMENSION_SET;
+  if(PFLAG_FORCE_LAYOUT || 没有缓存) then (  true           )
+  :View.onMeasure()
+  View.getDefaultSize()
+  View.setMeasuredDimension()
+  View.setMeasuredDimensionRaw()
+
+  :mPrivateFlags3 &= ~PFLAG3_MEASURE_NEEDED_BEFORE_LAYOUT;
+  else(              false       )
+     :setMeasuredDimensionRaw((int) (value >> 32), (int) value)
+     mPrivateFlags3 |= PFLAG3_MEASURE_NEEDED_BEFORE_LAYOUT
+     存入缓存;
+     endif
+endif
+end
+
+
+@enduml

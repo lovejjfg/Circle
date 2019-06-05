@@ -1,0 +1,43 @@
+@startuml
+
+start
+:draw();
+
+if (!dirtyOpaque)
+  : drawBackGround(canvas);
+  : onDraw(canvas);
+endif
+  if(dispatchDraw(canvas)?) then  ( \n isViewGroup\n)
+    :drawChild(Canvas canvas, View child, long drawingTime);
+    :View.draw(Canvas canvas, ViewGroup parent, long drawingTime)
+      mRecreateDisplayList = (mPrivateFlags & PFLAG_INVALIDATED) != 0
+      mPrivateFlags &= ~PFLAG_INVALIDATED;
+
+
+    while(View.updateDisplayListIfDirty();)
+     if(~PFLAG_DRAWING_CACHE_VALID || !renderNode.isValid()|| (mRecreateDisplayList)) then (   \n三个条件都不满足)
+     :mPrivateFlags |= PFLAG_DRAWN | PFLAG_DRAWING_CACHE_VALID
+     mPrivateFlags &= ~PFLAG_DIRTY_MASK;
+     end
+     else if (renderNode.isValid() && !mRecreateDisplayList) then (\n 直接绘制 \n)
+         :mPrivateFlags |= PFLAG_DRAWN | PFLAG_DRAWING_CACHE_VALID
+         :mPrivateFlags &= ~PFLAG_DIRTY_MASK
+         :dispatchGetDisplayList();
+         :parent.recreateChildDisplayList(child);
+          end
+      else (\n 不满足                创建Canvas\n)
+          :mRecreateDisplayList = true;
+          :View.draw(canvas);
+           end
+      endif
+      end while
+       :mRecreateDisplayList = false;
+   else (   isView 空实现)
+   endif
+
+   :drawAutofilledHighlight(canvas);
+          : onDrawForeground(canvas);
+          :drawDefaultFocusHighlight(canvas);
+
+stop
+@enduml

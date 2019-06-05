@@ -1,0 +1,27 @@
+@startuml
+
+start
+:invalidate();
+:invalidateInternal(int l, int t, int r, int b, boolean invalidateCache,boolean fullInvalidate);
+if(条件不符合)
+  end
+else(\n     符合条件)
+  :mPrivateFlags &= ~PFLAG_DRAWN
+  mPrivateFlags |= PFLAG_DIRTY
+  mPrivateFlags |= PFLAG_INVALIDATED
+  mPrivateFlags &= ~PFLAG_DRAWING_CACHE_VALID;
+  : p.invalidateChild(this, damage);
+  if(mHardwareAccelerated) then (true           )
+    while(mParent != null)
+      :mParent.onDescendantInvalidated(child, child);
+      : mPrivateFlags &= ~PFLAG_DRAWING_CACHE_VALID;
+    endwhile
+  else(           false)
+  while(parent = parent.invalidateChildInParent(location, dirty) != null;)
+   :mPrivateFlags &= ~PFLAG_DRAWING_CACHE_VALID;
+  endwhile
+  endif
+ :ViewRootImple.invalidate();
+ end
+
+@enduml

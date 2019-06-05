@@ -1,0 +1,12 @@
+@startuml
+start
+:View.requestLayout();
+  :mMeasureCache.clear()
+  mPrivateFlags |= PFLAG_FORCE_LAYOUT
+  mPrivateFlags |= PFLAG_INVALIDATED;
+
+while(mParent != null && !mParent.isLayoutRequested())
+  :mParent.requestLayout();
+endwhile
+end
+@enduml
